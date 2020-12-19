@@ -5,9 +5,8 @@ import com.stonks.api.currency.CurrencyRequests
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-/*
 val currencyApi: CurrencyRequests = Retrofit.Builder()
     .baseUrl(CURRENCY_API_BASE_URL)
     .addConverterFactory(GsonConverterFactory.create())
     .build()
-    .create(CurrencyRequests::class.java)*/
+    .create(CurrencyRequests::class.java)
