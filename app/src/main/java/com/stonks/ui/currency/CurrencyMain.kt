@@ -65,9 +65,6 @@ class CurrencyMain : AppCompatActivity() {
                 val response = currencyApi.getRates(rate = baseRate).awaitResponse()
                 val data = response.body()!!
 
-                // TODO: Здесь необходимо получить по запросу с апи значение, равное targetRat`у.
-                // TODO: Т.е targetRate = USD, необходимо найти по результатам запроса data.rates.USD
-                // TODO: Не представляю, как этого сделать
                 // val answer : String = data.rates
 
                 outputList.add("Тут должно быть поле Rates, равное targetRate")
@@ -87,14 +84,12 @@ class CurrencyMain : AppCompatActivity() {
                 val data = response.body()!!
 
                 Log.i(TAG, "Current date: " + data.date)
-                Log.i(TAG, "Base rate: " + data.base)
-                Log.i(TAG, data.rates?.EUR.toString())
-                Log.i(TAG, data.rates?.RUB.toString())
-                Log.i(TAG, data.rates?.USD.toString())
 
-                Log.i(TAG, data.rates.toString())
+                for (key in data.rates?.entries!!) {
+                    Log.i(TAG, "Rate RUB to ${key.value.toString()}: ")
+                }
 
-                Log.i(TAG, data.rates?.javaClass?.kotlin?.simpleName.toString())
+                // Log.i(TAG, data.rates?.javaClass?.kotlin?.simpleName.toString())
 
             } catch (exception: Exception) {
                 Log.e(TAG, exception.toString())
