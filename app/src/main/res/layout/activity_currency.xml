@@ -60,7 +60,7 @@
             android:background="@drawable/rounded_corners"/>
 
         <TextView
-            android:id="@+id/result_rate"
+            android:id="@+id/rate_result"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
