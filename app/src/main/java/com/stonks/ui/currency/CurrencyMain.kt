@@ -40,7 +40,6 @@ class CurrencyMain : AppCompatActivity() {
         baseRateSpinner.adapter = baseRateAdapter
         baseRateSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                // Toast.makeText(this@CurrencyMain, ratesArray[position], Toast.LENGTH_LONG).show()
                 baseRateSpinnerString = ratesArray[position]
             }
 
@@ -54,7 +53,6 @@ class CurrencyMain : AppCompatActivity() {
         targetRateSpinner.adapter = targetRateAdapter
         targetRateSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                // Toast.makeText(this@CurrencyMain, ratesArray[position], Toast.LENGTH_LONG).show()
                 targetRateSpinnerString = ratesArray[position]
 
                 resultRateTextView.text = getTargetRatePrice(baseRate = baseRateSpinnerString,
