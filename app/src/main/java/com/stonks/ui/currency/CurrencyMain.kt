@@ -1,19 +1,14 @@
 package com.stonks.ui.currency
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.stonks.R
 import com.stonks.api.currencyApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import retrofit2.awaitResponse
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
 class CurrencyMain : AppCompatActivity() {
 
@@ -31,8 +26,20 @@ class CurrencyMain : AppCompatActivity() {
         lateinit var baseRateSpinnerString : String
         lateinit var targetRateSpinnerString : String
 
-        // TODO: Синхронизировать поток запроса к апи и вывода на экран при помощи RxJava
-        dateRateTextView.text = getApiDate()
+        // dateRateTextView.text = getApiDate()
+        // TODO: Вынести  в отдельную функцию: getApiDate()
+        val compositeDisposable = CompositeDisposable()
+        compositeDisposable.add(
+            currencyApi.getRates(rate = "EUR")
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                    { response ->
+                        dateRateTextView.text = response.date.toString()},
+                    { failure ->
+                        Toast.makeText(this, failure.message, Toast.LENGTH_SHORT).show()}
+                )
+        )
 
 
         val baseRateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, ratesArray)
@@ -55,8 +62,25 @@ class CurrencyMain : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 targetRateSpinnerString = ratesArray[position]
 
-                resultRateTextView.text = getTargetRatePrice(baseRate = baseRateSpinnerString,
-                        targetRate = targetRateSpinnerString)
+                /*resultRateTextView.text = getTargetRatePrice(baseRate = baseRateSpinnerString,
+                      targetRate = targetRateSpinnerString)*/
+                if(baseRateSpinnerString == targetRateSpinnerString) {
+                    resultRateTextView.text = "1.0"
+                } else {
+                    // TODO: Вынести в отдельную функцию getTargetRatePrice()
+                    val compositeDisposable2 = CompositeDisposable()
+                    compositeDisposable2.add(
+                        currencyApi.getRates(rate = baseRateSpinnerString)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(
+                                { response ->
+                                    resultRateTextView.text = response.rates?.get(targetRateSpinnerString).toString().take(7)},
+                                { failure ->
+                                    Toast.makeText(this@CurrencyMain, failure.message, Toast.LENGTH_SHORT).show()}
+                            )
+                    )
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -71,16 +95,32 @@ class CurrencyMain : AppCompatActivity() {
      * */
     private fun getApiDate(baseRate: String = "RUB") : String {
         var currentDate: String = ""
-        GlobalScope.launch(Dispatchers.IO) {
+        /*GlobalScope.launch(Dispatchers.IO) {
             try {
                 val response = currencyApi.getRates(rate = baseRate).awaitResponse()
                 val data = response.body()!!
+
 
                 currentDate = data.date.toString()
             } catch (exception: Exception) {
                 Log.e(TAG, exception.toString())
             }
-        }
+        }*/
+
+        val compositeDisposable = CompositeDisposable()
+        compositeDisposable.add(
+            currencyApi.getRates(rate = baseRate)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                    { response ->
+                        currentDate = response.date.toString()},
+                    { failure ->
+                        Toast.makeText(this, failure.message, Toast.LENGTH_SHORT).show()}
+                )
+        )
+
+        // TODO: Ничего не возвращает. Выше ответ с апи есть, но в ретёрн ничего не приходит
         return currentDate
     }
 
@@ -89,12 +129,12 @@ class CurrencyMain : AppCompatActivity() {
      */
     private fun getTargetRatePrice(baseRate : String, targetRate: String) : String {
         var outputString: String = ""
-        GlobalScope.launch(Dispatchers.IO) {
+        /*GlobalScope.launch(Dispatchers.IO) {
             try {
                 val response = currencyApi.getRates(rate = baseRate).awaitResponse()
                 val data = response.body()!!
 
-                for (key in data.rates?.entries!!) {
+                for (key in data.rates.entries!!) {
                     if (targetRate == key.key.toString()) {
                         outputString = key.value.toString()
                     }
@@ -102,7 +142,21 @@ class CurrencyMain : AppCompatActivity() {
             } catch (exception: Exception) {
                 Log.e(TAG, exception.toString())
             }
-        }
+        }*/
+        val compositeDisposable = CompositeDisposable()
+        compositeDisposable.add(
+            currencyApi.getRates(rate = baseRate)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                    { response ->
+                        outputString = response.rates?.get(baseRate).toString()},
+                    { failure ->
+                        Toast.makeText(this, failure.message, Toast.LENGTH_SHORT).show()}
+                )
+        )
+
+        // TODO: Такая же проблема, как и в getApiDate()
         return outputString
     }
 }
