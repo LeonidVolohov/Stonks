@@ -9,6 +9,7 @@ import com.stonks.api.currencyApi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.lang.Double.parseDouble
 
 class CurrencyMain : AppCompatActivity() {
 
@@ -23,8 +24,11 @@ class CurrencyMain : AppCompatActivity() {
         val ratesArray = resources.getStringArray(R.array.rates)
         val resultRateTextView = findViewById<TextView>(R.id.rate_result)
         val dateRateTextView = findViewById<TextView>(R.id.rate_data)
+        val calculateButton = findViewById<Button>(R.id.calculate_button)
+        val rateNumber = findViewById<EditText>(R.id.rate_number)
         lateinit var baseRateSpinnerString : String
         lateinit var targetRateSpinnerString : String
+        var isNumeric: Boolean
 
         // dateRateTextView.text = getApiDate()
         // TODO: Вынести  в отдельную функцию: getApiDate()
@@ -61,32 +65,49 @@ class CurrencyMain : AppCompatActivity() {
         targetRateSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 targetRateSpinnerString = ratesArray[position]
-
-                /*resultRateTextView.text = getTargetRatePrice(baseRate = baseRateSpinnerString,
-                      targetRate = targetRateSpinnerString)*/
-                if(baseRateSpinnerString == targetRateSpinnerString) {
-                    resultRateTextView.text = "1.0"
-                } else {
-                    // TODO: Вынести в отдельную функцию getTargetRatePrice()
-                    val compositeDisposable2 = CompositeDisposable()
-                    compositeDisposable2.add(
-                        currencyApi.getRates(rate = baseRateSpinnerString)
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribeOn(Schedulers.io())
-                            .subscribe(
-                                { response ->
-                                    resultRateTextView.text = response.rates?.get(targetRateSpinnerString).toString().take(7)},
-                                { failure ->
-                                    Toast.makeText(this@CurrencyMain, failure.message, Toast.LENGTH_SHORT).show()}
-                            )
-                    )
-                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
         }
+
+        calculateButton.setOnClickListener {
+            if(baseRateSpinnerString == targetRateSpinnerString) {
+                resultRateTextView.text = "1.0"
+            } else {
+                try {
+                    parseDouble(rateNumber.text.toString())
+                    isNumeric = true
+                } catch (exception: NumberFormatException) {
+                    isNumeric = false
+                }
+
+                if(isNumeric) {
+                    // TODO: Вынести в отдельную функцию getTargetRatePrice()
+                    val compositeDisposable2 = CompositeDisposable()
+                    compositeDisposable2.add(
+                            currencyApi.getRates(rate = baseRateSpinnerString)
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribeOn(Schedulers.io())
+                                    .subscribe(
+                                            { response ->
+                                                resultRateTextView.text = stringMultiplication(rateNumber.text.toString(),
+                                                        response.rates?.get(targetRateSpinnerString).toString().take(7))},
+                                            { failure ->
+                                                Toast.makeText(this@CurrencyMain, failure.message, Toast.LENGTH_SHORT).show()}
+                                    )
+                    )
+                } else {
+                    Toast.makeText(this, "Wrong input", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+
+    private fun stringMultiplication(firstNumber : String, secondNumber : String) : String {
+        return (firstNumber.toDouble() * secondNumber.toDouble()).toString().take(7)
     }
 
     /**
@@ -94,19 +115,7 @@ class CurrencyMain : AppCompatActivity() {
      * @return Возвращает поле data с API
      * */
     private fun getApiDate(baseRate: String = "RUB") : String {
-        var currentDate: String = ""
-        /*GlobalScope.launch(Dispatchers.IO) {
-            try {
-                val response = currencyApi.getRates(rate = baseRate).awaitResponse()
-                val data = response.body()!!
-
-
-                currentDate = data.date.toString()
-            } catch (exception: Exception) {
-                Log.e(TAG, exception.toString())
-            }
-        }*/
-
+        var currentDate = ""
         val compositeDisposable = CompositeDisposable()
         compositeDisposable.add(
             currencyApi.getRates(rate = baseRate)
@@ -128,21 +137,7 @@ class CurrencyMain : AppCompatActivity() {
      * Возвращает стоимость [targetRate] по отношению к [baseRate]
      */
     private fun getTargetRatePrice(baseRate : String, targetRate: String) : String {
-        var outputString: String = ""
-        /*GlobalScope.launch(Dispatchers.IO) {
-            try {
-                val response = currencyApi.getRates(rate = baseRate).awaitResponse()
-                val data = response.body()!!
-
-                for (key in data.rates.entries!!) {
-                    if (targetRate == key.key.toString()) {
-                        outputString = key.value.toString()
-                    }
-                }
-            } catch (exception: Exception) {
-                Log.e(TAG, exception.toString())
-            }
-        }*/
+        var outputString = ""
         val compositeDisposable = CompositeDisposable()
         compositeDisposable.add(
             currencyApi.getRates(rate = baseRate)
