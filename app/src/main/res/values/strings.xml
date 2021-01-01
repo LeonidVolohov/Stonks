@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Stonks</string>
+    <string name="constant_multiplier">1.0</string>
+    <string name="button_query_result">Тыкни</string>
+    <string name="edittext_constant_hint">How much</string>
 
     <string-array name="rates">
         <item>AUD</item>
