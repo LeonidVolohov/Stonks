@@ -20,10 +20,10 @@ class CurrencyMain : AppCompatActivity() {
         val baseRateSpinner = findViewById<Spinner>(R.id.base_rate_spinner)
         val targetRateSpinner = findViewById<Spinner>(R.id.target_rate_spinner)
         val ratesArray = resources.getStringArray(R.array.rates)
+        val rateNumberEditText = findViewById<EditText>(R.id.rate_number)
         val resultRateTextView = findViewById<TextView>(R.id.rate_result)
         val dateRateTextView = findViewById<TextView>(R.id.rate_data)
         val calculateButton = findViewById<Button>(R.id.calculate_button)
-        val rateNumber = findViewById<EditText>(R.id.rate_number)
         lateinit var baseRateSpinnerString : String
         lateinit var targetRateSpinnerString : String
         var isNumeric: Boolean
@@ -58,17 +58,17 @@ class CurrencyMain : AppCompatActivity() {
 
         calculateButton.setOnClickListener {
             if(baseRateSpinnerString == targetRateSpinnerString) {
-                resultRateTextView.text = "1.0"
+                resultRateTextView.text = stringMultiplication(rateNumberEditText.text.toString(), "1.0")
             } else {
                 isNumeric = try {
-                    parseDouble(rateNumber.text.toString())
+                    parseDouble(rateNumberEditText.text.toString())
                     true
                 } catch (exception: NumberFormatException) {
                     false
                 }
 
                 if(isNumeric) {
-                    loadTargetRatePrice(baseRateSpinnerString, targetRateSpinnerString, rateNumber, resultRateTextView)
+                    loadTargetRatePrice(baseRateSpinnerString, targetRateSpinnerString, rateNumberEditText, resultRateTextView)
                 } else {
                     Toast.makeText(this, "Wrong input", Toast.LENGTH_LONG).show()
                 }
