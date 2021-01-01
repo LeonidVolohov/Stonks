@@ -13,8 +13,6 @@ import java.lang.Double.parseDouble
 
 class CurrencyMain : AppCompatActivity() {
 
-    private val TAG : String = CurrencyMain::class.java.name
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_currency)
@@ -29,22 +27,6 @@ class CurrencyMain : AppCompatActivity() {
         lateinit var baseRateSpinnerString : String
         lateinit var targetRateSpinnerString : String
         var isNumeric: Boolean
-
-        // dateRateTextView.text = getApiDate()
-        // TODO: Вынести  в отдельную функцию: getApiDate()
-        val compositeDisposable = CompositeDisposable()
-        compositeDisposable.add(
-            currencyApi.getRates(rate = "EUR")
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(
-                    { response ->
-                        dateRateTextView.text = response.date.toString()},
-                    { failure ->
-                        Toast.makeText(this, failure.message, Toast.LENGTH_SHORT).show()}
-                )
-        )
-
 
         val baseRateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, ratesArray)
         baseRateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -72,32 +54,21 @@ class CurrencyMain : AppCompatActivity() {
             }
         }
 
+        loadApiDate(dateRateTextView)
+
         calculateButton.setOnClickListener {
             if(baseRateSpinnerString == targetRateSpinnerString) {
                 resultRateTextView.text = "1.0"
             } else {
-                try {
+                isNumeric = try {
                     parseDouble(rateNumber.text.toString())
-                    isNumeric = true
+                    true
                 } catch (exception: NumberFormatException) {
-                    isNumeric = false
+                    false
                 }
 
                 if(isNumeric) {
-                    // TODO: Вынести в отдельную функцию getTargetRatePrice()
-                    val compositeDisposable2 = CompositeDisposable()
-                    compositeDisposable2.add(
-                            currencyApi.getRates(rate = baseRateSpinnerString)
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribeOn(Schedulers.io())
-                                    .subscribe(
-                                            { response ->
-                                                resultRateTextView.text = stringMultiplication(rateNumber.text.toString(),
-                                                        response.rates?.get(targetRateSpinnerString).toString().take(7))},
-                                            { failure ->
-                                                Toast.makeText(this@CurrencyMain, failure.message, Toast.LENGTH_SHORT).show()}
-                                    )
-                    )
+                    loadTargetRatePrice(baseRateSpinnerString, targetRateSpinnerString, rateNumber, resultRateTextView)
                 } else {
                     Toast.makeText(this, "Wrong input", Toast.LENGTH_LONG).show()
                 }
@@ -105,53 +76,47 @@ class CurrencyMain : AppCompatActivity() {
         }
     }
 
-
+    /**
+     * Умножает две строки [firstNumber]  и [secondNumber] и возвращает только первые 7 символов
+     */
     private fun stringMultiplication(firstNumber : String, secondNumber : String) : String {
         return (firstNumber.toDouble() * secondNumber.toDouble()).toString().take(7)
     }
 
     /**
-     * @param[baseRate] Указана по умолчанию, т.к. возвращаемое значение не зависит от валюты
-     * @return Возвращает поле data с API
+     * Загружает в [textView] дату, полученную с API
      * */
-    private fun getApiDate(baseRate: String = "RUB") : String {
-        var currentDate = ""
-        val compositeDisposable = CompositeDisposable()
-        compositeDisposable.add(
-            currencyApi.getRates(rate = baseRate)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(
-                    { response ->
-                        currentDate = response.date.toString()},
-                    { failure ->
-                        Toast.makeText(this, failure.message, Toast.LENGTH_SHORT).show()}
-                )
+    private fun loadApiDate(textView : TextView) {
+        val compositeDisposable3 = CompositeDisposable()
+        compositeDisposable3.add(
+                currencyApi.getRates(rate = "EUR")
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(
+                                { response ->
+                                    textView.text = response.date.toString()},
+                                { failure ->
+                                    Toast.makeText(this, failure.message, Toast.LENGTH_SHORT).show()}
+                        )
         )
-
-        // TODO: Ничего не возвращает. Выше ответ с апи есть, но в ретёрн ничего не приходит
-        return currentDate
     }
 
     /**
-     * Возвращает стоимость [targetRate] по отношению к [baseRate]
+     * Загружает в [textView] стоимость [baseRate] относительно [targetRate] со множителем [rateNumber]
      */
-    private fun getTargetRatePrice(baseRate : String, targetRate: String) : String {
-        var outputString = ""
-        val compositeDisposable = CompositeDisposable()
-        compositeDisposable.add(
-            currencyApi.getRates(rate = baseRate)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(
-                    { response ->
-                        outputString = response.rates?.get(baseRate).toString()},
-                    { failure ->
-                        Toast.makeText(this, failure.message, Toast.LENGTH_SHORT).show()}
-                )
+    private fun loadTargetRatePrice(baseRate : String, targetRate: String, rateNumber: EditText, textView: TextView) {
+        val compositeDisposable2 = CompositeDisposable()
+        compositeDisposable2.add(
+                currencyApi.getRates(rate = baseRate)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(
+                                { response ->
+                                    textView.text = stringMultiplication(rateNumber.text.toString(),
+                                            response.rates?.get(targetRate).toString().take(7))},
+                                { failure ->
+                                    Toast.makeText(this@CurrencyMain, failure.message, Toast.LENGTH_SHORT).show()}
+                        )
         )
-
-        // TODO: Такая же проблема, как и в getApiDate()
-        return outputString
     }
 }
