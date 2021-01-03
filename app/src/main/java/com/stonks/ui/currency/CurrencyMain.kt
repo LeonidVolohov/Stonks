@@ -1,9 +1,11 @@
 package com.stonks.ui.currency
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.stonks.R
 import com.stonks.api.currencyApi
@@ -16,6 +18,7 @@ import java.time.format.DateTimeFormatter
 
 class CurrencyMain : AppCompatActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_currency)
