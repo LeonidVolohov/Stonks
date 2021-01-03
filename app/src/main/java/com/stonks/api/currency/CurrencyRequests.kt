@@ -7,5 +7,11 @@ import retrofit2.http.Query
 interface CurrencyRequests {
 
     @GET("latest")
-    fun getRates(@Query("base") rate: String): Observable<Currency>
+    fun getRatesPerDay(@Query("base") rate: String): Observable<CurrencyPerDay>
+
+    @GET("history")
+    fun getRatesPerMonth(@Query("start_at") startDate : String,
+                         @Query("end_at") endDate : String,
+                         @Query("symbols") targetRate : String,
+                         @Query("base") baseRate : String): Observable<CurrencyPerMonth>
 }

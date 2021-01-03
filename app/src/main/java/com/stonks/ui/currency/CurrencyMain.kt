@@ -89,7 +89,7 @@ class CurrencyMain : AppCompatActivity() {
     private fun loadApiDate(textView : TextView) {
         val compositeDisposable3 = CompositeDisposable()
         compositeDisposable3.add(
-                currencyApi.getRates(rate = "EUR")
+                currencyApi.getRatesPerDay(rate = "EUR")
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe(
@@ -107,7 +107,7 @@ class CurrencyMain : AppCompatActivity() {
     private fun loadTargetRatePrice(baseRate : String, targetRate: String, rateNumber: EditText, textView: TextView) {
         val compositeDisposable2 = CompositeDisposable()
         compositeDisposable2.add(
-                currencyApi.getRates(rate = baseRate)
+                currencyApi.getRatesPerDay(rate = baseRate)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe(
