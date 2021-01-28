@@ -120,18 +120,11 @@
             android:textSize="@dimen/text_size_large"/>
     </LinearLayout>
 
-
-    <TextView
-        android:id="@+id/graphic"
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/currency_chart"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/third_linear"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="@dimen/margin_padding_size_small"
-        android:layout_marginTop="@dimen/margin_padding_size_small"
-        android:layout_marginEnd="@dimen/margin_padding_size_small"
-        android:layout_marginBottom="@dimen/margin_padding_size_small"
-        android:textSize="@dimen/text_size_xlarge"
-        android:gravity="center"
-        tools:text="тут график" />
+        android:layout_alignParentBottom="true"/>
+
 </RelativeLayout>
