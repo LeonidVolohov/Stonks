@@ -1,26 +1,29 @@
 package com.stonks.ui.currency
 
 import android.content.Context
-import android.graphics.Canvas
-import android.widget.TextView
+import android.util.Log
+import android.widget.Toast
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
-import com.stonks.R
 
-class CustomMarkerView(context: Context?, layoutResource: Int) : MarkerView(context, layoutResource) {
-    private var textViewContent : TextView = findViewById(R.id.textViewMarkerContent)
+class CustomMarkerView(context: Context?, layoutResource: Int, dataList: List<String>) : MarkerView(context, layoutResource) {
+    private val TAG: String = CurrencyMain::class.java.name
+    private val localDateList: List<String> = dataList
+    private var toastMessage : String = ""
+    private var toast : Toast = Toast.makeText(context, "", Toast.LENGTH_SHORT)
 
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
-        if (e != null) {
-            textViewContent.text = e.y.toString()
+        try {
+            toastMessage = "Date: ${e?.x?.toInt()?.let { localDateList[it] }} \nValue: ${e?.y}"
+            toast = Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT)
+            toast.show()
+        } catch (exception : ArrayIndexOutOfBoundsException) {
+            Log.e(TAG, exception.message.toString())
+            toast.cancel()
         }
 
         super.refreshContent(e, highlight)
     }
-
-    // TODO: override this method for correct displaying marker
-    override fun draw(canvas: Canvas?, posX: Float, posY: Float) {
-        super.draw(canvas, posX, posY)
-    }
 }
+

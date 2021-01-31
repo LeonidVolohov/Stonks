@@ -25,7 +25,6 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
 class CurrencyMain : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -47,6 +46,8 @@ class CurrencyMain : AppCompatActivity() {
         lateinit var targetRateSpinnerString: String
         var isNumeric: Boolean
 
+        loadApiDate(dateRateTextView)
+
         // chart settings
         currencyLineChart.setTouchEnabled(true)
         currencyLineChart.setPinchZoom(true)
@@ -54,17 +55,17 @@ class CurrencyMain : AppCompatActivity() {
         currencyLineChart.setBorderColor(Color.GRAY)
         currencyLineChart.setBorderWidth(5f)
         currencyLineChart.description.text = ""
+        /*currencyLineChart.setDragOffsetX(10f)
+        currencyLineChart.setDragOffsetY(10f)*/
 
-        currencyLineChart.marker = CustomMarkerView(this, R.layout.activity_textview_content)
-        currencyLineChart.setDragOffsetX(50f)
-
+        // legend settings
         val legend = currencyLineChart.legend
         legend.isEnabled = true
         legend.form = Legend.LegendForm.LINE
         legend.textSize = 16f
         legend.formSize = 12f
 
-
+        // init spinner
         val baseRateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, ratesArray)
         baseRateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         baseRateSpinner.adapter = baseRateAdapter
@@ -79,9 +80,7 @@ class CurrencyMain : AppCompatActivity() {
                 rateNumberEditText.setText("1.0")
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
 
         val targetRateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, ratesArray)
@@ -98,12 +97,8 @@ class CurrencyMain : AppCompatActivity() {
                 rateNumberEditText.setText("1.0")
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
-
-        loadApiDate(dateRateTextView)
 
         val currentMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         val previousMonth = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
@@ -155,19 +150,19 @@ class CurrencyMain : AppCompatActivity() {
                                     if (dateList != null) {
                                         for (date in dateList) {
                                             rateListPerMonth.add(
-                                                response.rates.get(date)?.get(
+                                                response.rates[date]?.get(
                                                     targetRateSpinnerString
                                                 ).toString()
                                             )
                                         }
                                     }
 
-                                    Log.i(TAG, dateList.toString())
-                                    Log.i(TAG, rateListPerMonth.toString())
+                                    Log.i(TAG, "${dateList?.size} + ${dateList.toString()}")
+                                    Log.i(TAG, "${rateListPerMonth.size} + ${rateListPerMonth.toString()}" )
 
                                     // add values to line array
                                     val entries = ArrayList<Entry>()
-                                    var iter = 1.0f
+                                    var iter = -1.0f
                                     for(item in rateListPerMonth) {
                                         iter += 1.0f
                                         entries.add(Entry(iter, BigDecimal(item).setScale(5, BigDecimal.ROUND_HALF_EVEN).toFloat()))
@@ -185,6 +180,8 @@ class CurrencyMain : AppCompatActivity() {
                                     xAxis.position = XAxis.XAxisPosition.TOP
                                     xAxis.setDrawGridLines(false)
                                     xAxis.valueFormatter = IndexAxisValueFormatter(dateList)
+                                    xAxis.textSize = 10f
+                                    xAxis.labelCount = 4
 
                                     // chart line settings
                                     val lineChartData = LineDataSet(entries, "$baseRateSpinnerString to $targetRateSpinnerString")
@@ -198,6 +195,7 @@ class CurrencyMain : AppCompatActivity() {
                                     lineChartData.color = R.color.purple_500
 
                                     // display chart on the screen
+                                    currencyLineChart.marker = dateList?.let { it -> CustomMarkerView(this, R.layout.activity_textview_content, it) }
                                     currencyLineChart.onTouchListener.setLastHighlighted(null) // reset selection
                                     currencyLineChart.highlightValues(null) // reset selection
                                     currencyLineChart.fitScreen() // reset zoom chart
