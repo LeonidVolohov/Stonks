@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -11,7 +12,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="@dimen/margin_padding_size_small"
+        android:layout_marginStart="@dimen/margin_padding_size_medium"
         android:layout_marginTop="@dimen/margin_padding_size_small"
         android:layout_marginEnd="@dimen/margin_padding_size_small"
         android:layout_marginBottom="@dimen/margin_padding_size_small"
@@ -34,21 +35,21 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="50"
-            android:layout_marginTop="@dimen/margin_padding_size_medium"
-            android:layout_marginStart="@dimen/margin_padding_size_small"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
             android:layout_marginEnd="@dimen/margin_padding_size_small"
             android:layout_marginBottom="@dimen/margin_padding_size_small"
             android:textSize="@dimen/text_size_large"
             android:gravity="center"
             android:textAlignment="center"
-            android:spinnerMode="dropdown"/>
+            android:spinnerMode="dropdown" />
 
         <Spinner
             android:id="@+id/target_rate_spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="50"
-            android:layout_marginTop="@dimen/margin_padding_size_medium"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
             android:layout_marginStart="@dimen/margin_padding_size_small"
             android:layout_marginEnd="@dimen/margin_padding_size_small"
             android:layout_marginBottom="@dimen/margin_padding_size_small"
@@ -62,7 +63,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="50"
-            android:layout_marginTop="@dimen/margin_padding_size_medium"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
             android:layout_marginStart="@dimen/margin_padding_size_small"
             android:layout_marginEnd="@dimen/margin_padding_size_small"
             android:layout_marginBottom="@dimen/margin_padding_size_small"
@@ -84,7 +85,7 @@
             android:id="@+id/rate_number"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_padding_size_small"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
             android:layout_marginTop="@dimen/margin_padding_size_medium"
             android:layout_marginEnd="@dimen/margin_padding_size_small"
             android:layout_marginBottom="@dimen/margin_padding_size_small"
@@ -127,17 +128,17 @@
             android:id="@+id/crypto_switch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="50"
-            android:layout_marginStart="@dimen/margin_padding_size_small"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
             android:layout_marginTop="@dimen/margin_padding_size_small"
             android:layout_marginEnd="@dimen/margin_padding_size_small"
             android:layout_marginBottom="@dimen/margin_padding_size_small"
-            android:paddingEnd="@dimen/margin_padding_size_medium"
-            android:paddingStart="@dimen/margin_padding_size_medium"
-            android:layout_gravity="center"
+            android:layout_weight="50"
             android:gravity="center"
+            android:paddingStart="@dimen/margin_padding_size_medium"
+            android:paddingEnd="@dimen/margin_padding_size_medium"
             android:text="@string/switch_prediction"
-            android:textSize="@dimen/text_size_large" />
+            android:textSize="@dimen/text_size_above_medium" />
 
         <Button
             android:id="@+id/calculate_button"
@@ -151,16 +152,267 @@
             android:background="@drawable/rounded_corners"
             android:gravity="center"
             android:text="@string/button_query_result"
-            android:textSize="@dimen/text_size_large"/>
+            android:textSize="@dimen/text_size_above_medium" />
     </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/third_linear"
+        card_view:cardCornerRadius="8dp"
+        card_view:cardElevation="4dp"
+        card_view:cardUseCompatPadding="true"
+        card_view:strokeWidth="1dp"
+        android:layout_marginStart="@dimen/margin_padding_size_medium"
+        android:layout_marginTop="@dimen/margin_padding_size_small"
+        android:layout_marginEnd="@dimen/margin_padding_size_small"
+        android:layout_marginBottom="@dimen/margin_padding_size_small">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true">
+
+            <RelativeLayout
+                android:id="@+id/first_relative"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:id="@+id/first_country_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_united_states"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="@dimen/text_size_smaller"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/text_size_smaller" />
+
+                <TextView
+                    android:id="@+id/first_currency_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@id/first_country_image"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="USD" />
+
+                <TextView
+                    android:id="@+id/first_primary_currency_result"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="1.023040" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/second_relative"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/first_relative">
+
+                <ImageButton
+                    android:id="@+id/second_country_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_united_states"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="@dimen/text_size_smaller"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/text_size_smaller" />
+
+                <TextView
+                    android:id="@+id/second_currency_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@id/second_country_image"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="EUR" />
+
+                <TextView
+                    android:id="@+id/second_primary_currency_result"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="1.023040" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/third_relative"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/second_relative">
+
+                <ImageButton
+                    android:id="@+id/third_country_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_united_kingdom"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="@dimen/text_size_smaller"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/text_size_smaller" />
+
+                <TextView
+                    android:id="@+id/third_currency_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@id/third_country_image"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="GBP" />
+
+                <TextView
+                    android:id="@+id/third_primary_currency_result"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="1.023040" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/fourth_relative"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/third_relative">
+
+                <ImageButton
+                    android:id="@+id/fourth_country_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_japan"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="@dimen/text_size_smaller"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/text_size_smaller" />
+
+                <TextView
+                    android:id="@+id/fourth_currency_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@id/fourth_country_image"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="JPY" />
+
+                <TextView
+                    android:id="@+id/fourth_primary_currency_result"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="1.023040" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/fifth_relative"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fourth_relative">
+
+                <ImageButton
+                    android:id="@+id/fifth_country_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_switzerland"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="@dimen/text_size_smaller"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/text_size_smaller" />
+
+                <TextView
+                    android:id="@+id/fifth_currency_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@id/fifth_country_image"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="CHF" />
+
+                <TextView
+                    android:id="@+id/fifth_primary_currency_result"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="1.023040" />
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/currency_chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/third_linear"
+        android:layout_below="@id/cardview"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="@dimen/margin_padding_size_small"
+        android:layout_marginStart="@dimen/margin_padding_size_medium"
         android:layout_marginTop="@dimen/margin_padding_size_medium"
         android:layout_marginEnd="@dimen/margin_padding_size_small"
         android:layout_marginBottom="@dimen/text_size_medium"/>

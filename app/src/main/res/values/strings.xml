@@ -42,6 +42,14 @@
         <item>ZAR</item>
     </string-array>
 
+    <string-array name="primary_rates">
+        <item>USD</item>
+        <item>EUR</item>
+        <item>GBP</item>
+        <item>JPY</item>
+        <item>CHF</item>
+    </string-array>
+
     <string-array name="chart_length">
         <item>1 неделя</item>
         <item>1 месяц</item>

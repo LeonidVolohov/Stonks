@@ -37,19 +37,36 @@ class CurrencyMain : AppCompatActivity() {
         val baseRateSpinner = findViewById<Spinner>(R.id.base_rate_spinner)
         val targetRateSpinner = findViewById<Spinner>(R.id.target_rate_spinner)
         val chartLengthSpinner = findViewById<Spinner>(R.id.chart_length_spinner)
-        val ratesArray = resources.getStringArray(R.array.rates)
+        val ratesNameArray = resources.getStringArray(R.array.rates)
         val chartLengthArray = resources.getStringArray(R.array.chart_length)
+        val chartPrimaryRatesArray = resources.getStringArray(R.array.primary_rates)
         val rateNumberEditText = findViewById<EditText>(R.id.rate_number)
         val resultRateTextView = findViewById<TextView>(R.id.rate_result)
         val dateRateTextView = findViewById<TextView>(R.id.last_date_update)
         val calculateButton = findViewById<Button>(R.id.calculate_button)
         val currencyLineChart = findViewById<LineChart>(R.id.currency_chart)
+        val firstPrimaryCurrencyText = findViewById<TextView>(R.id.first_currency_name)
+        val secondPrimaryCurrencyText = findViewById<TextView>(R.id.second_currency_name)
+        val thirdPrimaryCurrencyText = findViewById<TextView>(R.id.third_currency_name)
+        val fourthPrimaryCurrencyText = findViewById<TextView>(R.id.fourth_currency_name)
+        val fifthPrimaryCurrencyText = findViewById<TextView>(R.id.fifth_currency_name)
+        val firstPrimaryCurrencyResult = findViewById<TextView>(R.id.first_primary_currency_result)
+        val secondPrimaryCurrencyResult = findViewById<TextView>(R.id.second_primary_currency_result)
+        val thirdPrimaryCurrencyResult = findViewById<TextView>(R.id.third_primary_currency_result)
+        val fourthPrimaryCurrencyResult = findViewById<TextView>(R.id.fourth_primary_currency_result)
+        val fifthPrimaryCurrencyResult = findViewById<TextView>(R.id.fifth_primary_currency_result)
         var baseRateSpinnerString = ""
         var targetRateSpinnerString = ""
         var chartLengthSpinnerString = ""
         var isNumeric: Boolean
 
         loadApiDate(dateRateTextView)
+
+        firstPrimaryCurrencyText.text = chartPrimaryRatesArray[0]
+        secondPrimaryCurrencyText.text = chartPrimaryRatesArray[1]
+        thirdPrimaryCurrencyText.text = chartPrimaryRatesArray[2]
+        fourthPrimaryCurrencyText.text = chartPrimaryRatesArray[3]
+        fifthPrimaryCurrencyText.text = chartPrimaryRatesArray[4]
 
         // chart settings
         currencyLineChart.setTouchEnabled(true)
@@ -69,7 +86,7 @@ class CurrencyMain : AppCompatActivity() {
         legend.formSize = 12f
 
         // init spinners
-        val baseRateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, ratesArray)
+        val baseRateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, ratesNameArray)
         baseRateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         baseRateSpinner.adapter = baseRateAdapter
         baseRateSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -79,14 +96,14 @@ class CurrencyMain : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                baseRateSpinnerString = ratesArray[position]
+                baseRateSpinnerString = ratesNameArray[position]
                 rateNumberEditText.setText("1.0")
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
 
-        val targetRateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, ratesArray)
+        val targetRateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, ratesNameArray)
         targetRateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         targetRateSpinner.adapter = targetRateAdapter
         targetRateSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -96,7 +113,7 @@ class CurrencyMain : AppCompatActivity() {
                     position: Int,
                     id: Long
             ) {
-                targetRateSpinnerString = ratesArray[position]
+                targetRateSpinnerString = ratesNameArray[position]
                 rateNumberEditText.setText("1.0")
             }
 
@@ -114,6 +131,7 @@ class CurrencyMain : AppCompatActivity() {
                     id: Long
             ) {
                 chartLengthSpinnerString = chartLengthArray[position]
+                rateNumberEditText.setText("1.0")
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -152,11 +170,11 @@ class CurrencyMain : AppCompatActivity() {
                         chartLengthArray[4] -> startPointDate = LocalDate.now().minusYears(5).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                     }
 
-                    // Get value rates for last month
-                    val rateListPerMonth: MutableList<String> = arrayListOf()
+
+                    val rateListPerPeriod: MutableList<String> = arrayListOf()
                     val compositeDisposable = CompositeDisposable()
                     compositeDisposable.add(
-                            currencyApi.getRatesPerMonth(
+                            currencyApi.getRatesPerPeriod(
                                     startDate = startPointDate,
                                     endDate = currentMonth,
                                     targetRate = targetRateSpinnerString,
@@ -176,7 +194,7 @@ class CurrencyMain : AppCompatActivity() {
                                                         }
                                                 if (dateList != null) {
                                                     for (date in dateList) {
-                                                        rateListPerMonth.add(
+                                                        rateListPerPeriod.add(
                                                                 response.rates[date]?.get(
                                                                         targetRateSpinnerString
                                                                 ).toString()
@@ -185,12 +203,12 @@ class CurrencyMain : AppCompatActivity() {
                                                 }
 
                                                 Log.i(TAG, "${dateList?.size} + ${dateList.toString()}")
-                                                Log.i(TAG, "${rateListPerMonth.size} + $rateListPerMonth")
+                                                Log.i(TAG, "${rateListPerPeriod.size} + $rateListPerPeriod")
 
                                                 // add values to line array
                                                 val entries = ArrayList<Entry>()
                                                 var iter = -1.0f
-                                                for (item in rateListPerMonth) {
+                                                for (item in rateListPerPeriod) {
                                                     iter += 1.0f
                                                     entries.add(Entry(iter, BigDecimal(item).setScale(5, BigDecimal.ROUND_HALF_EVEN).toFloat()))
                                                 }
@@ -216,8 +234,8 @@ class CurrencyMain : AppCompatActivity() {
                                                 lineChartData.setDrawCircles(false)
                                                 lineChartData.setDrawCircleHole(false)
                                                 /*lineChartData.setCircleColor(Color.GRAY)
-                                    lineChartData.circleRadius = 0.5f
-                                    lineChartData.circleHoleRadius = 0.25f*/
+                                                lineChartData.circleRadius = 0.5f
+                                                lineChartData.circleHoleRadius = 0.25f*/
                                                 lineChartData.valueTextSize = 0f
                                                 lineChartData.color = R.color.purple_500
 
@@ -233,10 +251,43 @@ class CurrencyMain : AppCompatActivity() {
                                             { failure ->
                                                 Toast.makeText(
                                                         this@CurrencyMain,
-                                                        failure.message,
+                                                        "No information from server: ${failure.message}",
                                                         Toast.LENGTH_SHORT
                                                 ).show()
                                             }
+                                    )
+                    )
+
+                    firstPrimaryCurrencyResult.text = ""
+                    secondPrimaryCurrencyResult.text = ""
+                    thirdPrimaryCurrencyResult.text = ""
+                    fourthPrimaryCurrencyResult.text = ""
+                    fifthPrimaryCurrencyResult.text = ""
+                    val compositeDisposablePrimaryCurrencies = CompositeDisposable()
+                    compositeDisposablePrimaryCurrencies.add(
+                            currencyApi.getPrimaryRatesPerDay(
+                                    baseRate = baseRateSpinnerString,
+                                    primaryCurrencies = "USD,EUR,GBP,JPY,CHF"
+                            )
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribeOn(Schedulers.io())
+                                    .subscribe(
+                                            { response ->
+                                                firstPrimaryCurrencyResult.text = response.rates?.get("USD").toString()
+                                                secondPrimaryCurrencyResult.text = response.rates?.get("EUR").toString()
+                                                thirdPrimaryCurrencyResult.text = response.rates?.get("GBP").toString()
+                                                fourthPrimaryCurrencyResult.text = response.rates?.get("JPY").toString()
+                                                fifthPrimaryCurrencyResult.text = response.rates?.get("CHF").toString()
+
+                                            },
+                                            { failure ->
+                                                Toast.makeText(
+                                                        this@CurrencyMain,
+                                                        "No information from server: ${failure.message}",
+                                                        Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+
                                     )
                     )
                 } else {
