@@ -4,13 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/last_date_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="@dimen/margin_padding_size_small"
+        android:layout_marginTop="@dimen/margin_padding_size_small"
+        android:layout_marginEnd="@dimen/margin_padding_size_small"
+        android:layout_marginBottom="@dimen/margin_padding_size_small"
+        android:paddingEnd="@dimen/margin_padding_size_medium"
+        android:paddingStart="@dimen/margin_padding_size_medium"
+        android:textSize="@dimen/text_size_smaller"
+        android:gravity="center"
+        tools:text="Данные на: 20.20.2020" />
+
     <LinearLayout
         android:id="@+id/first_linear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" >
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/last_date_update">
 
         <Spinner
             android:id="@+id/base_rate_spinner"
@@ -38,7 +55,21 @@
             android:textSize="@dimen/text_size_large"
             android:gravity="center"
             android:textAlignment="center"
-            android:spinnerMode="dropdown"/>
+            android:spinnerMode="dropdown" />
+
+        <Spinner
+            android:id="@+id/chart_length_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:layout_marginTop="@dimen/margin_padding_size_medium"
+            android:layout_marginStart="@dimen/margin_padding_size_small"
+            android:layout_marginEnd="@dimen/margin_padding_size_small"
+            android:layout_marginBottom="@dimen/margin_padding_size_small"
+            android:textSize="@dimen/text_size_large"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:spinnerMode="dropdown" />
     </LinearLayout>
 
     <LinearLayout
@@ -60,7 +91,7 @@
             android:layout_weight="50"
             android:textSize="@dimen/text_size_large"
             android:gravity="center"
-            android:text="@string/constant_multiplier"
+            android:text="@string/edittext_constant_multiplier"
             android:background="@drawable/rounded_corners"
             android:inputType="numberDecimal"
             android:autofillHints="no"
@@ -92,20 +123,21 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true">
 
-        <TextView
-            android:id="@+id/rate_data"
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/crypto_switch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="50"
             android:layout_marginStart="@dimen/margin_padding_size_small"
             android:layout_marginTop="@dimen/margin_padding_size_small"
             android:layout_marginEnd="@dimen/margin_padding_size_small"
             android:layout_marginBottom="@dimen/margin_padding_size_small"
             android:paddingEnd="@dimen/margin_padding_size_medium"
             android:paddingStart="@dimen/margin_padding_size_medium"
-            android:layout_weight="50"
-            android:textSize="@dimen/text_size_large"
-            android:gravity="end"
-            tools:text="2020-12-18" />
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/switch_prediction"
+            android:textSize="@dimen/text_size_large" />
 
         <Button
             android:id="@+id/calculate_button"
