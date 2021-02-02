@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">Stonks</string>
-    <string name="constant_multiplier">1.0</string>
+    <string name="edittext_constant_multiplier">1.0</string>
+    <string name="edittext_constant_hint">Сколько</string>
     <string name="button_query_result">Тыкни</string>
-    <string name="edittext_constant_hint">How much</string>
+    <string name="switch_prediction">Прогноз</string>
+    <string name="last_updated_date">Данные на: %1$s</string>
 
     <string-array name="rates">
         <item>AUD</item>
@@ -38,5 +40,21 @@
         <item>TRY</item>
         <item>USD</item>
         <item>ZAR</item>
+    </string-array>
+
+    <string-array name="primary_rates">
+        <item>USD</item>
+        <item>EUR</item>
+        <item>GBP</item>
+        <item>JPY</item>
+        <item>CHF</item>
+    </string-array>
+
+    <string-array name="chart_length">
+        <item>1 неделя</item>
+        <item>1 месяц</item>
+        <item>6 месяцев</item>
+        <item>1 год</item>
+        <item>5 лет</item>
     </string-array>
 </resources>

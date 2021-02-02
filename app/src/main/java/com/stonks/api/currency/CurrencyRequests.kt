@@ -10,8 +10,12 @@ interface CurrencyRequests {
     fun getRatesPerDay(@Query("base") rate: String): Observable<CurrencyPerDay>
 
     @GET("history")
-    fun getRatesPerMonth(@Query("start_at") startDate : String,
-                         @Query("end_at") endDate : String,
-                         @Query("symbols") targetRate : String,
-                         @Query("base") baseRate : String): Observable<CurrencyPerMonth>
+    fun getRatesPerPeriod(@Query("start_at") startDate: String,
+                          @Query("end_at") endDate: String,
+                          @Query("symbols") targetRate: String,
+                          @Query("base") baseRate: String): Observable<CurrencyPerMonth>
+
+    @GET("latest")
+    fun getPrimaryRatesPerDay(@Query("base") baseRate: String,
+                              @Query("symbols") primaryCurrencies: String): Observable<CurrencyPrimaryPerDay>
 }
