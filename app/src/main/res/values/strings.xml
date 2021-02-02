@@ -5,41 +5,29 @@
     <string name="button_query_result">Тыкни</string>
     <string name="switch_prediction">Прогноз</string>
     <string name="last_updated_date">Данные на: %1$s</string>
+    <string name="exchange_rate">Курс</string>
+    <string name="bid_price">Спрос</string>
+    <string name="ask_price">Предложение</string>
 
     <string-array name="rates">
-        <item>AUD</item>
-        <item>BGN</item>
-        <item>BRL</item>
-        <item>CAD</item>
-        <item>CHF</item>
-        <item>CNY</item>
-        <item>CZK</item>
-        <item>DKK</item>
-        <item>EUR</item>
-        <item>GBP</item>
-        <item>HKD</item>
-        <item>HRK:</item>
-        <item>HUF</item>
-        <item>IDR</item>
-        <item>ILS</item>
-        <item>INR</item>
-        <item>ISK</item>
-        <item>JPY</item>
-        <item>KRW</item>
-        <item>MXN</item>
-        <item>MYR</item>
-        <item>NOK</item>
-        <item>NZD</item>
-        <item>PHP</item>
-        <item>PLN</item>
-        <item>RON</item>
-        <item>RUB</item>
-        <item>SEK</item>
-        <item>SGD</item>
-        <item>THB</item>
-        <item>TRY</item>
-        <item>USD</item>
-        <item>ZAR</item>
+        <item>AUD, Australian Dollar</item>
+        <item>BRL, Brazilian Real</item>
+        <item>CAD, Canadian Dollar</item>
+        <item>CHF, Swiss Franc</item>
+        <item>DKK, Danish Krone</item>
+        <item>EUR, Euro</item>
+        <item>ILS, Israeli New Sheqel</item>
+        <item>JPY, Japanese Yen</item>
+        <item>KRW, South Korean Won</item>
+        <item>MXN, Mexican Peso</item>
+        <item>NOK, Norwegian Krone</item>
+        <item>NZD, New Zealand Dollar</item>
+        <item>PLN, Polish Zloty</item>
+        <item>RUB, Russian Ruble</item>
+        <item>SEK, Swedish Krona</item>
+        <item>SGD, Singapore Dollar</item>
+        <item>TRY, Turkish Lira</item>
+        <item>USD, United States Dollar</item>
     </string-array>
 
     <string-array name="primary_rates">
@@ -56,5 +44,33 @@
         <item>6 месяцев</item>
         <item>1 год</item>
         <item>5 лет</item>
+    </string-array>
+
+    <string-array name="crypto_currencies">
+        <item>BTC, Bitcoin</item>
+        <item>ETH, Ethereum</item>
+        <item>USDT, Tether</item>
+        <item>XRP, Ripple</item>
+        <item>DOT, Polkadot</item>
+        <item>ADA, Cardano</item>
+        <item>LINK, ChainLink</item>
+        <item>LCC, Litecoin-Cash</item>
+        <item>BNB, Binance-Coin</item>
+        <item>XLM, Stellar</item>
+        <item>DOGE, DogeCoin</item>
+        <item>EOS, EOS</item>
+        <item>XMR, Monero</item>
+        <item>NEM, NEM</item>
+        <item>TRX, Tronix</item>
+        <item>THETA, Theta-Token</item>
+        <item>SNX, Synthetix-Network-Token</item>
+        <item>VEN, VeChain</item>
+        <item>DAI, Dai</item>
+        <item>NEO, NEO</item>
+        <item>MKR, Maker</item>
+        <item>BUSD, Binance-USD</item>
+        <item>DASH, Dash</item>
+        <item>XRP, Ripple</item>
+        <item>BCH, Bitcoin-Cash</item>
     </string-array>
 </resources>
