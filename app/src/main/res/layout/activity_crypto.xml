@@ -1,6 +1,238 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/crypto_last_date_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="@dimen/margin_padding_size_medium"
+        android:layout_marginTop="@dimen/margin_padding_size_small"
+        android:layout_marginEnd="@dimen/margin_padding_size_small"
+        android:layout_marginBottom="@dimen/margin_padding_size_small"
+        android:paddingEnd="@dimen/margin_padding_size_medium"
+        android:paddingStart="@dimen/margin_padding_size_medium"
+        android:textSize="@dimen/text_size_smaller"
+        android:gravity="center"
+        tools:text="Данные на: 20.20.2020" />
+
+    <LinearLayout
+        android:id="@+id/first_linear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/crypto_last_date_update">
+
+        <Spinner
+            android:id="@+id/crypto_currency_name_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginEnd="@dimen/margin_padding_size_small"
+            android:layout_marginBottom="@dimen/margin_padding_size_small"
+            android:textSize="@dimen/text_size_large"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:spinnerMode="dropdown" />
+
+        <Spinner
+            android:id="@+id/to_currency_name_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
+            android:layout_marginStart="@dimen/margin_padding_size_small"
+            android:layout_marginEnd="@dimen/margin_padding_size_small"
+            android:layout_marginBottom="@dimen/margin_padding_size_small"
+            android:textSize="@dimen/text_size_large"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:spinnerMode="dropdown"/>
+    </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/first_linear"
+        card_view:cardCornerRadius="8dp"
+        card_view:cardElevation="4dp"
+        card_view:cardUseCompatPadding="true"
+        card_view:strokeWidth="1dp"
+        android:layout_marginStart="@dimen/margin_padding_size_medium"
+        android:layout_marginTop="@dimen/margin_padding_size_small"
+        android:layout_marginEnd="@dimen/margin_padding_size_small"
+        android:layout_marginBottom="@dimen/margin_padding_size_small">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true">
+
+            <RelativeLayout
+                android:id="@+id/crypto_first_relative"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/first_crypto_currency_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/exchange_rate"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="Валютный курс" />
+
+                <TextView
+                    android:id="@+id/first_crypto_currency_result"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="1.023040" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/second_relative"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/crypto_first_relative">
+
+                <TextView
+                    android:id="@+id/second_crypto_currency_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/bid_price"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="Bid price" />
+
+                <TextView
+                    android:id="@+id/second_crypto_currency_result"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="1.023040" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/third_relative"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/second_relative">
+
+                <TextView
+                    android:id="@+id/third_crypto_currency_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/ask_price"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="Ask price" />
+
+                <TextView
+                    android:id="@+id/third_crypto_currency_result"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="1.023040" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:id="@+id/third_linear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cardview"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true">
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/crypto_switch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
+            android:layout_marginEnd="@dimen/margin_padding_size_small"
+            android:layout_marginBottom="@dimen/margin_padding_size_small"
+            android:layout_weight="50"
+            android:gravity="center"
+            android:paddingStart="@dimen/margin_padding_size_medium"
+            android:paddingEnd="@dimen/margin_padding_size_medium"
+            android:text="@string/switch_prediction"
+            android:textSize="@dimen/text_size_medium" />
+
+        <Button
+            android:id="@+id/crypto_calculate_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_small"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
+            android:layout_marginEnd="@dimen/margin_padding_size_small"
+            android:layout_marginBottom="@dimen/margin_padding_size_small"
+            android:layout_weight="50"
+            android:background="@drawable/rounded_corners"
+            android:gravity="center"
+            android:text="@string/button_query_result"
+            android:textSize="@dimen/text_size_above_medium" />
+    </LinearLayout>
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/crypto_currency_chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/cardview"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/margin_padding_size_medium"
+        android:layout_marginTop="@dimen/margin_padding_size_medium"
+        android:layout_marginEnd="@dimen/margin_padding_size_small"
+        android:layout_marginBottom="@dimen/text_size_medium"/>
+
+</RelativeLayout>
