@@ -186,17 +186,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/first_country_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_united_states"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="@dimen/text_size_smaller"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginTop="@dimen/margin_padding_size_smaller"
-                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
-                    android:layout_marginEnd="@dimen/text_size_smaller" />
+                    android:layout_marginBottom="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_small" />
 
                 <TextView
                     android:id="@+id/first_currency_name"
@@ -231,17 +231,17 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/first_relative">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/second_country_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_united_states"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="@dimen/text_size_smaller"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginTop="@dimen/margin_padding_size_smaller"
-                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
-                    android:layout_marginEnd="@dimen/text_size_smaller" />
+                    android:layout_marginBottom="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_small" />
 
                 <TextView
                     android:id="@+id/second_currency_name"
@@ -276,17 +276,17 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/second_relative">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/third_country_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_united_kingdom"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="@dimen/text_size_smaller"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginTop="@dimen/margin_padding_size_smaller"
-                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
-                    android:layout_marginEnd="@dimen/text_size_smaller" />
+                    android:layout_marginBottom="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_small" />
 
                 <TextView
                     android:id="@+id/third_currency_name"
@@ -321,17 +321,17 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/third_relative">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/fourth_country_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_japan"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="@dimen/text_size_smaller"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginTop="@dimen/margin_padding_size_smaller"
-                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
-                    android:layout_marginEnd="@dimen/text_size_smaller" />
+                    android:layout_marginBottom="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_small" />
 
                 <TextView
                     android:id="@+id/fourth_currency_name"
@@ -366,17 +366,17 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/fourth_relative">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/fifth_country_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_switzerland"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="@dimen/text_size_smaller"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginTop="@dimen/margin_padding_size_smaller"
-                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
-                    android:layout_marginEnd="@dimen/text_size_smaller" />
+                    android:layout_marginBottom="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_small" />
 
                 <TextView
                     android:id="@+id/fifth_currency_name"

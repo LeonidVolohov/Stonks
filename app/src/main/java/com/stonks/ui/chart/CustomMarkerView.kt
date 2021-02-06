@@ -1,4 +1,4 @@
-package com.stonks.ui.currency
+package com.stonks.ui.chart
 
 import android.content.Context
 import android.util.Log
@@ -6,6 +6,7 @@ import android.widget.Toast
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
+import com.stonks.ui.currency.CurrencyMain
 
 class CustomMarkerView(context: Context?, layoutResource: Int, dataList: List<String>) : MarkerView(context, layoutResource) {
     private val TAG: String = CurrencyMain::class.java.name
@@ -26,4 +27,3 @@ class CustomMarkerView(context: Context?, layoutResource: Int, dataList: List<St
         super.refreshContent(e, highlight)
     }
 }
-

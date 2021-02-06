@@ -1,22 +1,15 @@
 package com.stonks.ui.currency
 
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.stonks.R
 import com.stonks.api.currencyApi
+import com.stonks.ui.chart.StockLineChart
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -45,7 +38,7 @@ class CurrencyMain : AppCompatActivity() {
         val resultRateTextView = findViewById<TextView>(R.id.rate_result)
         val dateRateTextView = findViewById<TextView>(R.id.last_date_update)
         val calculateButton = findViewById<Button>(R.id.calculate_button)
-        val currencyLineChart = findViewById<LineChart>(R.id.currency_chart)
+        val lineChart = findViewById<LineChart>(R.id.currency_chart)
         val firstPrimaryCurrencyText = findViewById<TextView>(R.id.first_currency_name)
         val secondPrimaryCurrencyText = findViewById<TextView>(R.id.second_currency_name)
         val thirdPrimaryCurrencyText = findViewById<TextView>(R.id.third_currency_name)
@@ -60,8 +53,7 @@ class CurrencyMain : AppCompatActivity() {
         var targetRateSpinnerString = ""
         var chartLengthSpinnerString = ""
         var isNumeric: Boolean
-
-        loadApiDate(dateRateTextView)
+        val currencyLineChart = StockLineChart(lineChart)
 
         firstPrimaryCurrencyText.text = chartPrimaryRatesArray[0]
         secondPrimaryCurrencyText.text = chartPrimaryRatesArray[1]
@@ -69,23 +61,7 @@ class CurrencyMain : AppCompatActivity() {
         fourthPrimaryCurrencyText.text = chartPrimaryRatesArray[3]
         fifthPrimaryCurrencyText.text = chartPrimaryRatesArray[4]
 
-        // chart settings
-        currencyLineChart.setTouchEnabled(true)
-        currencyLineChart.setPinchZoom(true)
-        currencyLineChart.setDrawGridBackground(true)
-        currencyLineChart.setBorderColor(Color.GRAY)
-        currencyLineChart.setBorderWidth(5f)
-        currencyLineChart.description.text = ""
-        /*currencyLineChart.setDragOffsetX(10f)
-        currencyLineChart.setDragOffsetY(10f)*/
-
-        // legend settings
-        val legend = currencyLineChart.legend
-        legend.isEnabled = true
-        legend.form = Legend.LegendForm.LINE
-        legend.textSize = 16f
-        legend.formSize = 12f
-
+        loadApiDate(dateRateTextView)
 
         baseRateSpinner.setSelection(defaultCurrencyIndex)
         baseRateSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -116,9 +92,6 @@ class CurrencyMain : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        val chartLengthAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, chartLengthArray)
-        chartLengthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        chartLengthSpinner.adapter = chartLengthAdapter
         chartLengthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -134,7 +107,6 @@ class CurrencyMain : AppCompatActivity() {
         }
 
         val currentMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-
         calculateButton.setOnClickListener {
             if (baseRateSpinnerString == targetRateSpinnerString) {
                 resultRateTextView.text = stringMultiplication(
@@ -157,7 +129,7 @@ class CurrencyMain : AppCompatActivity() {
                             resultRateTextView
                     )
 
-                    var startPointDate = "" //LocalDate.now()
+                    var startPointDate = ""
                     when (chartLengthSpinnerString) {
                         chartLengthArray[0] -> startPointDate = LocalDate.now().minusWeeks(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                         chartLengthArray[1] -> startPointDate = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
@@ -165,7 +137,6 @@ class CurrencyMain : AppCompatActivity() {
                         chartLengthArray[3] -> startPointDate = LocalDate.now().minusYears(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                         chartLengthArray[4] -> startPointDate = LocalDate.now().minusYears(5).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                     }
-
 
                     val rateListPerPeriod: MutableList<String> = arrayListOf()
                     val compositeDisposable = CompositeDisposable()
@@ -198,51 +169,20 @@ class CurrencyMain : AppCompatActivity() {
                                                     }
                                                 }
 
-                                                Log.i(TAG, "${dateList?.size} + ${dateList.toString()}")
-                                                Log.i(TAG, "${rateListPerPeriod.size} + $rateListPerPeriod")
-
-                                                // add values to line array
-                                                val entries = ArrayList<Entry>()
-                                                var iter = -1.0f
-                                                for (item in rateListPerPeriod) {
-                                                    iter += 1.0f
-                                                    entries.add(Entry(iter, BigDecimal(item).setScale(5, BigDecimal.ROUND_HALF_EVEN).toFloat()))
-                                                }
-
-                                                // get arraylist for xlabel
-                                                val xLabel: ArrayList<String> = arrayListOf()
-                                                if (dateList != null) {
-                                                    for (item in dateList) {
-                                                        xLabel.add(item)
-                                                    }
-                                                }
-
-                                                val xAxis = currencyLineChart.xAxis
-                                                xAxis.position = XAxis.XAxisPosition.TOP
-                                                xAxis.setDrawGridLines(false)
-                                                xAxis.valueFormatter = IndexAxisValueFormatter(dateList)
-                                                xAxis.textSize = 10f
-                                                xAxis.labelCount = 4
-
-                                                // chart line settings
-                                                val lineChartData = LineDataSet(entries, "$baseRateSpinnerString to $targetRateSpinnerString")
-                                                lineChartData.lineWidth = 4f
-                                                lineChartData.setDrawCircles(false)
-                                                lineChartData.setDrawCircleHole(false)
-                                                /*lineChartData.setCircleColor(Color.GRAY)
-                                                lineChartData.circleRadius = 0.5f
-                                                lineChartData.circleHoleRadius = 0.25f*/
-                                                lineChartData.valueTextSize = 0f
-                                                lineChartData.color = R.color.purple_500
-
-                                                // display chart on the screen
-                                                currencyLineChart.marker = dateList?.let { it -> CustomMarkerView(this, R.layout.activity_textview_content, it) }
-                                                currencyLineChart.onTouchListener.setLastHighlighted(null) // reset selection
-                                                currencyLineChart.highlightValues(null) // reset selection
-                                                currencyLineChart.fitScreen() // reset zoom chart
-                                                currencyLineChart.data = LineData(lineChartData)
-                                                currencyLineChart.notifyDataSetChanged()
-                                                currencyLineChart.invalidate() // refreshes chart
+                                                val entries = rateListPerPeriod.toList()
+                                                currencyLineChart.setXAxis(
+                                                        lineChart = lineChart,
+                                                        dateList = dateList
+                                                )
+                                                val lineChartData = currencyLineChart.getLineData(
+                                                        entries = entries,
+                                                        baseCurrency = baseRateSpinnerString,
+                                                        targetCurrency = targetRateSpinnerString
+                                                )
+                                                currencyLineChart.displayChart(
+                                                        lineChart = lineChart,
+                                                        lineChartData = lineChartData
+                                                )
                                             },
                                             { failure ->
                                                 Toast.makeText(
