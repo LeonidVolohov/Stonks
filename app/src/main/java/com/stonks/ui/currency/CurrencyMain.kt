@@ -33,6 +33,7 @@ class CurrencyMain : AppCompatActivity() {
         setContentView(R.layout.activity_currency)
 
         val TAG: String = CurrencyMain::class.java.name
+        val defaultCurrencyIndex = 17
 
         val baseRateSpinner = findViewById<Spinner>(R.id.base_rate_spinner)
         val targetRateSpinner = findViewById<Spinner>(R.id.target_rate_spinner)
@@ -85,27 +86,22 @@ class CurrencyMain : AppCompatActivity() {
         legend.textSize = 16f
         legend.formSize = 12f
 
-        // init spinners
-        val baseRateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, ratesNameArray)
-        baseRateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        baseRateSpinner.adapter = baseRateAdapter
+
+        baseRateSpinner.setSelection(defaultCurrencyIndex)
         baseRateSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
             ) {
-                baseRateSpinnerString = ratesNameArray[position]
+                baseRateSpinnerString = ratesNameArray[position].split(",")[0]
                 rateNumberEditText.setText("1.0")
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
 
-        val targetRateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, ratesNameArray)
-        targetRateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        targetRateSpinner.adapter = targetRateAdapter
         targetRateSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -113,7 +109,7 @@ class CurrencyMain : AppCompatActivity() {
                     position: Int,
                     id: Long
             ) {
-                targetRateSpinnerString = ratesNameArray[position]
+                targetRateSpinnerString = ratesNameArray[position].split(",")[0]
                 rateNumberEditText.setText("1.0")
             }
 
@@ -273,12 +269,30 @@ class CurrencyMain : AppCompatActivity() {
                                     .subscribeOn(Schedulers.io())
                                     .subscribe(
                                             { response ->
-                                                firstPrimaryCurrencyResult.text = response.rates?.get("USD").toString()
-                                                secondPrimaryCurrencyResult.text = response.rates?.get("EUR").toString()
-                                                thirdPrimaryCurrencyResult.text = response.rates?.get("GBP").toString()
-                                                fourthPrimaryCurrencyResult.text = response.rates?.get("JPY").toString()
-                                                fifthPrimaryCurrencyResult.text = response.rates?.get("CHF").toString()
+                                                firstPrimaryCurrencyResult.text = stringMultiplication(
+                                                        rateNumberEditText.text.toString(),
+                                                        response.rates?.get("USD").toString()
+                                                )
 
+                                                secondPrimaryCurrencyResult.text = stringMultiplication(
+                                                        rateNumberEditText.text.toString(),
+                                                        response.rates?.get("EUR").toString()
+                                                )
+
+                                                thirdPrimaryCurrencyResult.text = stringMultiplication(
+                                                        rateNumberEditText.text.toString(),
+                                                        response.rates?.get("GBP").toString()
+                                                )
+
+                                                fourthPrimaryCurrencyResult.text = stringMultiplication(
+                                                        rateNumberEditText.text.toString(),
+                                                        response.rates?.get("JPY").toString()
+                                                )
+
+                                                fifthPrimaryCurrencyResult.text = stringMultiplication(
+                                                        rateNumberEditText.text.toString(),
+                                                        response.rates?.get("CHF").toString()
+                                                )
                                             },
                                             { failure ->
                                                 Toast.makeText(

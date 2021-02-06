@@ -3,8 +3,10 @@ package com.stonks.ui.cryptocurrency
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.webkit.WebView
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.Button
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.stonks.R
 import com.stonks.api.cryptoCurrencyApi
@@ -13,7 +15,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.math.BigDecimal
 import java.math.BigDecimal.ROUND_HALF_EVEN
-import java.util.*
 
 class CryptoCurrencyMain : AppCompatActivity() {
 
@@ -40,9 +41,6 @@ class CryptoCurrencyMain : AppCompatActivity() {
         var toCurrencySpinnerString = ""
 
 
-        val exchangeRateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, cryptoCurrenciesArray)
-        exchangeRateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        cryptoCurrencyNameSpinner.adapter = exchangeRateAdapter
         cryptoCurrencyNameSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -50,15 +48,12 @@ class CryptoCurrencyMain : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                cryptoCurrencyNameSpinnerString = cryptoCurrenciesArray[position]
+                cryptoCurrencyNameSpinnerString = cryptoCurrenciesArray[position].split(",")[0]
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
 
-        val toCurrencyNameAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, currencyNameArray)
-        toCurrencyNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        toCurrencyNameSpinner.adapter = toCurrencyNameAdapter
         toCurrencyNameSpinner.setSelection(defaultCurrencyIndex)
         toCurrencyNameSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -67,7 +62,7 @@ class CryptoCurrencyMain : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                toCurrencySpinnerString = currencyNameArray[position]
+                toCurrencySpinnerString = currencyNameArray[position].split(",")[0]
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) { }
@@ -76,25 +71,25 @@ class CryptoCurrencyMain : AppCompatActivity() {
         calculateButton.setOnClickListener {
             val compositeDisposable = CompositeDisposable()
             compositeDisposable.add(
-                cryptoCurrencyApi.getCryptoCurrencyRatePerDay(
-                    function = "CURRENCY_EXCHANGE_RATE",
-                    cryptoCurrencyName = cryptoCurrencyNameSpinnerString.split(",")[0],
-                    toCurrencyName = toCurrencySpinnerString.split(",")[0],
-                    apiKey = apiKey
-                )
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(
-                        { response ->
-                            lastUpdateDate.text = getString(R.string.last_updated_date, response.cryptoCurrency.lastRefreshedDate)
-                            exchangeRate.text = String.format(BigDecimal(response.cryptoCurrency.exchangeRate.toDouble()).setScale(decimalPointPrecision, ROUND_HALF_EVEN).toString())
-                            bidPrice.text = String.format(BigDecimal(response.cryptoCurrency.bidPrice.toDouble()).setScale(decimalPointPrecision, ROUND_HALF_EVEN).toString())
-                            askPrice.text = String.format(BigDecimal(response.cryptoCurrency.askPrice.toDouble()).setScale(decimalPointPrecision, ROUND_HALF_EVEN).toString())
-                        },
-                        { failure ->
-                            Log.i(TAG, "No data")
-                        }
+                    cryptoCurrencyApi.getCryptoCurrencyRatePerDay(
+                            function = "CURRENCY_EXCHANGE_RATE",
+                            cryptoCurrencyName = cryptoCurrencyNameSpinnerString,
+                            toCurrencyName = toCurrencySpinnerString,
+                            apiKey = apiKey
                     )
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(
+                                    { response ->
+                                        lastUpdateDate.text = getString(R.string.last_updated_date, response.cryptoCurrency.lastRefreshedDate)
+                                        exchangeRate.text = String.format(BigDecimal(response.cryptoCurrency.exchangeRate.toDouble()).setScale(decimalPointPrecision, ROUND_HALF_EVEN).toString())
+                                        bidPrice.text = String.format(BigDecimal(response.cryptoCurrency.bidPrice.toDouble()).setScale(decimalPointPrecision, ROUND_HALF_EVEN).toString())
+                                        askPrice.text = String.format(BigDecimal(response.cryptoCurrency.askPrice.toDouble()).setScale(decimalPointPrecision, ROUND_HALF_EVEN).toString())
+                                    },
+                                    { failure ->
+                                        Log.i(TAG, "No data")
+                                    }
+                            )
             )
         }
     }

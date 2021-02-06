@@ -42,7 +42,8 @@
             android:textSize="@dimen/text_size_large"
             android:gravity="center"
             android:textAlignment="center"
-            android:spinnerMode="dropdown" />
+            android:spinnerMode="dropdown"
+            android:entries="@array/crypto_currencies" />
 
         <Spinner
             android:id="@+id/to_currency_name_spinner"
@@ -56,7 +57,8 @@
             android:textSize="@dimen/text_size_large"
             android:gravity="center"
             android:textAlignment="center"
-            android:spinnerMode="dropdown"/>
+            android:spinnerMode="dropdown"
+            android:entries="@array/rates" />
     </LinearLayout>
 
     <com.google.android.material.card.MaterialCardView
