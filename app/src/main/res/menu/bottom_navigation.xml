@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/crypto_tab"
+        android:icon="@drawable/ic_bitcoin"
+        android:title="@string/crypto"/>
+
+    <item
+        android:id="@+id/currency_tab"
+        android:icon="@drawable/ic_dollar"
+        android:title="@string/currencies"/>
+
+    <item
+        android:id="@+id/stocks_tab"
+        android:icon="@drawable/ic_stocks"
+        android:title="@string/stocks"/>
+
+</menu>
