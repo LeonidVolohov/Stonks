@@ -3,12 +3,12 @@
 
     <item
         android:id="@+id/cryptocurrency_tab"
-        android:icon="@drawable/ic_bitcoin"
+        android:icon="@drawable/ic_cryptocurrency"
         android:title="@string/cryptocurrencies_tab_name"/>
 
     <item
         android:id="@+id/currency_tab"
-        android:icon="@drawable/ic_dollar"
+        android:icon="@drawable/ic_currency"
         android:title="@string/currencies_tab_name"/>
 
     <item
