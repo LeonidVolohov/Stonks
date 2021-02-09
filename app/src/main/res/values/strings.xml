@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">Stonks</string>
     <string name="edittext_constant_multiplier">1.0</string>
-    <string name="edittext_constant_hint">Сколько</string>
-    <string name="button_query_result">Тыкни</string>
-    <string name="switch_prediction">Прогноз</string>
-    <string name="last_updated_date">Данные на: %1$s</string>
-    <string name="exchange_rate">Курс</string>
-    <string name="bid_price">Спрос</string>
-    <string name="ask_price">Предложение</string>
+    <string name="edittext_constant_hint">Amount</string>
+    <string name="button_query_result">Push</string>
+    <string name="switch_prediction">Prediction</string>
+    <string name="last_updated_date">Data for: %1$s</string>
+    <string name="exchange_rate">Rate</string>
+    <string name="bid_price">Demand</string>
+    <string name="ask_price">Supply</string>
     <string name="cryptocurrencies_tab_name">Crypto</string>
     <string name="currencies_tab_name">Currencies</string>
     <string name="stocks_tab_name">Stocks</string>
@@ -43,11 +43,11 @@
     </string-array>
 
     <string-array name="chart_length">
-        <item>1 неделя</item>
-        <item>1 месяц</item>
-        <item>6 месяцев</item>
-        <item>1 год</item>
-        <item>5 лет</item>
+        <item>1 week</item>
+        <item>1 month</item>
+        <item>6 months</item>
+        <item>1 year</item>
+        <item>5 years</item>
     </string-array>
 
     <string-array name="crypto_currencies">
