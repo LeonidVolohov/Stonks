@@ -11,6 +11,7 @@ import com.stonks.api.cryptoCurrencyApi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.lang.Double.parseDouble
 import java.math.BigDecimal
 import java.math.BigDecimal.ROUND_HALF_EVEN
 import java.util.*
@@ -34,10 +35,12 @@ class CryptoCurrencyMain : AppCompatActivity() {
         val calculateButton = findViewById<Button>(R.id.crypto_calculate_button)
         val cryptoCurrencyNameSpinner = findViewById<Spinner>(R.id.crypto_currency_name_spinner)
         val toCurrencyNameSpinner = findViewById<Spinner>(R.id.to_currency_name_spinner)
+        val cryptoRateNumberEditText = findViewById<EditText>(R.id.crypto_rate_number)
         val cryptoCurrenciesArray = resources.getStringArray(R.array.crypto_currencies)
         val currencyNameArray = resources.getStringArray(R.array.rates)
         var cryptoCurrencyNameSpinnerString = ""
         var toCurrencySpinnerString = ""
+        var isNumeric: Boolean
 
 
         val exchangeRateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, cryptoCurrenciesArray)
@@ -45,10 +48,10 @@ class CryptoCurrencyMain : AppCompatActivity() {
         cryptoCurrencyNameSpinner.adapter = exchangeRateAdapter
         cryptoCurrencyNameSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
             ) {
                 cryptoCurrencyNameSpinnerString = cryptoCurrenciesArray[position]
             }
@@ -62,10 +65,10 @@ class CryptoCurrencyMain : AppCompatActivity() {
         toCurrencyNameSpinner.setSelection(defaultCurrencyIndex)
         toCurrencyNameSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
             ) {
                 toCurrencySpinnerString = currencyNameArray[position]
             }
@@ -74,28 +77,43 @@ class CryptoCurrencyMain : AppCompatActivity() {
         }
 
         calculateButton.setOnClickListener {
-            val compositeDisposable = CompositeDisposable()
-            compositeDisposable.add(
-                cryptoCurrencyApi.getCryptoCurrencyRatePerDay(
-                    function = "CURRENCY_EXCHANGE_RATE",
-                    cryptoCurrencyName = cryptoCurrencyNameSpinnerString.split(",")[0],
-                    toCurrencyName = toCurrencySpinnerString.split(",")[0],
-                    apiKey = apiKey
+            isNumeric = try {
+                parseDouble(cryptoRateNumberEditText.text.toString())
+                true
+            } catch (exception: NumberFormatException) {
+                false
+            }
+
+            if (isNumeric) {
+                val compositeDisposable = CompositeDisposable()
+                compositeDisposable.add(
+                        cryptoCurrencyApi.getCryptoCurrencyRatePerDay(
+                                function = "CURRENCY_EXCHANGE_RATE",
+                                cryptoCurrencyName = cryptoCurrencyNameSpinnerString.split(",")[0],
+                                toCurrencyName = toCurrencySpinnerString.split(",")[0],
+                                apiKey = apiKey
+                        )
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribeOn(Schedulers.io())
+                                .subscribe(
+                                        { response ->
+                                            lastUpdateDate.text = getString(R.string.last_updated_date, response.cryptoCurrency.lastRefreshedDate)
+                                            val exchangeRateResult = BigDecimal((cryptoRateNumberEditText.text.toString().toDouble() * response.cryptoCurrency.exchangeRate.toDouble())).setScale(decimalPointPrecision, BigDecimal.ROUND_HALF_EVEN).toString()
+                                            exchangeRate.text = exchangeRateResult
+                                            bidPrice.text = String.format(BigDecimal(response.cryptoCurrency.bidPrice.toDouble()).setScale(decimalPointPrecision, ROUND_HALF_EVEN).toString())
+                                            askPrice.text = String.format(BigDecimal(response.cryptoCurrency.askPrice.toDouble()).setScale(decimalPointPrecision, ROUND_HALF_EVEN).toString())
+                                        },
+                                        { failure ->
+                                            Toast.makeText(this, "No data", Toast.LENGTH_LONG).show()
+                                        }
+                                )
                 )
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(
-                        { response ->
-                            lastUpdateDate.text = getString(R.string.last_updated_date, response.cryptoCurrency.lastRefreshedDate)
-                            exchangeRate.text = String.format(BigDecimal(response.cryptoCurrency.exchangeRate.toDouble()).setScale(decimalPointPrecision, ROUND_HALF_EVEN).toString())
-                            bidPrice.text = String.format(BigDecimal(response.cryptoCurrency.bidPrice.toDouble()).setScale(decimalPointPrecision, ROUND_HALF_EVEN).toString())
-                            askPrice.text = String.format(BigDecimal(response.cryptoCurrency.askPrice.toDouble()).setScale(decimalPointPrecision, ROUND_HALF_EVEN).toString())
-                        },
-                        { failure ->
-                            Log.i(TAG, "No data")
-                        }
-                    )
-            )
+            } else {
+                Toast.makeText(this, "Wrong input", Toast.LENGTH_LONG).show()
+                exchangeRate.text = ""
+                bidPrice.text = ""
+                askPrice.text = ""
+            }
         }
     }
 }
