@@ -54,6 +54,7 @@ class CryptoCurrencyMain : AppCompatActivity() {
                     id: Long
             ) {
                 cryptoCurrencyNameSpinnerString = cryptoCurrenciesArray[position]
+                cryptoRateNumberEditText.setText("1.0")
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) { }
@@ -71,6 +72,7 @@ class CryptoCurrencyMain : AppCompatActivity() {
                     id: Long
             ) {
                 toCurrencySpinnerString = currencyNameArray[position]
+                cryptoRateNumberEditText.setText("1.0")
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) { }
