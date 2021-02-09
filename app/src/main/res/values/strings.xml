@@ -8,6 +8,10 @@
     <string name="exchange_rate">Курс</string>
     <string name="bid_price">Спрос</string>
     <string name="ask_price">Предложение</string>
+    <string name="cryptocurrencies_tab_name">Crypto</string>
+    <string name="currencies_tab_name">Currencies</string>
+    <string name="stocks_tab_name">Stocks</string>
+    <string name="fragment_placeholder_text">Default Fragment Placeholder</string>
 
     <string-array name="rates">
         <item>AUD, Australian Dollar</item>

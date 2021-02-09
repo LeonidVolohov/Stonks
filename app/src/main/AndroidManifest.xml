@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Stonks">
 
-        <activity android:name=".ui.cryptocurrency.CryptoCurrencyMain">
+        <activity android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

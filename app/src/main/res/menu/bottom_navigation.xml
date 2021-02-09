@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/crypto_tab"
+        android:id="@+id/cryptocurrency_tab"
         android:icon="@drawable/ic_bitcoin"
-        android:title="@string/crypto"/>
+        android:title="@string/cryptocurrencies_tab_name"/>
 
     <item
         android:id="@+id/currency_tab"
         android:icon="@drawable/ic_dollar"
-        android:title="@string/currencies"/>
+        android:title="@string/currencies_tab_name"/>
 
     <item
         android:id="@+id/stocks_tab"
         android:icon="@drawable/ic_stocks"
-        android:title="@string/stocks"/>
+        android:title="@string/stocks_tab_name"/>
 
 </menu>
