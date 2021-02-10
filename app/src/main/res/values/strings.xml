@@ -12,6 +12,16 @@
     <string name="currencies_tab_name">Currencies</string>
     <string name="stocks_tab_name">Stocks</string>
     <string name="fragment_placeholder_text">Default Fragment Placeholder</string>
+    <string name="one_day_period_button_text">1D</string>
+    <string name="one_week_period_button_text">1W</string>
+    <string name="one_month_period_button_text">1M</string>
+    <string name="six_months_period_button_text">6M</string>
+    <string name="one_year_period_button_text">1Y</string>
+    <string name="five_years_period_button_text">5Y</string>
+    <string name="market_string">Market:</string>
+    <string name="conversion_icon_description">Conversion Icon</string>
+    <string name="latest_price_string">Latest Price:</string>
+    <string name="price_value_placeholer">100.352</string>
 
     <string-array name="rates">
         <item>AUD, Australian Dollar</item>
@@ -76,5 +86,108 @@
         <item>DASH, Dash</item>
         <item>XRP, Ripple</item>
         <item>BCH, Bitcoin-Cash</item>
+    </string-array>
+
+    <string-array name="stocks_list">
+        <item>AAL</item>
+        <item>AAPL</item>
+        <item>ABNB</item>
+        <item>ACB</item>
+        <item>AMC</item>
+        <item>AMD</item>
+        <item>AMZN</item>
+        <item>APHA</item>
+        <item>ARKK</item>
+        <item>AZN</item>
+        <item>BA</item>
+        <item>BABA</item>
+        <item>BAC</item>
+        <item>BB</item>
+        <item>BLNK</item>
+        <item>BNGO</item>
+        <item>CCIV</item>
+        <item>CCL</item>
+        <item>CGC</item>
+        <item>CPRX</item>
+        <item>CRM</item>
+        <item>CRON</item>
+        <item>DAL</item>
+        <item>DIS</item>
+        <item>DKNG</item>
+        <item>ET</item>
+        <item>F</item>
+        <item>FB</item>
+        <item>FCEL</item>
+        <item>GE</item>
+        <item>GEVO</item>
+        <item>GM</item>
+        <item>GME</item>
+        <item>GNUS</item>
+        <item>GOOGL</item>
+        <item>GPRO</item>
+        <item>GUSH</item>
+        <item>HEXO</item>
+        <item>IDEX</item>
+        <item>INO</item>
+        <item>INTC</item>
+        <item>IVR</item>
+        <item>JBLU</item>
+        <item>JNJ</item>
+        <item>KO</item>
+        <item>KOS</item>
+        <item>LI</item>
+        <item>LUV</item>
+        <item>MFA</item>
+        <item>MGM</item>
+        <item>MRNA</item>
+        <item>MRO</item>
+        <item>MSFT</item>
+        <item>NCLH</item>
+        <item>NFLX</item>
+        <item>NIO</item>
+        <item>NKE</item>
+        <item>NKLA</item>
+        <item>NNDM</item>
+        <item>NOK</item>
+        <item>NRZ</item>
+        <item>NVDA</item>
+        <item>OCGN</item>
+        <item>OGI</item>
+        <item>PENN</item>
+        <item>PFE</item>
+        <item>PLTR</item>
+        <item>PLUG</item>
+        <item>PSEC</item>
+        <item>PTON</item>
+        <item>PYPL</item>
+        <item>RCL</item>
+        <item>RIOT</item>
+        <item>SAVE</item>
+        <item>SBUX</item>
+        <item>SIRI</item>
+        <item>SNAP</item>
+        <item>SNDL</item>
+        <item>SNE</item>
+        <item>SOLO</item>
+        <item>SPCE</item>
+        <item>SPY</item>
+        <item>SQ</item>
+        <item>T</item>
+        <item>TLRY</item>
+        <item>TSLA</item>
+        <item>TWTR</item>
+        <item>TXMD</item>
+        <item>UAL</item>
+        <item>UBER</item>
+        <item>V</item>
+        <item>VOO</item>
+        <item>WFC</item>
+        <item>WKHS</item>
+        <item>WMT</item>
+        <item>XOM</item>
+        <item>XPEV</item>
+        <item>ZM</item>
+        <item>ZNGA</item>
+        <item>ZOM</item>
     </string-array>
 </resources>
