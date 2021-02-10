@@ -89,105 +89,105 @@
     </string-array>
 
     <string-array name="stocks_list">
-        <item>AAL</item>
-        <item>AAPL</item>
-        <item>ABNB</item>
-        <item>ACB</item>
-        <item>AMC</item>
-        <item>AMD</item>
-        <item>AMZN</item>
-        <item>APHA</item>
-        <item>ARKK</item>
-        <item>AZN</item>
-        <item>BA</item>
-        <item>BABA</item>
-        <item>BAC</item>
-        <item>BB</item>
-        <item>BLNK</item>
-        <item>BNGO</item>
-        <item>CCIV</item>
-        <item>CCL</item>
-        <item>CGC</item>
-        <item>CPRX</item>
-        <item>CRM</item>
-        <item>CRON</item>
-        <item>DAL</item>
-        <item>DIS</item>
-        <item>DKNG</item>
-        <item>ET</item>
-        <item>F</item>
-        <item>FB</item>
-        <item>FCEL</item>
-        <item>GE</item>
-        <item>GEVO</item>
-        <item>GM</item>
-        <item>GME</item>
-        <item>GNUS</item>
-        <item>GOOGL</item>
-        <item>GPRO</item>
-        <item>GUSH</item>
-        <item>HEXO</item>
-        <item>IDEX</item>
-        <item>INO</item>
-        <item>INTC</item>
-        <item>IVR</item>
-        <item>JBLU</item>
-        <item>JNJ</item>
-        <item>KO</item>
-        <item>KOS</item>
-        <item>LI</item>
-        <item>LUV</item>
-        <item>MFA</item>
-        <item>MGM</item>
-        <item>MRNA</item>
-        <item>MRO</item>
-        <item>MSFT</item>
-        <item>NCLH</item>
-        <item>NFLX</item>
-        <item>NIO</item>
-        <item>NKE</item>
-        <item>NKLA</item>
-        <item>NNDM</item>
-        <item>NOK</item>
-        <item>NRZ</item>
-        <item>NVDA</item>
-        <item>OCGN</item>
-        <item>OGI</item>
-        <item>PENN</item>
-        <item>PFE</item>
-        <item>PLTR</item>
-        <item>PLUG</item>
-        <item>PSEC</item>
-        <item>PTON</item>
-        <item>PYPL</item>
-        <item>RCL</item>
-        <item>RIOT</item>
-        <item>SAVE</item>
-        <item>SBUX</item>
-        <item>SIRI</item>
-        <item>SNAP</item>
-        <item>SNDL</item>
-        <item>SNE</item>
-        <item>SOLO</item>
-        <item>SPCE</item>
-        <item>SPY</item>
-        <item>SQ</item>
-        <item>T</item>
-        <item>TLRY</item>
-        <item>TSLA</item>
-        <item>TWTR</item>
-        <item>TXMD</item>
-        <item>UAL</item>
-        <item>UBER</item>
-        <item>V</item>
-        <item>VOO</item>
-        <item>WFC</item>
-        <item>WKHS</item>
-        <item>WMT</item>
-        <item>XOM</item>
-        <item>XPEV</item>
-        <item>ZM</item>
-        <item>ZNGA</item>
-        <item>ZOM</item>
+        <item>TXMD, TherapeuticsMD</item>
+        <item>FUBO, FuboTV</item>
+        <item>NRZ, NewResidentialInvestment</item>
+        <item>BABA, Alibaba</item>
+        <item>AMZN, Amazon</item>
+        <item>MSFT, Microsoft</item>
+        <item>GOOGL, AlphabetClassA</item>
+        <item>ZNGA, Zynga</item>
+        <item>GM, GM</item>
+        <item>NKE, Nike</item>
+        <item>FB, Facebook</item>
+        <item>PTON, PelotonInteractive</item>
+        <item>V, Visa</item>
+        <item>SNE, Sony</item>
+        <item>PYPL, PayPal</item>
+        <item>UBER, Uber</item>
+        <item>CRM, Salesforce</item>
+        <item>AZN, AstraZeneca</item>
+        <item>LI, LiAutoInc</item>
+        <item>NVDA, NVIDIA</item>
+        <item>DIS, Disney</item>
+        <item>ET, EnergyTransfer</item>
+        <item>WMT, Walmart</item>
+        <item>APHA, Aphria</item>
+        <item>PLUG, PlugPower</item>
+        <item>AAPL, Apple</item>
+        <item>GE, GE</item>
+        <item>DKNG, Draftkings</item>
+        <item>SNAP, Snap</item>
+        <item>NFLX, Netflix</item>
+        <item>SPCE, VirginGalacticHoldings</item>
+        <item>KO, Coca-Cola</item>
+        <item>JNJ, Johnson&amp;Johnson</item>
+        <item>XPEV, XPeng</item>
+        <item>LUV, SouthwestAirlines</item>
+        <item>SIRI, SiriusXM</item>
+        <item>BAC, BankofAmerica</item>
+        <item>PENN, PennNationalGaming</item>
+        <item>AMD, AMD</item>
+        <item>WKHS, Workhorse</item>
+        <item>SQ, Square</item>
+        <item>NIO, NIO</item>
+        <item>MRNA, Moderna</item>
+        <item>SAVE, SpiritAirlines</item>
+        <item>BA, Boeing</item>
+        <item>DAL, DeltaAirLines</item>
+        <item>SBUX, Starbucks</item>
+        <item>NOK, Nokia</item>
+        <item>MRO, MarathonOil</item>
+        <item>UAL, UnitedAirlines</item>
+        <item>ZM, Zoom</item>
+        <item>XOM, ExxonMobil</item>
+        <item>TWTR, Twitter</item>
+        <item>ABNB, Airbnb</item>
+        <item>PFE, Pfizer</item>
+        <item>RCL, RoyalCaribbeanGroup</item>
+        <item>NKLA, Nikola</item>
+        <item>MFA, MFAFinancial</item>
+        <item>JBLU, JetBlueAirways</item>
+        <item>OGI, OrganiGram</item>
+        <item>NCLH, NorwegianCruiseLine</item>
+        <item>TSLA, Tesla</item>
+        <item>T, AT&amp;T</item>
+        <item>INO, Inovio</item>
+        <item>CRON, CronosGroup</item>
+        <item>F, FordMotor</item>
+        <item>CGC, CanopyGrowth</item>
+        <item>GPRO, GoPro</item>
+        <item>FCEL, FuelCellEnergy</item>
+        <item>TLRY, Tilray</item>
+        <item>PLTR, PalantirTechnologies</item>
+        <item>BB, Blackberry</item>
+        <item>MGM, MGMResorts</item>
+        <item>HEXO, Hexo</item>
+        <item>ACB, AuroraCannabis</item>
+        <item>CCL, Carnival</item>
+        <item>AAL, AmericanAirlines</item>
+        <item>AMC, AMCEntertainment</item>
+        <item>SNDL, SundialGrowers</item>
+        <item>GME, GameStop</item>
+        <item>NAKD, NakedBrand</item>
+        <item>ZOM, Zomedica</item>
+        <item>CCIV, ChurchillCapital</item>
+        <item>IDEX, Ideanomics</item>
+        <item>GNUS, GeniusBrands</item>
+        <item>VOO, VanguardS&amp;P500ETF</item>
+        <item>BNGO, BionanoGenomics</item>
+        <item>SPY, SPDRS&amp;P500ETF</item>
+        <item>CTRM, CastorMaritime</item>
+        <item>PSEC, ProspectCapital</item>
+        <item>OCGN, Ocugen,Inc</item>
+        <item>ARKK, ARKInnovationETF</item>
+        <item>NNDM, NanoDimension</item>
+        <item>CPRX, CatalystPharmaceuticals</item>
+        <item>IVR, InvescoMortgageCapital</item>
+        <item>BLNK, BlinkCharging</item>
+        <item>GEVO, Gevo</item>
+        <item>GUSH, DirexionDailyS&amp;POil&amp;GasExp.&amp;Prod.Bull2XShares</item>
+        <item>SLV, iSharesSilverTrust</item>
+        <item>SOLO, ElectrameccanicaVehicles</item>
     </string-array>
 </resources>
