@@ -15,4 +15,8 @@
     <dimen name="margin_padding_size_medium">16dp</dimen>
     <dimen name="margin_padding_size_large">24dp</dimen>
     <dimen name="margin_padding_size_xlarge">32dp</dimen>
+
+    <!-- Custom Values -->
+    <dimen name="toggle_button_width">56dp</dimen>
+    <dimen name="toggle_button_text_size">14sp</dimen>
 </resources>
