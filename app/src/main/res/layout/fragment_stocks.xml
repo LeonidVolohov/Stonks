@@ -8,7 +8,7 @@
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="@dimen/margin_padding_size_xlarge"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -17,7 +17,7 @@
             android:id="@+id/constraintLayout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="@dimen/margin_padding_size_xlarge"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -35,9 +35,9 @@
                 android:id="@+id/textview_market_string"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="@dimen/margin_padding_size_small"
                 android:text="@string/market_string"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_smaller"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/spinner_stocks" />
@@ -46,8 +46,8 @@
                 android:id="@+id/textview_market_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:textSize="12sp"
+                android:layout_marginStart="@dimen/margin_padding_size_small"
+                android:textSize="@dimen/text_size_smaller"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textview_market_string"
                 app:layout_constraintTop_toBottomOf="@+id/spinner_stocks" />
@@ -67,7 +67,7 @@
             android:id="@+id/spinnerCurrency"
             android:layout_width="128dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="@dimen/margin_padding_size_xlarge"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:entries="@array/rates" />
@@ -78,16 +78,16 @@
         android:id="@+id/constraintLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="@dimen/margin_padding_size_xlarge"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
 
         <TextView
             android:id="@+id/textview_price_string"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="@dimen/margin_padding_size_xlarge"
             android:text="@string/latest_price_string"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -96,8 +96,9 @@
             android:id="@+id/textview_price_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="@dimen/margin_padding_size_xlarge"
             android:text="@string/price_value_placeholer"
+            android:textSize="@dimen/text_size_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -108,7 +109,7 @@
         android:id="@+id/constraintLayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="@dimen/margin_padding_size_xlarge"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
 
         <com.google.android.material.button.MaterialButtonToggleGroup
@@ -179,7 +180,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/togglebutton_custom_period_selector"
-                android:layout_width="56dp"
+                android:layout_width="@dimen/toggle_button_width"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/ic_calendar"
                 app:iconGravity="textStart"
@@ -216,14 +217,14 @@
         android:id="@+id/constraintLayout5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="@dimen/margin_padding_size_xlarge"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switch_prediction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="@dimen/margin_padding_size_xlarge"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
