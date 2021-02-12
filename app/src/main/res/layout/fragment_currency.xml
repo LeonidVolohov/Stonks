@@ -100,7 +100,7 @@
             android:inputType="numberDecimal"
             android:autofillHints="no"
             android:hint="@string/edittext_constant_hint"
-            android:maxLength="6"/>
+            android:maxLength="6" />
 
         <TextView
             android:id="@+id/rate_result"
@@ -141,7 +141,7 @@
             android:paddingStart="@dimen/margin_padding_size_medium"
             android:paddingEnd="@dimen/margin_padding_size_medium"
             android:text="@string/switch_prediction"
-            android:textSize="@dimen/text_size_above_medium" />
+            android:textSize="@dimen/text_size_medium" />
 
         <Button
             android:id="@+id/calculate_button"
@@ -418,6 +418,6 @@
         android:layout_marginStart="@dimen/margin_padding_size_medium"
         android:layout_marginTop="@dimen/margin_padding_size_medium"
         android:layout_marginEnd="@dimen/margin_padding_size_small"
-        android:layout_marginBottom="@dimen/text_size_medium"/>
+        android:layout_marginBottom="@dimen/text_size_medium" />
 
 </RelativeLayout>
