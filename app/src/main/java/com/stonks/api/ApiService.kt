@@ -2,6 +2,7 @@ package com.stonks.api
 
 import com.stonks.api.Constants.Companion.CRYPTOCURRENCY_API_BASE_URL
 import com.stonks.api.Constants.Companion.CURRENCY_API_BASE_URL
+import com.stonks.api.Constants.Companion.STOCK_API_BASE_URL
 import com.stonks.api.cryptocurrency.CryptoCurrencyRequests
 import com.stonks.api.currency.CurrencyRequests
 import com.stonks.api.stocks.StocksRequests
@@ -24,7 +25,7 @@ val cryptoCurrencyApi: CryptoCurrencyRequests = Retrofit.Builder()
         .create(CryptoCurrencyRequests::class.java)
 
 val stocksApi = Retrofit.Builder()
-        .baseUrl(Constants.STOCK_API_BASE_URL)
+        .baseUrl(STOCK_API_BASE_URL)
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .build()
