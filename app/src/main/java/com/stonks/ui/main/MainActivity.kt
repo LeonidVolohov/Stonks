@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.stonks.R
 import com.stonks.ui.DefaultFragment
+import com.stonks.ui.stocks.StocksFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
             selectedFragment = when (item.itemId) {
                 R.id.cryptocurrency_tab -> DefaultFragment()    // TODO: Replace with actual fragment
                 R.id.currency_tab -> DefaultFragment()          // TODO: Replace with actual fragment
-                R.id.stocks_tab -> DefaultFragment()            // TODO: Replace with actual fragment
+                R.id.stocks_tab -> StocksFragment()
                 else -> TODO("Not implemented yet")
             }
 
