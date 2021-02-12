@@ -92,7 +92,7 @@
             android:layout_marginTop="@dimen/margin_padding_size_medium"
             android:layout_marginEnd="@dimen/margin_padding_size_small"
             android:layout_marginBottom="@dimen/margin_padding_size_small"
-            android:layout_weight="50"
+            android:layout_weight="45"
             android:textSize="@dimen/text_size_large"
             android:gravity="center"
             android:text="@string/edittext_constant_multiplier"
@@ -112,10 +112,10 @@
             android:layout_marginBottom="@dimen/margin_padding_size_small"
             android:paddingEnd="@dimen/margin_padding_size_medium"
             android:paddingStart="@dimen/margin_padding_size_medium"
-            android:layout_weight="50"
+            android:layout_weight="55"
             android:textSize="@dimen/text_size_large"
             android:gravity="end"
-            android:maxLength="10"
+            android:maxLength="12"
             tools:text="6.75" />
     </LinearLayout>
 
@@ -208,7 +208,7 @@
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@id/first_country_image"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_small"
                     tools:text="USD" />
 
                 <TextView
@@ -221,7 +221,7 @@
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_small"
                     tools:text="1.023040" />
             </RelativeLayout>
 
@@ -253,7 +253,7 @@
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@id/second_country_image"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_small"
                     tools:text="EUR" />
 
                 <TextView
@@ -266,7 +266,7 @@
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_small"
                     tools:text="1.023040" />
             </RelativeLayout>
 
@@ -298,7 +298,7 @@
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@id/third_country_image"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_small"
                     tools:text="GBP" />
 
                 <TextView
@@ -311,7 +311,7 @@
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_small"
                     tools:text="1.023040" />
             </RelativeLayout>
 
@@ -343,7 +343,7 @@
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@id/fourth_country_image"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_small"
                     tools:text="JPY" />
 
                 <TextView
@@ -356,7 +356,7 @@
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_small"
                     tools:text="1.023040" />
             </RelativeLayout>
 
@@ -388,7 +388,7 @@
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@id/fifth_country_image"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_small"
                     tools:text="CHF" />
 
                 <TextView
@@ -401,7 +401,7 @@
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_small"
                     tools:text="1.023040" />
             </RelativeLayout>
 

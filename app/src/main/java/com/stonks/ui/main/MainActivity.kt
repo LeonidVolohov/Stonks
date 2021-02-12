@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNavigation : BottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigation.setOnNavigationItemSelectedListener(navListener)
+        bottomNavigation.selectedItemId = R.id.currency_tab
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, selectedFragment)
@@ -40,5 +41,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     // Variable storing currently selected fragment for displaying
-    private var selectedFragment : Fragment = DefaultFragment()  // TODO: place fragment corresponding to most left tab (now crypto)
+    private var selectedFragment: Fragment =
+        CurrencyFragment()  // TODO: place fragment corresponding to most left tab (now crypto)
 }
