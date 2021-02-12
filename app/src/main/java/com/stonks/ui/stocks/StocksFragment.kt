@@ -24,6 +24,8 @@ class StocksFragment : Fragment() {
     private var disposable: Disposable? = null
 
     private lateinit var spinnerStocks: Spinner
+    private val spinnerStocksValue: String
+        get() = spinnerStocks.selectedItem.toString().split(',')[0]
     private lateinit var spinnerCurrency: Spinner
     private lateinit var textViewMarket: TextView
     private lateinit var textViewPrice: TextView
@@ -64,9 +66,9 @@ class StocksFragment : Fragment() {
     }
 
     private fun updateStockData(changedPeriodOnly: Boolean = false) {
+        val stock = spinnerStocksValue
         if (!changedPeriodOnly) {
             textViewMarket.text = "Loading..."
-            val stock = spinnerStocks.selectedItem.toString().split(",")[0]
             disposable = StocksApiDataUtils().getMarket(stock)
                 .subscribe(
                     { result ->
@@ -81,32 +83,32 @@ class StocksFragment : Fragment() {
             R.id.togglebutton_one_day_selector -> {
                 println("One Day Period Selected")
                 observable =
-                    StocksApiDataUtils().getPricesFor1Day(spinnerStocks.selectedItem.toString())
+                    StocksApiDataUtils().getPricesFor1Day(stock)
             }
             R.id.togglebutton_one_week_selector -> {
                 println("One Week Period Selected")
                 observable =
-                    StocksApiDataUtils().getPricesFor1Week(spinnerStocks.selectedItem.toString())
+                    StocksApiDataUtils().getPricesFor1Week(stock)
             }
             R.id.togglebutton_one_month_selector -> {
                 println("One Month Period Selected")
                 observable =
-                    StocksApiDataUtils().getPricesFor1Month(spinnerStocks.selectedItem.toString())
+                    StocksApiDataUtils().getPricesFor1Month(stock)
             }
             R.id.togglebutton_six_months_selector -> {
                 println("Six Months Period Selected")
                 observable =
-                    StocksApiDataUtils().getPricesFor6Months(spinnerStocks.selectedItem.toString())
+                    StocksApiDataUtils().getPricesFor6Months(stock)
             }
             R.id.togglebutton_one_year_selector -> {
                 println("One Year Period Selected")
                 observable =
-                    StocksApiDataUtils().getPricesFor1Year(spinnerStocks.selectedItem.toString())
+                    StocksApiDataUtils().getPricesFor1Year(stock)
             }
             R.id.togglebutton_five_years_selector -> {
                 println("Five Years Period Selected")
                 observable =
-                    StocksApiDataUtils().getPricesFor5Years(spinnerStocks.selectedItem.toString())
+                    StocksApiDataUtils().getPricesFor5Years(stock)
             }
             R.id.togglebutton_custom_period_selector -> {
                 val calendar = Calendar.getInstance()
