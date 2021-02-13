@@ -10,12 +10,14 @@ import com.stonks.ui.currency.CurrencyFragment
 import com.stonks.ui.stocks.StocksFragment
 
 class MainActivity : AppCompatActivity() {
+    // Variable storing currently selected fragment for displaying
+    private var selectedFragment: Fragment = CurrencyFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val bottomNavigation : BottomNavigationView = findViewById(R.id.bottom_navigation)
+        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigation.setOnNavigationItemSelectedListener(navListener)
         bottomNavigation.selectedItemId = R.id.currency_tab
 
@@ -30,7 +32,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.cryptocurrency_tab -> DefaultFragment()    // TODO: Replace with actual fragment
                 R.id.currency_tab -> CurrencyFragment()
                 R.id.stocks_tab -> StocksFragment()
-                else -> TODO("Not implemented yet")
+                else -> TODO("Rewrite it without else statement")
             }
 
             supportFragmentManager.beginTransaction()
@@ -39,8 +41,4 @@ class MainActivity : AppCompatActivity() {
 
             true
         }
-
-    // Variable storing currently selected fragment for displaying
-    private var selectedFragment: Fragment =
-        CurrencyFragment()  // TODO: place fragment corresponding to most left tab (now crypto)
 }

@@ -144,60 +144,63 @@ class CurrencyFragment : Fragment() {
                             )
                     }
 
-                    val rateListPerPeriod: MutableList<String> = arrayListOf()
+                    val rateListPerPeriod: MutableList<Double> = arrayListOf()
                     val compositeDisposable = CompositeDisposable()
                     compositeDisposable.add(
-                        currencyApi.getRatesPerPeriod(
-                            startDate = startPointDate,
-                            endDate = currentMonth,
-                            targetRate = targetRateSpinnerString,
-                            baseRate = baseRateSpinnerString
-                        )
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribeOn(Schedulers.io())
-                            .subscribe(
-                                { response ->
-                                    val dateList: List<String>? =
-                                        response.rates?.keys?.sortedBy {
-                                            LocalDate.parse(
-                                                it, DateTimeFormatter.ofPattern(
-                                                    "yyyy-MM-dd"
-                                                )
-                                            )
-                                        }
-                                    if (dateList != null) {
-                                        for (date in dateList) {
-                                            rateListPerPeriod.add(
-                                                response.rates[date]?.get(
-                                                    targetRateSpinnerString
-                                                ).toString()
-                                            )
-                                        }
-                                    }
-
-                                    val entries = rateListPerPeriod.toList()
-                                    currencyLineChart.setXAxis(
-                                        lineChart = currency_chart,
-                                        dateList = dateList
-                                    )
-                                    val lineChartData = currencyLineChart.getLineData(
-                                        entries = entries,
-                                        baseCurrency = baseRateSpinnerString,
-                                        targetCurrency = targetRateSpinnerString
-                                    )
-                                    currencyLineChart.displayChart(
-                                        lineChart = currency_chart,
-                                        lineChartData = lineChartData
-                                    )
-                                },
-                                { failure ->
-                                    Toast.makeText(
-                                        context,
-                                        "No information from server: ${failure.message}",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
+                            currencyApi.getRatesPerPeriod(
+                                    startDate = startPointDate,
+                                    endDate = currentMonth,
+                                    targetRate = targetRateSpinnerString,
+                                    baseRate = baseRateSpinnerString
                             )
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribeOn(Schedulers.io())
+                                    .subscribe(
+                                            { response ->
+                                                val dateList: List<String>? =
+                                                        response.rates?.keys?.sortedBy {
+                                                            LocalDate.parse(
+                                                                    it, DateTimeFormatter.ofPattern(
+                                                                    "yyyy-MM-dd"
+                                                            )
+                                                            )
+                                                        }
+
+                                                if (dateList != null) {
+                                                    for (date in dateList) {
+                                                        response.rates[date]?.get(
+                                                                targetRateSpinnerString
+                                                        )?.let { it ->
+                                                            rateListPerPeriod.add(
+                                                                    it
+                                                            )
+                                                        }
+                                                    }
+                                                }
+
+                                                val entries = rateListPerPeriod.toList()
+                                                currencyLineChart.setXAxis(
+                                                        lineChart = currency_chart,
+                                                        dateList = dateList
+                                                )
+                                                val lineChartData = currencyLineChart.getLineData(
+                                                        entries = entries,
+                                                        baseCurrency = baseRateSpinnerString,
+                                                        targetCurrency = targetRateSpinnerString
+                                                )
+                                                currencyLineChart.displayChart(
+                                                        lineChart = currency_chart,
+                                                        lineChartData = lineChartData
+                                                )
+                                            },
+                                            { failure ->
+                                                Toast.makeText(
+                                                        requireContext(),
+                                                        "No information from server: ${failure.message}",
+                                                        Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+                                    )
                     )
 
                     first_primary_currency_result.text = ""
@@ -207,51 +210,51 @@ class CurrencyFragment : Fragment() {
                     fifth_primary_currency_result.text = ""
                     val compositeDisposablePrimaryCurrencies = CompositeDisposable()
                     compositeDisposablePrimaryCurrencies.add(
-                        currencyApi.getPrimaryRatesPerDay(
-                            baseRate = baseRateSpinnerString,
-                            primaryCurrencies = "USD,EUR,GBP,JPY,CHF"
-                        )
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribeOn(Schedulers.io())
-                            .subscribe(
-                                { response ->
-                                    first_primary_currency_result.text = stringMultiplication(
-                                        rate_number.text.toString(),
-                                        response.rates?.get("USD").toString()
-                                    )
-
-                                    second_primary_currency_result.text = stringMultiplication(
-                                        rate_number.text.toString(),
-                                        response.rates?.get("EUR").toString()
-                                    )
-
-                                    third_primary_currency_result.text = stringMultiplication(
-                                        rate_number.text.toString(),
-                                        response.rates?.get("GBP").toString()
-                                    )
-
-                                    fourth_primary_currency_result.text = stringMultiplication(
-                                        rate_number.text.toString(),
-                                        response.rates?.get("JPY").toString()
-                                    )
-
-                                    fifth_primary_currency_result.text = stringMultiplication(
-                                        rate_number.text.toString(),
-                                        response.rates?.get("CHF").toString()
-                                    )
-                                },
-                                { failure ->
-                                    Toast.makeText(
-                                        context,
-                                        "No information from server: ${failure.message}",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-
+                            currencyApi.getPrimaryRatesPerDay(
+                                    baseRate = baseRateSpinnerString,
+                                    primaryCurrencies = "USD,EUR,GBP,JPY,CHF"
                             )
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribeOn(Schedulers.io())
+                                    .subscribe(
+                                            { response ->
+                                                first_primary_currency_result.text = stringMultiplication(
+                                                        rate_number.text.toString(),
+                                                        response.rates?.get("USD").toString()
+                                                )
+
+                                                second_primary_currency_result.text = stringMultiplication(
+                                                        rate_number.text.toString(),
+                                                        response.rates?.get("EUR").toString()
+                                                )
+
+                                                third_primary_currency_result.text = stringMultiplication(
+                                                        rate_number.text.toString(),
+                                                        response.rates?.get("GBP").toString()
+                                                )
+
+                                                fourth_primary_currency_result.text = stringMultiplication(
+                                                        rate_number.text.toString(),
+                                                        response.rates?.get("JPY").toString()
+                                                )
+
+                                                fifth_primary_currency_result.text = stringMultiplication(
+                                                        rate_number.text.toString(),
+                                                        response.rates?.get("CHF").toString()
+                                                )
+                                            },
+                                            { failure ->
+                                                Toast.makeText(
+                                                        requireContext(),
+                                                        "No information from server: ${failure.message}",
+                                                        Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+
+                                    )
                     )
                 } else {
-                    Toast.makeText(context, "Wrong input", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Wrong input", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -275,18 +278,18 @@ class CurrencyFragment : Fragment() {
     private fun loadApiDate(textView: TextView) {
         val compositeDisposable = CompositeDisposable()
         compositeDisposable.add(
-            currencyApi.getRatesPerDay(rate = "EUR")
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(
-                    { response ->
-                        textView.text =
-                            getString(R.string.last_updated_date, response.date.toString())
-                    },
-                    { failure ->
-                        Toast.makeText(context, failure.message, Toast.LENGTH_SHORT).show()
-                    }
-                )
+                currencyApi.getRatesPerDay(rate = "EUR")
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(
+                                { response ->
+                                    textView.text =
+                                            getString(R.string.last_updated_date, response.date.toString())
+                                },
+                                { failure ->
+                                    Toast.makeText(requireContext(), failure.message, Toast.LENGTH_SHORT).show()
+                                }
+                        )
         )
     }
 
@@ -301,24 +304,24 @@ class CurrencyFragment : Fragment() {
     ) {
         val compositeDisposable = CompositeDisposable()
         compositeDisposable.add(
-            currencyApi.getRatesPerDay(rate = baseRate)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(
-                    { response ->
-                        textView.text = stringMultiplication(
-                            rateNumber.text.toString(),
-                            response.rates?.get(targetRate).toString().take(7)
+                currencyApi.getRatesPerDay(rate = baseRate)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(
+                                { response ->
+                                    textView.text = stringMultiplication(
+                                            rateNumber.text.toString(),
+                                            response.rates?.get(targetRate).toString().take(7)
+                                    )
+                                },
+                                { failure ->
+                                    Toast.makeText(
+                                            requireContext(),
+                                            failure.message,
+                                            Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                         )
-                    },
-                    { failure ->
-                        Toast.makeText(
-                            context,
-                            failure.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                )
         )
     }
 }

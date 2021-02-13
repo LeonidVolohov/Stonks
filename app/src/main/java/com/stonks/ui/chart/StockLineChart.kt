@@ -40,7 +40,7 @@ class StockLineChart(lineChart: LineChart) {
         lineChart.xAxis.labelCount = 4
     }
 
-    fun getLineData(entries: List<String>, baseCurrency: String, targetCurrency: String): LineDataSet {
+    fun getLineData(entries: List<Double>, baseCurrency: String, targetCurrency: String): LineDataSet {
         val localEntry = ArrayList<Entry>()
         var iter = -1.0f
         for (item in entries) {
