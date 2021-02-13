@@ -60,21 +60,6 @@
             android:textAlignment="center"
             android:spinnerMode="dropdown"
             android:entries="@array/rates" />
-
-        <Spinner
-            android:id="@+id/chart_length_spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="50"
-            android:layout_marginTop="@dimen/margin_padding_size_small"
-            android:layout_marginStart="@dimen/margin_padding_size_small"
-            android:layout_marginEnd="@dimen/margin_padding_size_small"
-            android:layout_marginBottom="@dimen/margin_padding_size_small"
-            android:textSize="@dimen/text_size_large"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:spinnerMode="dropdown"
-            android:entries="@array/chart_length" />
     </LinearLayout>
 
     <LinearLayout
@@ -194,7 +179,7 @@
                     android:src="@drawable/ic_united_states"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginStart="@dimen/margin_padding_size_small"
                     android:layout_marginTop="@dimen/margin_padding_size_smaller"
                     android:layout_marginBottom="@dimen/margin_padding_size_small"
                     android:layout_marginEnd="@dimen/margin_padding_size_small" />
@@ -230,30 +215,31 @@
                 android:id="@+id/second_relative"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/first_relative">
+                android:layout_below="@id/first_relative"
+                android:layout_marginTop="0dp">
 
                 <!-- тут  флаг евросоюза -->
                 <ImageView
                     android:id="@+id/second_country_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_european_union"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginStart="@dimen/margin_padding_size_small"
                     android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_small"
                     android:layout_marginBottom="@dimen/margin_padding_size_small"
-                    android:layout_marginEnd="@dimen/margin_padding_size_small" />
+                    android:src="@drawable/ic_european_union" />
 
                 <TextView
                     android:id="@+id/second_currency_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
                     android:layout_marginStart="@dimen/text_size_small"
                     android:layout_marginTop="@dimen/margin_padding_size_smaller"
-                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
                     android:layout_toEndOf="@id/second_country_image"
                     android:textSize="@dimen/text_size_small"
                     tools:text="EUR" />
@@ -262,12 +248,12 @@
                     android:id="@+id/second_primary_currency_result"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/text_size_small"
-                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
-                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
-                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
                     android:textSize="@dimen/text_size_small"
                     tools:text="1.023040" />
             </RelativeLayout>
@@ -285,7 +271,7 @@
                     android:src="@drawable/ic_united_kingdom"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginStart="@dimen/margin_padding_size_small"
                     android:layout_marginTop="@dimen/margin_padding_size_smaller"
                     android:layout_marginBottom="@dimen/margin_padding_size_small"
                     android:layout_marginEnd="@dimen/margin_padding_size_small" />
@@ -330,7 +316,7 @@
                     android:src="@drawable/ic_japan"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginStart="@dimen/margin_padding_size_small"
                     android:layout_marginTop="@dimen/margin_padding_size_smaller"
                     android:layout_marginBottom="@dimen/margin_padding_size_small"
                     android:layout_marginEnd="@dimen/margin_padding_size_small" />
@@ -375,7 +361,7 @@
                     android:src="@drawable/ic_switzerland"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginStart="@dimen/margin_padding_size_small"
                     android:layout_marginTop="@dimen/margin_padding_size_smaller"
                     android:layout_marginBottom="@dimen/margin_padding_size_small"
                     android:layout_marginEnd="@dimen/margin_padding_size_small" />
@@ -424,21 +410,10 @@
         android:layout_marginBottom="@dimen/margin_padding_size_small"
         app:singleSelection="true"
         app:selectionRequired="true"
-        app:checkedButton="@+id/togglebutton_one_day_selector">
+        app:checkedButton="@id/currency_togglebutton_one_week_selector">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/togglebutton_one_day_selector"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/one_day_period_button_text"
-            android:textAlignment="center"
-            android:textSize="@dimen/toggle_button_text_size"
-            style="?attr/materialButtonOutlinedStyle"
-            app:strokeWidth="2dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/togglebutton_one_week_selector"
+            android:id="@+id/currency_togglebutton_one_week_selector"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -449,7 +424,7 @@
             app:strokeWidth="2dp" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/togglebutton_one_month_selector"
+            android:id="@+id/currency_togglebutton_one_month_selector"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -460,7 +435,7 @@
             app:strokeWidth="2dp" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/togglebutton_six_months_selector"
+            android:id="@+id/currency_togglebutton_six_months_selector"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -470,7 +445,7 @@
             style="?attr/materialButtonOutlinedStyle" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/togglebutton_one_year_selector"
+            android:id="@+id/currency_togglebutton_one_year_selector"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -481,7 +456,7 @@
             app:strokeWidth="2dp" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/togglebutton_five_years_selector"
+            android:id="@+id/currency_togglebutton_five_years_selector"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -492,7 +467,7 @@
             app:strokeWidth="2dp" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/togglebutton_custom_period_selector"
+            android:id="@+id/currency_togglebutton_custom_period_selector"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"

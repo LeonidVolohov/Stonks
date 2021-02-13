@@ -6,27 +6,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.stonks.R
-import com.stonks.api.currencyApi
 import com.stonks.ui.chart.StockLineChart
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_currency.*
-import java.math.BigDecimal
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class CurrencyFragment : Fragment() {
+    private val TAG = CurrencyFragment::class.java.name
+    private var disposable: Disposable? = null
+    private lateinit var baseRateSpinnerString: String
+    private lateinit var targetRateSpinnerString: String
+    private var isNumeric: Boolean = false
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_currency, container, false)
     }
@@ -35,32 +32,23 @@ class CurrencyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val defaultCurrencyIndex = 17
-
         val ratesNameArray = resources.getStringArray(R.array.rates)
-        val chartLengthArray = resources.getStringArray(R.array.chart_length)
         val chartPrimaryRatesArray = resources.getStringArray(R.array.primary_rates)
-        var baseRateSpinnerString = ""
-        var targetRateSpinnerString = ""
-        var chartLengthSpinnerString = ""
-        var isNumeric: Boolean
+
+        val currencyFragmentUtils = CurrencyFragmentUtils(disposable = disposable)
         val currencyLineChart = StockLineChart(currency_chart)
 
-        first_currency_name.text = chartPrimaryRatesArray[0]
-        second_currency_name.text = chartPrimaryRatesArray[1]
-        third_currency_name.text = chartPrimaryRatesArray[2]
-        fourth_currency_name.text = chartPrimaryRatesArray[3]
-        fifth_currency_name.text = chartPrimaryRatesArray[4]
+        initPrimaryRatesName(chartPrimaryRatesArray)
 
-        loadApiDate(last_date_update)
+        currencyFragmentUtils.setLastUpdatedDate(last_date_update, "Data for: ")
 
-        base_rate_spinner?.setSelection(defaultCurrencyIndex)
+        base_rate_spinner?.setSelection(DEFAULT_CURRENCY_INDEX)
         base_rate_spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
             ) {
                 baseRateSpinnerString = ratesNameArray[position].split(",")[0]
                 rate_number.setText("1.0")
@@ -71,10 +59,10 @@ class CurrencyFragment : Fragment() {
 
         target_rate_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
             ) {
                 targetRateSpinnerString = ratesNameArray[position].split(",")[0]
                 rate_number.setText("1.0")
@@ -83,26 +71,66 @@ class CurrencyFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        chart_length_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                chartLengthSpinnerString = chartLengthArray[position]
-                rate_number.setText("1.0")
+        currency_button_group.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (isChecked) {
+                when (currency_button_group.checkedButtonId) {
+                    R.id.currency_togglebutton_one_week_selector -> {
+                        currencyFragmentUtils.plotRatesPerPeriod(
+                                startDate = "1W",
+                                targetRate = targetRateSpinnerString,
+                                baseRate = baseRateSpinnerString,
+                                stockLineChart = currencyLineChart,
+                                currencyChart = currency_chart
+                        )
+                    }
+                    R.id.currency_togglebutton_one_month_selector -> {
+                        currencyFragmentUtils.plotRatesPerPeriod(
+                                startDate = "1M",
+                                targetRate = targetRateSpinnerString,
+                                baseRate = baseRateSpinnerString,
+                                stockLineChart = currencyLineChart,
+                                currencyChart = currency_chart
+                        )
+                    }
+                    R.id.currency_togglebutton_six_months_selector -> {
+                        currencyFragmentUtils.plotRatesPerPeriod(
+                                startDate = "6M",
+                                targetRate = targetRateSpinnerString,
+                                baseRate = baseRateSpinnerString,
+                                stockLineChart = currencyLineChart,
+                                currencyChart = currency_chart
+                        )
+                    }
+                    R.id.currency_togglebutton_one_year_selector -> {
+                        currencyFragmentUtils.plotRatesPerPeriod(
+                                startDate = "1Y",
+                                targetRate = targetRateSpinnerString,
+                                baseRate = baseRateSpinnerString,
+                                stockLineChart = currencyLineChart,
+                                currencyChart = currency_chart
+                        )
+                    }
+                    R.id.currency_togglebutton_five_years_selector -> {
+                        currencyFragmentUtils.plotRatesPerPeriod(
+                                startDate = "5Y",
+                                targetRate = targetRateSpinnerString,
+                                baseRate = baseRateSpinnerString,
+                                stockLineChart = currencyLineChart,
+                                currencyChart = currency_chart
+                        )
+                    }
+                    R.id.currency_togglebutton_custom_period_selector -> {
+                        // TODO: Add calendar
+                    }
+                }
             }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        val currentMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         calculate_button.setOnClickListener {
             if (baseRateSpinnerString == targetRateSpinnerString) {
-                rate_result.text = stringMultiplication(
-                    rate_number.text.toString(),
-                    "1.0"
+                rate_result.text = currencyFragmentUtils.stringMultiplication(
+                        rate_number.text.toString(),
+                        "1.0"
                 )
             } else {
                 isNumeric = try {
@@ -113,215 +141,56 @@ class CurrencyFragment : Fragment() {
                 }
 
                 if (isNumeric) {
-                    loadTargetRatePrice(
-                        baseRateSpinnerString,
-                        targetRateSpinnerString,
-                        rate_number,
-                        rate_result
+                    changeToDefaultValue()
+                    currency_button_group.check(R.id.currency_togglebutton_one_week_selector)
+
+                    currencyFragmentUtils.setTargetRatePrice(
+                            baseRate = baseRateSpinnerString,
+                            targetRate = targetRateSpinnerString,
+                            rateNumber = rate_number,
+                            textView = rate_result
+                    )
+                    currencyFragmentUtils.plotRatesPerPeriod(
+                            startDate = "1W",
+                            targetRate = targetRateSpinnerString,
+                            baseRate = baseRateSpinnerString,
+                            stockLineChart = currencyLineChart,
+                            currencyChart = currency_chart
                     )
 
-                    var startPointDate = ""
-                    when (chartLengthSpinnerString) {
-                        chartLengthArray[0] -> startPointDate =
-                            LocalDate.now().minusWeeks(1).format(
-                                DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                            )
-                        chartLengthArray[1] -> startPointDate =
-                            LocalDate.now().minusMonths(1).format(
-                                DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                            )
-                        chartLengthArray[2] -> startPointDate =
-                            LocalDate.now().minusMonths(6).format(
-                                DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                            )
-                        chartLengthArray[3] -> startPointDate =
-                            LocalDate.now().minusYears(1).format(
-                                DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                            )
-                        chartLengthArray[4] -> startPointDate =
-                            LocalDate.now().minusYears(5).format(
-                                DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                            )
-                    }
-
-                    val rateListPerPeriod: MutableList<Double> = arrayListOf()
-                    val compositeDisposable = CompositeDisposable()
-                    compositeDisposable.add(
-                            currencyApi.getRatesPerPeriod(
-                                    startDate = startPointDate,
-                                    endDate = currentMonth,
-                                    targetRate = targetRateSpinnerString,
-                                    baseRate = baseRateSpinnerString
-                            )
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribeOn(Schedulers.io())
-                                    .subscribe(
-                                            { response ->
-                                                val dateList: List<String>? =
-                                                        response.rates?.keys?.sortedBy {
-                                                            LocalDate.parse(
-                                                                    it, DateTimeFormatter.ofPattern(
-                                                                    "yyyy-MM-dd"
-                                                            )
-                                                            )
-                                                        }
-
-                                                if (dateList != null) {
-                                                    for (date in dateList) {
-                                                        response.rates[date]?.get(
-                                                                targetRateSpinnerString
-                                                        )?.let { it ->
-                                                            rateListPerPeriod.add(
-                                                                    it
-                                                            )
-                                                        }
-                                                    }
-                                                }
-
-                                                val entries = rateListPerPeriod.toList()
-                                                currencyLineChart.setXAxis(
-                                                        lineChart = currency_chart,
-                                                        dateList = dateList
-                                                )
-                                                val lineChartData = currencyLineChart.getLineData(
-                                                        entries = entries,
-                                                        baseCurrency = baseRateSpinnerString,
-                                                        targetCurrency = targetRateSpinnerString
-                                                )
-                                                currencyLineChart.displayChart(
-                                                        lineChart = currency_chart,
-                                                        lineChartData = lineChartData
-                                                )
-                                            },
-                                            { failure ->
-                                                Toast.makeText(
-                                                        requireContext(),
-                                                        "No information from server: ${failure.message}",
-                                                        Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
-                                    )
-                    )
-
-                    first_primary_currency_result.text = ""
-                    second_primary_currency_result.text = ""
-                    third_primary_currency_result.text = ""
-                    fourth_primary_currency_result.text = ""
-                    fifth_primary_currency_result.text = ""
-                    val compositeDisposablePrimaryCurrencies = CompositeDisposable()
-                    compositeDisposablePrimaryCurrencies.add(
-                            currencyApi.getPrimaryRatesPerDay(
-                                    baseRate = baseRateSpinnerString,
-                                    primaryCurrencies = "USD,EUR,GBP,JPY,CHF"
-                            )
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribeOn(Schedulers.io())
-                                    .subscribe(
-                                            { response ->
-                                                first_primary_currency_result.text = stringMultiplication(
-                                                        rate_number.text.toString(),
-                                                        response.rates?.get("USD").toString()
-                                                )
-
-                                                second_primary_currency_result.text = stringMultiplication(
-                                                        rate_number.text.toString(),
-                                                        response.rates?.get("EUR").toString()
-                                                )
-
-                                                third_primary_currency_result.text = stringMultiplication(
-                                                        rate_number.text.toString(),
-                                                        response.rates?.get("GBP").toString()
-                                                )
-
-                                                fourth_primary_currency_result.text = stringMultiplication(
-                                                        rate_number.text.toString(),
-                                                        response.rates?.get("JPY").toString()
-                                                )
-
-                                                fifth_primary_currency_result.text = stringMultiplication(
-                                                        rate_number.text.toString(),
-                                                        response.rates?.get("CHF").toString()
-                                                )
-                                            },
-                                            { failure ->
-                                                Toast.makeText(
-                                                        requireContext(),
-                                                        "No information from server: ${failure.message}",
-                                                        Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
-
-                                    )
+                    currencyFragmentUtils.setPrimaryRatesPerDay(
+                            baseRate = baseRateSpinnerString,
+                            symbols = PRIMARY_RATES,
+                            firstTextView = first_primary_currency_result,
+                            secondTextView = second_primary_currency_result,
+                            thirdTextView = third_primary_currency_result,
+                            fourthTextView = fourth_primary_currency_result,
+                            fifthTextView = fifth_primary_currency_result,
+                            rateNumber = rate_number
                     )
                 } else {
                     Toast.makeText(requireContext(), "Wrong input", Toast.LENGTH_LONG).show()
+                    changeToDefaultValue()
                 }
             }
         }
     }
 
-    /**
-     * Умножает две строки [firstNumber]  и [secondNumber] и возвращает только первые 7 символов
-     */
-    private fun stringMultiplication(firstNumber: String, secondNumber: String): String {
-        //return (firstNumber.toDouble() * secondNumber.toDouble()).toString().take(7)
-        return BigDecimal((firstNumber.toDouble() * secondNumber.toDouble())).setScale(
-            3,
-            BigDecimal.ROUND_HALF_EVEN
-        ).toString()
-
+    private fun changeToDefaultValue() {
+        rate_result.text = ""
+        first_primary_currency_result.text = ""
+        second_primary_currency_result.text = ""
+        third_primary_currency_result.text = ""
+        fourth_primary_currency_result.text = ""
+        fifth_primary_currency_result.text = ""
     }
 
-    /**
-     * Загружает в [textView] дату, полученную с API
-     * */
-    private fun loadApiDate(textView: TextView) {
-        val compositeDisposable = CompositeDisposable()
-        compositeDisposable.add(
-                currencyApi.getRatesPerDay(rate = "EUR")
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(
-                                { response ->
-                                    textView.text =
-                                            getString(R.string.last_updated_date, response.date.toString())
-                                },
-                                { failure ->
-                                    Toast.makeText(requireContext(), failure.message, Toast.LENGTH_SHORT).show()
-                                }
-                        )
-        )
-    }
+    private fun initPrimaryRatesName(chartPrimaryRatesArray: Array<String>) {
+        first_currency_name.text = chartPrimaryRatesArray[0]
+        second_currency_name.text = chartPrimaryRatesArray[1]
+        third_currency_name.text = chartPrimaryRatesArray[2]
+        fourth_currency_name.text = chartPrimaryRatesArray[3]
+        fifth_currency_name.text = chartPrimaryRatesArray[4]
 
-    /**
-     * Загружает в [textView] стоимость [baseRate] относительно [targetRate] со множителем [rateNumber]
-     */
-    private fun loadTargetRatePrice(
-        baseRate: String,
-        targetRate: String,
-        rateNumber: EditText,
-        textView: TextView
-    ) {
-        val compositeDisposable = CompositeDisposable()
-        compositeDisposable.add(
-                currencyApi.getRatesPerDay(rate = baseRate)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(
-                                { response ->
-                                    textView.text = stringMultiplication(
-                                            rateNumber.text.toString(),
-                                            response.rates?.get(targetRate).toString().take(7)
-                                    )
-                                },
-                                { failure ->
-                                    Toast.makeText(
-                                            requireContext(),
-                                            failure.message,
-                                            Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                        )
-        )
     }
 }

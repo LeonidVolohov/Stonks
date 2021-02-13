@@ -52,14 +52,6 @@
         <item>CHF</item>
     </string-array>
 
-    <string-array name="chart_length">
-        <item>1 week</item>
-        <item>1 month</item>
-        <item>6 months</item>
-        <item>1 year</item>
-        <item>5 years</item>
-    </string-array>
-
     <string-array name="crypto_currencies">
         <item>BTC, Bitcoin</item>
         <item>ETH, Ethereum</item>
