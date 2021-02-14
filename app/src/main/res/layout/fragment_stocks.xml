@@ -58,13 +58,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/conversion_icon_description"
-            app:layout_constraintEnd_toStartOf="@+id/spinner_currency"
+            app:layout_constraintEnd_toStartOf="@+id/spinnerCurrency"
             app:layout_constraintStart_toEndOf="@+id/constraintLayout"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_arrows" />
 
         <Spinner
-            android:id="@+id/spinner_currency"
+            android:id="@+id/spinnerCurrency"
             android:layout_width="128dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_padding_size_xlarge"
