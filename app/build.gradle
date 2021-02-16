@@ -70,4 +70,7 @@ dependencies {
     apply plugin: 'com.android.application'
     apply plugin: 'kotlin-android'
     apply plugin: 'kotlin-android-extensions'
+    
+    // Logging HTTP requests for debugging purposes
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
 }
