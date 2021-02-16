@@ -44,6 +44,8 @@ class StocksFragment : Fragment() {
     private val endCustomDateLimit: ZonedDateTime
         get() = ZonedDateTime.now(ZoneId.systemDefault())
 
+    private val TAG = this::class.java.name
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -79,7 +81,7 @@ class StocksFragment : Fragment() {
     private fun updateStockData(changedPeriodOnly: Boolean = false) {
         val stock = spinnerStocksValue
         if (!changedPeriodOnly) {
-            Log.i("ApiUtils", "Changing API Utils Object")
+            Log.i(TAG, "Changing API Utils Object")
             apiUtils = StocksApiDataUtils(stock)
             textViewMarket.text = "Loading..."
             disposables.add(
@@ -135,7 +137,7 @@ class StocksFragment : Fragment() {
                             .build()
                     )
                     .build()
-                picker.addOnNegativeButtonClickListener { Log.e("error", "Cancelled selection") }
+                picker.addOnNegativeButtonClickListener { Log.i(TAG, "Cancelled selection") }
                 picker.addOnPositiveButtonClickListener {
                     val startInstant = Instant.ofEpochMilli(it.first ?: 0)
                     val endInstant = Instant.ofEpochMilli(it.second ?: 0)
@@ -145,22 +147,24 @@ class StocksFragment : Fragment() {
                         apiUtils!!.getPricesForCustomPeriod(startDateTime, endDateTime)
                             .subscribe(
                                 { result ->
-                                    Log.e("error", result.toString())
+                                    Log.e(
+                                        TAG,
+                                        result.toString()
+                                    ) // TODO: Placeholder for actual actions with data
                                 },
                                 ::logError
                             )
                     )
-                    Log.e("error", "The selected date range is $startDateTime - $endDateTime")
+                    Log.i(TAG, "The selected date range is $startDateTime - $endDateTime")
                 }
                 picker.show(activity?.supportFragmentManager!!, picker.toString())
-                Log.e("error", "after Picker is shown")
             }
             else -> TODO("Error")
         }
         disposables.add(
             observable?.subscribe(
                 { result ->
-                    Log.e("error", result.toString())
+                    Log.e(TAG, result.toString()) // TODO: Placeholder for actual actions with data
                 },
                 ::logError
             ) ?: Observable.just(1).subscribe({}, {})
@@ -168,7 +172,7 @@ class StocksFragment : Fragment() {
     }
 
     private fun logError(error: Throwable) {
-        Log.e("error", error.message ?: "error occured", error)
+        Log.e(TAG, error.message ?: "error occured", error)
     }
 
     /**

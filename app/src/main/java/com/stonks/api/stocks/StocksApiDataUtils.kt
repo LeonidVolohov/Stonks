@@ -114,8 +114,6 @@ class StocksApiDataUtils(val stock: String) {
         startDateTime: ZonedDateTime,
         endDateTime: ZonedDateTime
     ): Observable<StocksDataModel.RatesProcessed> {
-        val test = ZonedDateTime.of(2021, 1, 1, 10, 0, 0, 0, ZoneId.systemDefault())
-        Log.e("error", "${test >= startDateTime && test <= endDateTime}")
         return getDailyPrices().map {
             StocksDataModel.RatesProcessed(
                 filterPeriod(it, startDateTime, endDateTime).toMap().toSortedMap()
