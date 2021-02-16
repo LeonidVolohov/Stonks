@@ -20,7 +20,7 @@
         android:paddingStart="@dimen/margin_padding_size_medium"
         android:textSize="@dimen/text_size_smaller"
         android:gravity="center"
-        tools:text="Данные на: 20.20.2020" />
+        tools:text="Last update: 20.20.2020" />
 
     <LinearLayout
         android:id="@+id/first_linear"
@@ -43,7 +43,7 @@
             android:gravity="center"
             android:textAlignment="center"
             android:spinnerMode="dropdown"
-            android:entries="@array/crypto_currencies" />
+            android:entries="@array/crypto_currencies"/>
 
         <Spinner
             android:id="@+id/to_currency_name_spinner"
@@ -58,7 +58,7 @@
             android:gravity="center"
             android:textAlignment="center"
             android:spinnerMode="dropdown"
-            android:entries="@array/rates" />
+            android:entries="@array/rates"/>
     </LinearLayout>
 
     <EditText

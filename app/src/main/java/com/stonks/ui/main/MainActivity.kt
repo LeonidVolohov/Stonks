@@ -9,6 +9,7 @@ import com.stonks.ui.DefaultFragment
 import com.stonks.ui.currency.CurrencyFragment
 import com.stonks.ui.stocks.StocksFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import com.stonks.ui.cryptocurrency.CryptoFragment
 
 class MainActivity : AppCompatActivity() {
     private val bottomNavigationHeight: Int = 0
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     private val navListener : BottomNavigationView.OnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             selectedFragment = when (item.itemId) {
-                R.id.cryptocurrency_tab -> DefaultFragment()    // TODO: Replace with actual fragment
+                R.id.cryptocurrency_tab -> CryptoFragment()    // TODO: Replace with actual fragment
                 R.id.currency_tab -> CurrencyFragment(bottom_navigation.height)
                 R.id.stocks_tab -> StocksFragment()
                 else -> TODO("Rewrite it without else statement")
