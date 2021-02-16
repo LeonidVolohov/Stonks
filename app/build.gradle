@@ -64,4 +64,9 @@ dependencies {
 
     // Chart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // Android Extensions
+    apply plugin: 'com.android.application'
+    apply plugin: 'kotlin-android'
+    apply plugin: 'kotlin-android-extensions'
 }

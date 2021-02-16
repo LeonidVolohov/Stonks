@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.stonks.R
 import com.stonks.ui.DefaultFragment
+import com.stonks.ui.cryptocurrency.CryptoFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private val navListener : BottomNavigationView.OnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             selectedFragment = when (item.itemId) {
-                R.id.cryptocurrency_tab -> DefaultFragment()    // TODO: Replace with actual fragment
+                R.id.cryptocurrency_tab -> CryptoFragment()
                 R.id.currency_tab -> DefaultFragment()          // TODO: Replace with actual fragment
                 R.id.stocks_tab -> DefaultFragment()            // TODO: Replace with actual fragment
                 else -> TODO("Not implemented yet")
