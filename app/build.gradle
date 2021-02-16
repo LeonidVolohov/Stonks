@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.stonks"
-        minSdkVersion 24
+        minSdkVersion 29
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -64,4 +64,7 @@ dependencies {
 
     // Chart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // Logging HTTP requests for debugging purposes
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
 }
