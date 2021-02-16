@@ -6,10 +6,9 @@ import android.widget.Toast
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
-import com.stonks.ui.currency.CurrencyMain
 
 class CustomMarkerView(context: Context?, layoutResource: Int, dataList: List<String>) : MarkerView(context, layoutResource) {
-    private val TAG: String = CurrencyMain::class.java.name
+    private val TAG: String = CustomMarkerView::class.java.name
     private val localDateList: List<String> = dataList
     private var toastMessage : String = ""
     private var toast : Toast = Toast.makeText(context, "", Toast.LENGTH_SHORT)
