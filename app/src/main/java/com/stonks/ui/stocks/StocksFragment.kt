@@ -1,6 +1,5 @@
 package com.stonks.ui.stocks
 
-import android.app.DatePickerDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,17 +10,23 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.stonks.R
 import com.stonks.api.stocks.StocksApiDataUtils
 import com.stonks.api.stocks.StocksDataModel
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
+import java.time.Instant
+import java.time.Period
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.*
 
 class StocksFragment : Fragment() {
-
-    private var disposable: Disposable? = null
+    private var disposables = CompositeDisposable()
+    private var apiUtils: StocksApiDataUtils? = null
 
     private lateinit var spinnerStocks: Spinner
     private val spinnerStocksValue: String
@@ -31,6 +36,13 @@ class StocksFragment : Fragment() {
     private lateinit var textViewPrice: TextView
     private lateinit var toggleGroupPeriod: MaterialButtonToggleGroup
     private lateinit var switchPrediction: SwitchMaterial
+
+    private val periodToFarthestReachableMomentInPast = Period.of(5, 0, 0)
+    private val startCustomDateLimit: ZonedDateTime
+        get() = ZonedDateTime.now(ZoneId.systemDefault()) -
+                periodToFarthestReachableMomentInPast
+    private val endCustomDateLimit: ZonedDateTime
+        get() = ZonedDateTime.now(ZoneId.systemDefault())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,83 +74,96 @@ class StocksFragment : Fragment() {
                 updateStockData(changedPeriodOnly = true)
             }
         }
-        updateStockData()
     }
 
     private fun updateStockData(changedPeriodOnly: Boolean = false) {
         val stock = spinnerStocksValue
         if (!changedPeriodOnly) {
+            Log.i("ApiUtils", "Changing API Utils Object")
+            apiUtils = StocksApiDataUtils(stock)
             textViewMarket.text = "Loading..."
-            disposable = StocksApiDataUtils().getMarket(stock)
-                .subscribe(
-                    { result ->
-                        textViewMarket.text = result.market
-                    },
+            disposables.add(
+                apiUtils!!.getMarket().subscribe(
+                    { result -> textViewMarket.text = result.market },
                     ::logError
                 )
+            )
             toggleGroupPeriod.check(R.id.togglebutton_one_day_selector)
+            disposables.add(
+                apiUtils!!.getLatestRate().subscribe(
+                    { result -> textViewPrice.text = result.toString() },
+                    ::logError
+                )
+            )
         }
         var observable: Observable<StocksDataModel.RatesProcessed>? = null
         when (toggleGroupPeriod.checkedButtonId) {
             R.id.togglebutton_one_day_selector -> {
                 println("One Day Period Selected")
-                observable =
-                    StocksApiDataUtils().getPricesFor1Day(stock)
+                observable = apiUtils!!.getPricesFor1Day()
             }
             R.id.togglebutton_one_week_selector -> {
                 println("One Week Period Selected")
-                observable =
-                    StocksApiDataUtils().getPricesFor1Week(stock)
+                observable = apiUtils!!.getPricesFor1Week()
             }
             R.id.togglebutton_one_month_selector -> {
                 println("One Month Period Selected")
-                observable =
-                    StocksApiDataUtils().getPricesFor1Month(stock)
+                observable = apiUtils!!.getPricesFor1Month()
             }
             R.id.togglebutton_six_months_selector -> {
                 println("Six Months Period Selected")
-                observable =
-                    StocksApiDataUtils().getPricesFor6Months(stock)
+                observable = apiUtils!!.getPricesFor6Months()
             }
             R.id.togglebutton_one_year_selector -> {
                 println("One Year Period Selected")
-                observable =
-                    StocksApiDataUtils().getPricesFor1Year(stock)
+                observable = apiUtils!!.getPricesFor1Year()
             }
             R.id.togglebutton_five_years_selector -> {
                 println("Five Years Period Selected")
-                observable =
-                    StocksApiDataUtils().getPricesFor5Years(stock)
+                observable = apiUtils!!.getPricesFor5Years()
             }
             R.id.togglebutton_custom_period_selector -> {
-                val calendar = Calendar.getInstance()
-                val year = calendar.get(Calendar.YEAR)
-                val month = calendar.get(Calendar.MONTH)
-                val day = calendar.get(Calendar.DAY_OF_MONTH)
-                val datePickerDialog =
-                    DatePickerDialog(
-                        requireContext(), DatePickerDialog.OnDateSetListener
-                        { view, year, monthOfYear, dayOfMonth ->
-
-                            Log.e(
-                                "error",
-                                "" + dayOfMonth + " - " + (monthOfYear + 1) + " - " + year
-                            )
-                        }, year, month, day
+                var startDateTime: ZonedDateTime
+                var endDateTime: ZonedDateTime
+                val now = Calendar.getInstance()
+                val picker = MaterialDatePicker.Builder.dateRangePicker()
+                    .setSelection(androidx.core.util.Pair(now.timeInMillis, now.timeInMillis))
+                    .setCalendarConstraints(
+                        CalendarConstraints.Builder()
+                            .setStart(startCustomDateLimit.toInstant().toEpochMilli())
+                            .setEnd(endCustomDateLimit.toInstant().toEpochMilli())
+                            .build()
                     )
-                datePickerDialog.setTitle("Chose start period")
-                datePickerDialog.datePicker.minDate = calendar.timeInMillis
-                datePickerDialog.show()
+                    .build()
+                picker.addOnNegativeButtonClickListener { Log.e("error", "Cancelled selection") }
+                picker.addOnPositiveButtonClickListener {
+                    val startInstant = Instant.ofEpochMilli(it.first ?: 0)
+                    val endInstant = Instant.ofEpochMilli(it.second ?: 0)
+                    startDateTime = ZonedDateTime.ofInstant(startInstant, ZoneId.systemDefault())
+                    endDateTime = ZonedDateTime.ofInstant(endInstant, ZoneId.systemDefault())
+                    disposables.add(
+                        apiUtils!!.getPricesForCustomPeriod(startDateTime, endDateTime)
+                            .subscribe(
+                                { result ->
+                                    Log.e("error", result.toString())
+                                },
+                                ::logError
+                            )
+                    )
+                    Log.e("error", "The selected date range is $startDateTime - $endDateTime")
+                }
+                picker.show(activity?.supportFragmentManager!!, picker.toString())
+                Log.e("error", "after Picker is shown")
             }
             else -> TODO("Error")
         }
-        disposable = observable?.subscribe(
-            { result ->
-                if (!changedPeriodOnly) {
-                    textViewPrice.text = result.rates[result.rates.lastKey()].toString()
-                }
-            },
-            ::logError
+        disposables.add(
+            observable?.subscribe(
+                { result ->
+                    Log.e("error", result.toString())
+                },
+                ::logError
+            ) ?: Observable.just(1).subscribe({}, {})
         )
     }
 
@@ -162,6 +187,6 @@ class StocksFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        disposable?.dispose()
+        disposables.clear()
     }
 }

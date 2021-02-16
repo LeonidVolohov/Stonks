@@ -9,7 +9,7 @@ import io.reactivex.schedulers.Schedulers
 import java.time.*
 import java.time.format.DateTimeFormatter
 
-class StocksApiDataUtils {
+class StocksApiDataUtils(val stock: String) {
 
     private companion object {
         const val dateFormatDaily = "yyyy-MM-dd"
@@ -33,78 +33,92 @@ class StocksApiDataUtils {
 
     //  Properties to cache results
     private var lastUpdatedDailyData: ZonedDateTime? = null
-    private var dailyData: StocksDataModel.RatesProcessed? = null
+    private var dailyData: List<Pair<ZonedDateTime, Double>>? = null
 
     private var lastUpdatedIntradayData: ZonedDateTime? = null
-    private var intradayData: StocksDataModel.RatesProcessed? = null
+    private var intradayData: List<Pair<ZonedDateTime, Double>>? = null
 
-    fun getMarket(stock: String): Observable<StocksDataModel.ResultCompanyInfo> {
+    fun getMarket(): Observable<StocksDataModel.ResultCompanyInfo> {
         return stocksApi.getCompanyMarket(symbol = stock, apikey = Constants.STOCK_API_KEY)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .map {
-                it.apply {
-                    Log.e("error", it.toString())
-                }
-            }
     }
 
-    fun getPricesFor1Day(stock: String): Observable<StocksDataModel.RatesProcessed> {
+    fun getLatestRate(): Observable<Double> {
+        return getIntradayPrices().map {
+            it[it.size - 1].second
+        }
+    }
+
+    fun getPricesFor1Day(): Observable<StocksDataModel.RatesProcessed> {
         val startDateTime: ZonedDateTime =
             endDateTimeIntraDay - Period.of(0, 0, 1)
-        return getIntradayPrices(stock).map {
+        return getIntradayPrices().map {
             StocksDataModel.RatesProcessed(
                 filterPeriod(it, startDateTime, endDateTimeIntraDay).toMap().toSortedMap()
             )
         }
     }
 
-    fun getPricesFor1Week(stock: String): Observable<StocksDataModel.RatesProcessed> {
+    fun getPricesFor1Week(): Observable<StocksDataModel.RatesProcessed> {
         val startDateTime: ZonedDateTime =
             endDateTimeIntraDay - Period.of(0, 0, 7)
-        return getIntradayPrices(stock).map {
+        return getIntradayPrices().map {
             StocksDataModel.RatesProcessed(
                 filterPeriod(it, startDateTime, endDateTimeIntraDay).toMap().toSortedMap()
             )
         }
     }
 
-    fun getPricesFor1Month(stock: String): Observable<StocksDataModel.RatesProcessed> {
+    fun getPricesFor1Month(): Observable<StocksDataModel.RatesProcessed> {
         val startDateTime: ZonedDateTime =
             endDateTimeIntraDay - Period.of(0, 0, 7)
-        return getIntradayPrices(stock).map {
+        return getIntradayPrices().map {
             StocksDataModel.RatesProcessed(
                 filterPeriod(it, startDateTime, endDateTimeIntraDay).toMap().toSortedMap()
             )
         }
     }
 
-    fun getPricesFor6Months(stock: String): Observable<StocksDataModel.RatesProcessed> {
+    fun getPricesFor6Months(): Observable<StocksDataModel.RatesProcessed> {
         val startDateTime: ZonedDateTime =
             endDateTimeDaily - Period.of(0, 6, 0)
-        return getDailyPrices(stock).map {
+        return getDailyPrices().map {
             StocksDataModel.RatesProcessed(
                 filterPeriod(it, startDateTime, endDateTimeDaily).toMap().toSortedMap()
             )
         }
     }
 
-    fun getPricesFor1Year(stock: String): Observable<StocksDataModel.RatesProcessed> {
+    fun getPricesFor1Year(): Observable<StocksDataModel.RatesProcessed> {
         val startDateTime: ZonedDateTime =
             endDateTimeDaily - Period.of(1, 0, 0)
-        return getDailyPrices(stock).map {
+        return getDailyPrices().map {
             StocksDataModel.RatesProcessed(
                 filterPeriod(it, startDateTime, endDateTimeDaily).toMap().toSortedMap()
             )
         }
     }
 
-    fun getPricesFor5Years(stock: String): Observable<StocksDataModel.RatesProcessed> {
+    fun getPricesFor5Years(): Observable<StocksDataModel.RatesProcessed> {
         val startDateTime: ZonedDateTime =
             endDateTimeDaily - Period.of(5, 0, 0)
-        return getDailyPrices(stock).map {
+        return getDailyPrices().map {
             StocksDataModel.RatesProcessed(
                 filterPeriod(it, startDateTime, endDateTimeDaily).toMap().toSortedMap()
+            )
+        }
+    }
+
+    fun getPricesForCustomPeriod(
+        startDateTime: ZonedDateTime,
+        endDateTime: ZonedDateTime
+    ): Observable<StocksDataModel.RatesProcessed> {
+        val test = ZonedDateTime.of(2021, 1, 1, 10, 0, 0, 0, ZoneId.systemDefault())
+        Log.e("error", "${test >= startDateTime && test <= endDateTime}")
+        return getDailyPrices().map {
+            StocksDataModel.RatesProcessed(
+                filterPeriod(it, startDateTime, endDateTime).toMap().toSortedMap()
             )
         }
     }
@@ -119,52 +133,56 @@ class StocksApiDataUtils {
 
     /**
      * Returns data about daily prices as an Observable
-     *
-     * @param stock Name of the stock to get data
      */
-    private fun getDailyPrices(
-        stock: String
-    ): Observable<List<Pair<ZonedDateTime, Double>>> {
-        return stocksApi.getDailyData(symbol = stock, apikey = Constants.STOCK_API_KEY)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { result ->
-                Log.e("error", result.toString())
-                result.data.map {
-                    ZonedDateTime.of(
-                        LocalDate.parse(it.key, DateTimeFormatter.ofPattern(dateFormatDaily)),
-                        LocalTime.MIDNIGHT,
-                        ZoneId.of(result.metaData.timeZone)
-                    ).withZoneSameInstant(ZoneId.systemDefault()) to it.value.price.toDouble()
+    private fun getDailyPrices(): Observable<List<Pair<ZonedDateTime, Double>>> {
+        if (checkDailyDataValid()) {
+            Log.i("CachedData", "Using cached data")
+            return Observable.just(dailyData)
+        } else {
+            Log.i("CachedData", "NOT Using cached data")
+            return stocksApi.getDailyData(symbol = stock, apikey = Constants.STOCK_API_KEY)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map { result ->
+                    dailyData = result.data.map {
+                        ZonedDateTime.of(
+                            LocalDate.parse(it.key, DateTimeFormatter.ofPattern(dateFormatDaily)),
+                            LocalTime.MIDNIGHT,
+                            ZoneId.of(result.metaData.timeZone)
+                        ).withZoneSameInstant(ZoneId.systemDefault()) to it.value.price.toDouble()
+                    }
+                    lastUpdatedDailyData = ZonedDateTime.now(ZoneId.systemDefault())
+                    dailyData
                 }
-            }
+        }
     }
 
     /**
      * Returns data about intraday prices as an Observable
-     *
-     * @param stock Name of the stock to get data for
      */
-    private fun getIntradayPrices(
-        stock: String,
-    ): Observable<List<Pair<ZonedDateTime, Double>>> {
-        return stocksApi.getIntradayData(apikey = Constants.STOCK_API_KEY, symbol = stock)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { result ->
-                result.apply {
-                    Log.e("error", result.toString())
+    private fun getIntradayPrices(): Observable<List<Pair<ZonedDateTime, Double>>> {
+        if (checkIntradayDataValid()) {
+            Log.i("CachedData", "Using cached data")
+            return Observable.just(intradayData)
+        } else {
+            Log.i("CachedData", "NOT Using cached data")
+            return stocksApi.getIntradayData(apikey = Constants.STOCK_API_KEY, symbol = stock)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map { result ->
+                    intradayData = result.data.map {
+                        ZonedDateTime.of(
+                            LocalDateTime.parse(
+                                it.key,
+                                DateTimeFormatter.ofPattern(dateFormatIntraday)
+                            ),
+                            ZoneId.of(result.metaData.timeZone)
+                        ).withZoneSameInstant(ZoneId.systemDefault()) to it.value.price.toDouble()
+                    }
+                    lastUpdatedIntradayData = ZonedDateTime.now(ZoneId.systemDefault())
+                    intradayData
                 }
-                result.data.map {
-                    ZonedDateTime.of(
-                        LocalDateTime.parse(
-                            it.key,
-                            DateTimeFormatter.ofPattern(dateFormatIntraday)
-                        ),
-                        ZoneId.of(result.metaData.timeZone)
-                    ).withZoneSameInstant(ZoneId.systemDefault()) to it.value.price.toDouble()
-                }
-            }
+        }
     }
 
     /**

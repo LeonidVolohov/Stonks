@@ -4,7 +4,7 @@ class Constants {
     companion object {
         const val CURRENCY_API_BASE_URL = "https://api.exchangeratesapi.io/"
 
-        const val STOCK_API_BASE_URL = "https://www.alphavantage.co/query/"
+        const val STOCK_API_BASE_URL = "https://www.alphavantage.co/"
         const val STOCK_API_KEY = "LBWSCWL8M5V6V9T0"
 
         const val CRYPTOCURRENCY_API_BASE_URL = "https://www.alphavantage.co/"
