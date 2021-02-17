@@ -73,4 +73,7 @@ dependencies {
     
     // Logging HTTP requests for debugging purposes
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+
+    // Prediction
+    compile 'org.nield:kotlin-statistics:1.2.1'
 }

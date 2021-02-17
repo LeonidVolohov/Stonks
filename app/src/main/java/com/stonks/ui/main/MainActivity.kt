@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     private val navListener : BottomNavigationView.OnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             selectedFragment = when (item.itemId) {
-                R.id.cryptocurrency_tab -> CryptoFragment()    // TODO: Replace with actual fragment
+                R.id.cryptocurrency_tab -> CryptoFragment()
                 R.id.currency_tab -> CurrencyFragment(bottom_navigation.height)
                 R.id.stocks_tab -> StocksFragment()
                 else -> TODO("Rewrite it without else statement")
