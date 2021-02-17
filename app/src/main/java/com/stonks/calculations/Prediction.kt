@@ -22,6 +22,9 @@ class Prediction {
     /**
      * Использование в следующем формате:
      * (Prediction::datePrediction)(Prediction(),dateTest,amountTest,30)
+     * Где
+     * dateTest: Array<Long>
+     * amountTest: Array<Double>
      * Возвращает значение типа double через <30> дней
      */
     fun datePrediction (date_array: Array<Long>, amount_array: Array<Double>, days: Int): Double {
