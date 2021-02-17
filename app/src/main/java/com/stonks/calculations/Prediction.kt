@@ -4,13 +4,13 @@ import org.nield.kotlinstatistics.SimpleRegression
 import org.nield.kotlinstatistics.simpleRegression
 
 class Prediction {
-    class AmountDate (val date: Long, val amount: Double)
+    data class AmountPerDate (val date: Long, val amount: Double)
 
     fun prediction (date_array: Array<Long>, amount_array: Array<Double>): SimpleRegression {
 
-        val amountDates = mutableListOf<AmountDate>()
+        val amountDates = mutableListOf<AmountPerDate>()
         for (i: Int in 0..(date_array.size-1)){
-            amountDates.add(AmountDate(date_array[i], amount_array[i]))
+            amountDates.add(AmountPerDate(date_array[i], amount_array[i]))
         }
 
         return amountDates.simpleRegression(
