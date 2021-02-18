@@ -1,6 +1,5 @@
 package com.stonks.api.stocks
 
-import android.util.Log
 import com.stonks.api.Constants
 import com.stonks.api.stocksApi
 import io.reactivex.Observable
@@ -28,6 +27,8 @@ class StocksApiDataUtils(val stock: String) {
                 ZoneId.systemDefault()
             )
     }
+
+    private val TAG = this::class.java.name
 
     var market: String? = null
 
@@ -72,7 +73,7 @@ class StocksApiDataUtils(val stock: String) {
 
     fun getPricesFor1Month(): Observable<StocksDataModel.RatesProcessed> {
         val startDateTime: ZonedDateTime =
-            endDateTimeIntraDay - Period.of(0, 0, 7)
+            endDateTimeIntraDay - Period.of(0, 1, 0)
         return getIntradayPrices().map {
             StocksDataModel.RatesProcessed(
                 filterPeriod(it, startDateTime, endDateTimeIntraDay).toMap().toSortedMap()
@@ -134,10 +135,8 @@ class StocksApiDataUtils(val stock: String) {
      */
     private fun getDailyPrices(): Observable<List<Pair<ZonedDateTime, Double>>> {
         if (checkDailyDataValid()) {
-            Log.i("CachedData", "Using cached data")
             return Observable.just(dailyData)
         } else {
-            Log.i("CachedData", "NOT Using cached data")
             return stocksApi.getDailyData(symbol = stock, apikey = Constants.STOCK_API_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -160,10 +159,8 @@ class StocksApiDataUtils(val stock: String) {
      */
     private fun getIntradayPrices(): Observable<List<Pair<ZonedDateTime, Double>>> {
         if (checkIntradayDataValid()) {
-            Log.i("CachedData", "Using cached data")
             return Observable.just(intradayData)
         } else {
-            Log.i("CachedData", "NOT Using cached data")
             return stocksApi.getIntradayData(apikey = Constants.STOCK_API_KEY, symbol = stock)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

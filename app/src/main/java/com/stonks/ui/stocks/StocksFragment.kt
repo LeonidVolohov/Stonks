@@ -16,26 +16,31 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.stonks.R
 import com.stonks.api.stocks.StocksApiDataUtils
 import com.stonks.api.stocks.StocksDataModel
+import com.stonks.ui.chart.StockLineChart
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import java.time.Instant
 import java.time.Period
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class StocksFragment : Fragment() {
     private var disposables = CompositeDisposable()
-    private var apiUtils: StocksApiDataUtils? = null
+    private lateinit var apiUtils: StocksApiDataUtils
 
     private lateinit var spinnerStocks: Spinner
     private val spinnerStocksValue: String
         get() = spinnerStocks.selectedItem.toString().split(',')[0]
     private lateinit var spinnerCurrency: Spinner
+    private val spinnerCurrencyValue: String
+        get() = spinnerCurrency.selectedItem.toString().split(',')[0]
     private lateinit var textViewMarket: TextView
     private lateinit var textViewPrice: TextView
     private lateinit var toggleGroupPeriod: MaterialButtonToggleGroup
     private lateinit var switchPrediction: SwitchMaterial
+    private lateinit var stocksChart: StockLineChart
 
     private val periodToFarthestReachableMomentInPast = Period.of(5, 0, 0)
     private val startCustomDateLimit: ZonedDateTime
@@ -81,18 +86,17 @@ class StocksFragment : Fragment() {
     private fun updateStockData(changedPeriodOnly: Boolean = false) {
         val stock = spinnerStocksValue
         if (!changedPeriodOnly) {
-            Log.i(TAG, "Changing API Utils Object")
             apiUtils = StocksApiDataUtils(stock)
-            textViewMarket.text = "Loading..."
+            textViewMarket.text = getString(R.string.loading_value_placeholder)
             disposables.add(
-                apiUtils!!.getMarket().subscribe(
+                apiUtils.getMarket().subscribe(
                     { result -> textViewMarket.text = result.market },
                     ::logError
                 )
             )
             toggleGroupPeriod.check(R.id.togglebutton_one_day_selector)
             disposables.add(
-                apiUtils!!.getLatestRate().subscribe(
+                apiUtils.getLatestRate().subscribe(
                     { result -> textViewPrice.text = result.toString() },
                     ::logError
                 )
@@ -101,28 +105,22 @@ class StocksFragment : Fragment() {
         var observable: Observable<StocksDataModel.RatesProcessed>? = null
         when (toggleGroupPeriod.checkedButtonId) {
             R.id.togglebutton_one_day_selector -> {
-                println("One Day Period Selected")
-                observable = apiUtils!!.getPricesFor1Day()
+                observable = apiUtils.getPricesFor1Day()
             }
             R.id.togglebutton_one_week_selector -> {
-                println("One Week Period Selected")
-                observable = apiUtils!!.getPricesFor1Week()
+                observable = apiUtils.getPricesFor1Week()
             }
             R.id.togglebutton_one_month_selector -> {
-                println("One Month Period Selected")
-                observable = apiUtils!!.getPricesFor1Month()
+                observable = apiUtils.getPricesFor1Month()
             }
             R.id.togglebutton_six_months_selector -> {
-                println("Six Months Period Selected")
-                observable = apiUtils!!.getPricesFor6Months()
+                observable = apiUtils.getPricesFor6Months()
             }
             R.id.togglebutton_one_year_selector -> {
-                println("One Year Period Selected")
-                observable = apiUtils!!.getPricesFor1Year()
+                observable = apiUtils.getPricesFor1Year()
             }
             R.id.togglebutton_five_years_selector -> {
-                println("Five Years Period Selected")
-                observable = apiUtils!!.getPricesFor5Years()
+                observable = apiUtils.getPricesFor5Years()
             }
             R.id.togglebutton_custom_period_selector -> {
                 var startDateTime: ZonedDateTime
@@ -144,31 +142,31 @@ class StocksFragment : Fragment() {
                     startDateTime = ZonedDateTime.ofInstant(startInstant, ZoneId.systemDefault())
                     endDateTime = ZonedDateTime.ofInstant(endInstant, ZoneId.systemDefault())
                     disposables.add(
-                        apiUtils!!.getPricesForCustomPeriod(startDateTime, endDateTime)
-                            .subscribe(
-                                { result ->
-                                    Log.e(
-                                        TAG,
-                                        result.toString()
-                                    ) // TODO: Placeholder for actual actions with data
-                                },
-                                ::logError
-                            )
+                        apiUtils.getPricesForCustomPeriod(startDateTime, endDateTime)
+                            .subscribe(::processResult, ::logError)
                     )
-                    Log.i(TAG, "The selected date range is $startDateTime - $endDateTime")
                 }
                 picker.show(activity?.supportFragmentManager!!, picker.toString())
             }
             else -> TODO("Error")
         }
         disposables.add(
-            observable?.subscribe(
-                { result ->
-                    Log.e(TAG, result.toString()) // TODO: Placeholder for actual actions with data
-                },
-                ::logError
-            ) ?: Observable.just(1).subscribe({}, {})
+            observable?.subscribe(::processResult, ::logError) ?: Observable.just(1)
+                .subscribe({}, {})
         )
+    }
+
+    private fun processResult(result: StocksDataModel.RatesProcessed) {
+        val dateList = result.rates.keys.map {
+            it.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        }.sorted()
+        stocksChart.setXAxis(view!!.findViewById(R.id.stocks_chart), dateList)
+        val entries = result.rates.values.sorted()
+        val data = stocksChart.getLineData(
+            entries = entries, baseCurrency = spinnerStocksValue,
+            targetCurrency = spinnerCurrencyValue
+        )
+        stocksChart.displayChart(view!!.findViewById(R.id.stocks_chart), data)
     }
 
     private fun logError(error: Throwable) {
@@ -186,6 +184,7 @@ class StocksFragment : Fragment() {
         textViewMarket = view.findViewById(R.id.textview_market_name)
         textViewPrice = view.findViewById(R.id.textview_price_value)
         toggleGroupPeriod = view.findViewById(R.id.period_selection_group)
+        stocksChart = StockLineChart(view.findViewById(R.id.stocks_chart))
         switchPrediction = view.findViewById(R.id.switch_prediction)
     }
 
