@@ -29,6 +29,8 @@ class StocksApiDataUtils(val stock: String) {
             )
     }
 
+    private val TAG = this::class.java.name
+
     var market: String? = null
 
     //  Properties to cache results
@@ -39,6 +41,7 @@ class StocksApiDataUtils(val stock: String) {
     private var intradayData: List<Pair<ZonedDateTime, Double>>? = null
 
     fun getMarket(): Observable<StocksDataModel.ResultCompanyInfo> {
+        Log.i(TAG, "Getting market data")
         return stocksApi.getCompanyMarket(symbol = stock, apikey = Constants.STOCK_API_KEY)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -133,11 +136,12 @@ class StocksApiDataUtils(val stock: String) {
      * Returns data about daily prices as an Observable
      */
     private fun getDailyPrices(): Observable<List<Pair<ZonedDateTime, Double>>> {
+        Log.i(TAG, "Getting daily data")
         if (checkDailyDataValid()) {
-            Log.i("CachedData", "Using cached data")
+            Log.i(TAG, "Using cached data")
             return Observable.just(dailyData)
         } else {
-            Log.i("CachedData", "NOT Using cached data")
+            Log.i(TAG, "NOT Using cached data")
             return stocksApi.getDailyData(symbol = stock, apikey = Constants.STOCK_API_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -159,11 +163,12 @@ class StocksApiDataUtils(val stock: String) {
      * Returns data about intraday prices as an Observable
      */
     private fun getIntradayPrices(): Observable<List<Pair<ZonedDateTime, Double>>> {
+        Log.i(TAG, "Getting intraday data")
         if (checkIntradayDataValid()) {
-            Log.i("CachedData", "Using cached data")
+            Log.i(TAG, "Using cached data")
             return Observable.just(intradayData)
         } else {
-            Log.i("CachedData", "NOT Using cached data")
+            Log.i(TAG, "NOT Using cached data")
             return stocksApi.getIntradayData(apikey = Constants.STOCK_API_KEY, symbol = stock)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

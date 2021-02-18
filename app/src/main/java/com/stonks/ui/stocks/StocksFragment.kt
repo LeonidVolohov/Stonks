@@ -106,27 +106,27 @@ class StocksFragment : Fragment() {
         var observable: Observable<StocksDataModel.RatesProcessed>? = null
         when (toggleGroupPeriod.checkedButtonId) {
             R.id.togglebutton_one_day_selector -> {
-                println("One Day Period Selected")
+                Log.i(TAG, "One Day Period Selected")
                 observable = apiUtils.getPricesFor1Day()
             }
             R.id.togglebutton_one_week_selector -> {
-                println("One Week Period Selected")
+                Log.i(TAG, "One Week Period Selected")
                 observable = apiUtils.getPricesFor1Week()
             }
             R.id.togglebutton_one_month_selector -> {
-                println("One Month Period Selected")
+                Log.i(TAG, "One Month Period Selected")
                 observable = apiUtils.getPricesFor1Month()
             }
             R.id.togglebutton_six_months_selector -> {
-                println("Six Months Period Selected")
+                Log.i(TAG, "Six Months Period Selected")
                 observable = apiUtils.getPricesFor6Months()
             }
             R.id.togglebutton_one_year_selector -> {
-                println("One Year Period Selected")
+                Log.i(TAG, "One Year Period Selected")
                 observable = apiUtils.getPricesFor1Year()
             }
             R.id.togglebutton_five_years_selector -> {
-                println("Five Years Period Selected")
+                Log.i(TAG, "Five Years Period Selected")
                 observable = apiUtils.getPricesFor5Years()
             }
             R.id.togglebutton_custom_period_selector -> {
@@ -165,7 +165,7 @@ class StocksFragment : Fragment() {
     }
 
     private fun processResult(result: StocksDataModel.RatesProcessed) {
-        Log.e(TAG, result.toString()) // TODO: Placeholder for actual actions with data
+        Log.e(TAG, result.toString())
         val dateList = result.rates.keys.map {
             it.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         }.sorted()
