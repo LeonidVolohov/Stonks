@@ -88,7 +88,7 @@ class StocksFragment : Fragment() {
         if (!changedPeriodOnly) {
             Log.i(TAG, "Changing API Utils Object")
             apiUtils = StocksApiDataUtils(stock)
-            textViewMarket.text = "Loading..."
+            textViewMarket.text = getString(R.string.loading_value_placeholder)
             disposables.add(
                 apiUtils.getMarket().subscribe(
                     { result -> textViewMarket.text = result.market },
