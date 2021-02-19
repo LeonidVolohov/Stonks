@@ -24,7 +24,7 @@
             android:layout_marginBottom="@dimen/margin_padding_size_small"
             android:paddingEnd="@dimen/margin_padding_size_medium"
             android:paddingStart="@dimen/margin_padding_size_medium"
-            android:textSize="@dimen/text_size_smaller"
+            android:textSize="@dimen/text_size_smallest"
             android:gravity="center"
             tools:text="Данные на: 20.20.2020" />
 
@@ -163,7 +163,7 @@
             android:layout_marginStart="@dimen/margin_padding_size_medium"
             android:layout_marginTop="@dimen/margin_padding_size_small"
             android:layout_marginEnd="@dimen/margin_padding_size_small"
-            android:layout_marginBottom="@dimen/text_size_smaller">
+            android:layout_marginBottom="@dimen/text_size_smallest">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -416,75 +416,68 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/currency_togglebutton_one_day_selector"
                 style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/toggle_button_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/one_day_period_button_text"
                 android:textAlignment="center"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="@dimen/text_size_smaller"
                 card_view:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/currency_togglebutton_one_week_selector"
                 style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/toggle_button_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/one_week_period_button_text"
                 android:textAlignment="center"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="@dimen/text_size_smaller"
                 card_view:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/currency_togglebutton_one_month_selector"
                 style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/toggle_button_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/one_month_period_button_text"
                 android:textAlignment="center"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="14sp"
                 card_view:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/currency_togglebutton_six_months_selector"
                 style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/toggle_button_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/six_months_period_button_text"
                 android:textAlignment="center"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="@dimen/text_size_smaller"
                 card_view:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/currency_togglebutton_one_year_selector"
                 style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/toggle_button_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/one_year_period_button_text"
                 android:textAlignment="center"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="@dimen/text_size_smaller"
                 card_view:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/currency_togglebutton_five_years_selector"
                 style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/toggle_button_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/five_years_period_button_text"
                 android:textAlignment="center"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="@dimen/text_size_smaller"
                 card_view:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/currency_togglebutton_custom_period_selector"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/toggle_button_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 card_view:icon="@drawable/ic_calendar"
                 card_view:iconGravity="textStart"
                 card_view:iconPadding="0dp"
