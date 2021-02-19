@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/localization_button"
-        android:title="mjjjj"
-        android:icon="@drawable/ic_european_union" />
-
+        android:id="@+id/localize"
+        app:actionLayout="@layout/toolbar_row"
+        app:showAsAction="always"
+        android:title="some" />
 </menu>
