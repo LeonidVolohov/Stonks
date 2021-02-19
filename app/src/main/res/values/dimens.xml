@@ -19,6 +19,5 @@
 
     <!-- Custom Values -->
     <dimen name="toggle_button_width">56dp</dimen>
-    <dimen name="toggle_button_text_size">14sp</dimen>
     <dimen name="spinner_width">128dp</dimen>
 </resources>
