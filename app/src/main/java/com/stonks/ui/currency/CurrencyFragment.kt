@@ -2,6 +2,7 @@ package com.stonks.ui.currency
 
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +11,18 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.stonks.R
 import com.stonks.ui.chart.StockLineChart
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_currency.*
+import java.time.Instant
+import java.time.Period
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class CurrencyFragment(bottomNavigationHeight: Int) : Fragment() {
     private val TAG = CurrencyFragment::class.java.name
@@ -22,6 +31,11 @@ class CurrencyFragment(bottomNavigationHeight: Int) : Fragment() {
     private lateinit var targetRateSpinnerString: String
     private var isNumeric: Boolean = false
     private val localBottomNavigationHeight: Int = bottomNavigationHeight
+
+    private val startCustomDateLimit: ZonedDateTime
+        get() = ZonedDateTime.now(ZoneId.systemDefault()) - Period.of(5, 0, 0)
+    private val endCustomDateLimit: ZonedDateTime
+        get() = ZonedDateTime.now(ZoneId.systemDefault())
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -139,7 +153,39 @@ class CurrencyFragment(bottomNavigationHeight: Int) : Fragment() {
                         displayChart()
                     }
                     R.id.currency_togglebutton_custom_period_selector -> {
-                        // TODO: Add calendar
+                        var startDateTime: String
+                        var endDateTime: String
+                        val now = Calendar.getInstance()
+                        val picker = MaterialDatePicker.Builder.dateRangePicker()
+                                .setSelection(androidx.core.util.Pair(now.timeInMillis, now.timeInMillis))
+                                .setCalendarConstraints(
+                                        CalendarConstraints.Builder()
+                                                .setStart(startCustomDateLimit.toInstant().toEpochMilli())
+                                                .setEnd(endCustomDateLimit.toInstant().toEpochMilli())
+                                                .build()
+                                )
+                                .build()
+                        picker.addOnPositiveButtonClickListener {
+                            val startInstant = Instant.ofEpochMilli(it.first ?: 0)
+                            val endInstant = Instant.ofEpochMilli(it.second ?: 0)
+                            startDateTime = ZonedDateTime.ofInstant(startInstant, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                            endDateTime = ZonedDateTime.ofInstant(endInstant, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+                            currencyFragmentUtils.plotRatesPerPeriod(
+                                    startDate = startDateTime,
+                                    endDate = endDateTime,
+                                    targetRate = targetRateSpinnerString,
+                                    baseRate = baseRateSpinnerString,
+                                    stockLineChart = currencyLineChart,
+                                    currencyChart = currency_chart
+                            )
+
+                            displayChart()
+                        }
+                        picker.addOnNegativeButtonClickListener { Log.i(TAG, "Cancelled selection") }
+
+                        picker.show(activity?.supportFragmentManager!!, picker.toString())
+
                     }
                 }
             }

@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_small"
                 android:text="@string/market_string"
-                android:textSize="@dimen/text_size_smaller"
+                android:textSize="@dimen/text_size_smallest"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/spinner_stocks" />
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_small"
-                android:textSize="@dimen/text_size_smaller"
+                android:textSize="@dimen/text_size_smallest"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/textview_market_string"
                 app:layout_constraintTop_toBottomOf="@id/spinner_stocks" />

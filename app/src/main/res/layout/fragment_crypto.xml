@@ -18,7 +18,7 @@
         android:layout_marginBottom="@dimen/margin_padding_size_small"
         android:paddingEnd="@dimen/margin_padding_size_medium"
         android:paddingStart="@dimen/margin_padding_size_medium"
-        android:textSize="@dimen/text_size_smaller"
+        android:textSize="@dimen/text_size_smallest"
         android:gravity="center"
         tools:text="Last update: 20.20.2020" />
 
