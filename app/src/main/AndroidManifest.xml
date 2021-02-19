@@ -14,7 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Stonks">
 
-        <activity android:name=".ui.main.MainActivity">
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

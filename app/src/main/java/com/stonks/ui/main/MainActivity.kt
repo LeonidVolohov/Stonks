@@ -1,15 +1,16 @@
 package com.stonks.ui.main
 
 import android.os.Bundle
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.stonks.R
-import com.stonks.ui.DefaultFragment
+import com.stonks.ui.cryptocurrency.CryptoFragment
 import com.stonks.ui.currency.CurrencyFragment
 import com.stonks.ui.stocks.StocksFragment
 import kotlinx.android.synthetic.main.activity_main.*
-import com.stonks.ui.cryptocurrency.CryptoFragment
 
 class MainActivity : AppCompatActivity() {
     private val bottomNavigationHeight: Int = 0
@@ -21,13 +22,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setSupportActionBar(toolbar)
+
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigation.setOnNavigationItemSelectedListener(navListener)
         bottomNavigation.selectedItemId = R.id.currency_tab
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, selectedFragment)
-            .commit()
+                .replace(R.id.fragment_container, selectedFragment)
+                .commit()
     }
 
     private val navListener : BottomNavigationView.OnNavigationItemSelectedListener =
@@ -40,9 +43,20 @@ class MainActivity : AppCompatActivity() {
             }
 
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, selectedFragment)
-                .commit()
+                    .replace(R.id.fragment_container, selectedFragment)
+                    .commit()
 
             true
         }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.localization_button -> {
+            Toast.makeText(this, "Clicked", Toast.LENGTH_LONG).show()
+            true
+        }
+
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
+    }
 }
