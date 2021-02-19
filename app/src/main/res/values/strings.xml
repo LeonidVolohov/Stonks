@@ -11,7 +11,6 @@
     <string name="cryptocurrencies_tab_name">Crypto</string>
     <string name="currencies_tab_name">Currencies</string>
     <string name="stocks_tab_name">Stocks</string>
-    <string name="fragment_placeholder_text">Default Fragment Placeholder</string>
     <string name="one_day_period_button_text">1D</string>
     <string name="one_week_period_button_text">1W</string>
     <string name="one_month_period_button_text">1M</string>
