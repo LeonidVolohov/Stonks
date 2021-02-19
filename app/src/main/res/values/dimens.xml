@@ -2,7 +2,8 @@
 <resources>
 
     <!-- Font sizes-->
-    <dimen name="text_size_smaller">8sp</dimen>
+    <dimen name="text_size_smallest">8sp</dimen>
+    <dimen name="text_size_smaller">14sp</dimen>
     <dimen name="text_size_small">16sp</dimen>
     <dimen name="text_size_medium">20sp</dimen>
     <dimen name="text_size_above_medium">24sp</dimen>
@@ -18,6 +19,5 @@
 
     <!-- Custom Values -->
     <dimen name="toggle_button_width">56dp</dimen>
-    <dimen name="toggle_button_text_size">14sp</dimen>
     <dimen name="spinner_width">128dp</dimen>
 </resources>
