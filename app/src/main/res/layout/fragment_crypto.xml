@@ -19,7 +19,7 @@
         android:layout_marginBottom="@dimen/margin_padding_size_small"
         android:paddingEnd="@dimen/margin_padding_size_medium"
         android:paddingStart="@dimen/margin_padding_size_medium"
-        android:textSize="@dimen/text_size_smaller"
+        android:textSize="@dimen/text_size_smallest"
         android:gravity="center"
         tools:text="Last update: 20.20.2020" />
 
@@ -265,7 +265,7 @@
             android:layout_height="wrap_content"
             android:text="@string/one_day_period_button_text"
             android:textAlignment="center"
-            android:textSize="@dimen/toggle_button_text_size"
+            android:textSize="@dimen/text_size_smaller"
             style="?attr/materialButtonOutlinedStyle" />
 
         <com.google.android.material.button.MaterialButton
@@ -274,7 +274,7 @@
             android:layout_height="wrap_content"
             android:text="@string/one_week_period_button_text"
             android:textAlignment="center"
-            android:textSize="@dimen/toggle_button_text_size"
+            android:textSize="@dimen/text_size_smaller"
             style="?attr/materialButtonOutlinedStyle" />
 
         <com.google.android.material.button.MaterialButton
@@ -283,7 +283,7 @@
             android:layout_height="wrap_content"
             android:text="@string/one_month_period_button_text"
             android:textAlignment="center"
-            android:textSize="@dimen/toggle_button_text_size"
+            android:textSize="@dimen/text_size_smaller"
             style="?attr/materialButtonOutlinedStyle" />
 
         <com.google.android.material.button.MaterialButton
@@ -292,7 +292,7 @@
             android:layout_height="wrap_content"
             android:text="@string/six_months_period_button_text"
             android:textAlignment="center"
-            android:textSize="@dimen/toggle_button_text_size"
+            android:textSize="@dimen/text_size_smaller"
             style="?attr/materialButtonOutlinedStyle" />
 
         <com.google.android.material.button.MaterialButton
@@ -301,7 +301,7 @@
             android:layout_height="wrap_content"
             android:text="@string/one_year_period_button_text"
             android:textAlignment="center"
-            android:textSize="@dimen/toggle_button_text_size"
+            android:textSize="@dimen/text_size_smaller"
             style="?attr/materialButtonOutlinedStyle" />
 
         <com.google.android.material.button.MaterialButton
@@ -310,7 +310,7 @@
             android:layout_height="wrap_content"
             android:text="@string/five_years_period_button_text"
             android:textAlignment="center"
-            android:textSize="@dimen/toggle_button_text_size"
+            android:textSize="@dimen/text_size_smaller"
             style="?attr/materialButtonOutlinedStyle" />
 
         <com.google.android.material.button.MaterialButton
@@ -327,8 +327,8 @@
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/crypto_currency_chart"
-        android:layout_width="383dp"
-        android:layout_height="310dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@id/period_selection_group"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="@dimen/margin_padding_size_medium"
