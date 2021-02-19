@@ -5,7 +5,9 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -30,7 +32,6 @@ class CurrencyFragment(bottomNavigationHeight: Int) : Fragment() {
     private lateinit var targetRateSpinnerString: String
     private val localBottomNavigationHeight: Int = bottomNavigationHeight
     private var isNumeric: Boolean = false
-    private var isEnglish: Boolean = Locale.getDefault().toString() == "en_US"
 
     private val startCustomDateLimit: ZonedDateTime
         get() = ZonedDateTime.now(ZoneId.systemDefault()) - Period.of(5, 0, 0)
@@ -41,8 +42,6 @@ class CurrencyFragment(bottomNavigationHeight: Int) : Fragment() {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        setHasOptionsMenu(true)
-
         return inflater.inflate(R.layout.fragment_currency, container, false)
     }
 
@@ -273,46 +272,6 @@ class CurrencyFragment(bottomNavigationHeight: Int) : Fragment() {
         params.height = Resources.getSystem().displayMetrics.heightPixels - (Resources.getSystem().displayMetrics.heightPixels - totalHeight) / 3
         currency_chart.requestLayout()
         currency_scroll_view.fullScroll(View.FOCUS_DOWN)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.localize -> {
-            Log.i("toolbar", "clicked")
-            true
-        }
-        R.id.toolbar_row_country_name -> {
-            Log.i("toolbar", "name clicked")
-            true
-        }
-        R.id.toolbar_row_country_image -> {
-            Log.i("toolbar", "image clicked")
-            true
-        }
-        else -> {
-            Log.i("onOptionsItemSelected", "else")
-            super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        Log.i("resourse locale", resources.configuration.locales.toString())
-        Log.i("Locale.getDefault", Locale.getDefault().toString())
-        Log.i("localIsEnglish", isEnglish.toString())
-
-        inflater.inflate(R.menu.toolbar_menu, menu)
-
-        val localizeButton = menu.findItem(R.id.localize)
-        localizeButton.actionView.setOnClickListener {
-            if (isEnglish) {
-                updateLocale("en")
-            } else {
-                updateLocale("ru")
-            }
-        }
-
-        Log.i("---", "---------------")
-
-        super.onCreateOptionsMenu(menu, inflater)
     }
 
     private fun updateLocale(languageCode: String) {
