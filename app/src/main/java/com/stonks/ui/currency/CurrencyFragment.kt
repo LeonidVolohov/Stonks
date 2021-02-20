@@ -1,5 +1,6 @@
 package com.stonks.ui.currency
 
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
@@ -29,8 +30,8 @@ class CurrencyFragment(bottomNavigationHeight: Int) : Fragment() {
     private var disposable: Disposable? = null
     private lateinit var baseRateSpinnerString: String
     private lateinit var targetRateSpinnerString: String
-    private var isNumeric: Boolean = false
     private val localBottomNavigationHeight: Int = bottomNavigationHeight
+    private var isNumeric: Boolean = false
 
     private val startCustomDateLimit: ZonedDateTime
         get() = ZonedDateTime.now(ZoneId.systemDefault()) - Period.of(5, 0, 0)
@@ -271,5 +272,13 @@ class CurrencyFragment(bottomNavigationHeight: Int) : Fragment() {
         params.height = Resources.getSystem().displayMetrics.heightPixels - (Resources.getSystem().displayMetrics.heightPixels - totalHeight) / 3
         currency_chart.requestLayout()
         currency_scroll_view.fullScroll(View.FOCUS_DOWN)
+    }
+
+    private fun updateLocale(languageCode: String) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val config: Configuration = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
     }
 }
