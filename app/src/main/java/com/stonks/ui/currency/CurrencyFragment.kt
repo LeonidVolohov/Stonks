@@ -102,7 +102,6 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                 )
 
                 displayChart()
-                currency_button_group.check(R.id.currency_togglebutton_one_week_selector)
             } else {
                 currencyLineChart.clearChart()
             }
