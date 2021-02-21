@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val currencyID = intent.getIntExtra("currencyID", 0)
+        val defaultCurrencyInd = intent.getIntExtra("defaultCurrencyInd", 0)
         val firstLaunch = intent.getBooleanExtra("firstLaunch", true)
 
         rlGuideSecondPage = findViewById(R.id.guide_overlay_second_layout)

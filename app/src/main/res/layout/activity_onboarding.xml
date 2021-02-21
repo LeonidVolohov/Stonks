@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FirstLaunchActivity">
+    tools:context=".OnboardingActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -70,9 +70,9 @@
         android:id="@+id/save_preferences_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="@dimen/margin_padding_size_medium"
+        android:layout_marginEnd="@dimen/margin_padding_size_medium"
+        android:layout_marginBottom="@dimen/margin_padding_size_medium"
         android:text="@string/preferences_setup_button_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
