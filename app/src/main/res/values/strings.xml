@@ -20,8 +20,16 @@
     <string name="market_string">Market:</string>
     <string name="conversion_icon_description">Conversion Icon</string>
     <string name="latest_price_string">Latest Price:</string>
-    <string name="price_value_placeholer">100.352</string>
+    <string name="price_value_placeholer">Unknown</string>
     <string name="loading_value_placeholder">Loading…</string>
+    <string name="default_currency_selector_text">Choose your main currency</string>
+    <string name="language_selection_text">And your language</string>
+    <string name="english_language_label" translatable="false">ENG</string>
+    <string name="russian_language_label" translatable="false">RU</string>
+    <string name="preferences_setup_button_text">GO</string>
+    <string name="first_guide_page_text">Navigate between modes</string>
+    <string name="guide_tap_to_continue">(Tap to continue)</string>
+    <string name="second_guide_page_text"><![CDATA[Choose base & target]]></string>
 
     <string-array name="rates">
         <item>AUD, Australian Dollar</item>

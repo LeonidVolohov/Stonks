@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.main.MainActivity">
@@ -11,85 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_navigation" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/preferences_setup_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Choose your main currency"
-            android:textSize="@dimen/text_size_large"
-            app:layout_constraintBottom_toTopOf="@+id/default_currency_selector_spinner"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Spinner
-            android:id="@+id/default_currency_selector_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/rates"
-            android:gravity="center_horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/language_selection_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="And your language"
-            android:textSize="@dimen/text_size_large"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/default_currency_selector_spinner" />
-
-        <RadioGroup
-            android:id="@+id/language_selection_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_padding_size_small"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/language_selection_text"
-            android:checkedButton="@id/english_language">
-
-            <RadioButton
-                android:id="@+id/english_language"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_padding_size_small"
-                android:drawableTop="@drawable/ic_united_states"
-                android:text="ENG" />
-
-            <RadioButton
-                android:id="@+id/russian_language"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_padding_size_small"
-                android:drawableTop="@drawable/ic_russia"
-                android:text="RU" />
-        </RadioGroup>
-
-        <Button
-            android:id="@+id/save_preferences_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="GO"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <RelativeLayout
         android:id="@+id/guide_overlay_first_layout"
@@ -104,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:text="Navigate between modes"
+            android:text="@string/first_guide_page_text"
             android:textAlignment="center"
             android:textColor="?attr/colorAccent"
             android:textSize="@dimen/text_size_xlarge" />
@@ -114,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/first_guide_page_main_text"
-            android:text="(Tap to continue)"
+            android:text="@string/guide_tap_to_continue"
             android:textAlignment="center"
             android:textColor="?attr/colorAccent"
             android:textSize="@dimen/text_size_medium" />
@@ -151,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@id/second_guide_page_next_text"
             android:gravity="center_horizontal"
-            android:text="Choose base &amp; target"
+            android:text="@string/second_guide_page_text"
             android:textColor="?attr/colorAccent"
             android:textSize="@dimen/text_size_xlarge" />
 
@@ -161,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:gravity="center_horizontal"
-            android:text="(Tap to continue)"
+            android:text="@string/guide_tap_to_continue"
             android:textColor="?attr/colorAccent"
             android:textSize="@dimen/text_size_medium" />
 
