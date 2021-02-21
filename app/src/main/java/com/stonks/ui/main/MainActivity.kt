@@ -19,18 +19,22 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
     private val bottomNavigationHeight: Int = 0
 
-    // Variable storing currently selected fragment for displaying
-    private var selectedFragment: Fragment = CurrencyFragment(bottomNavigationHeight)
-
     private lateinit var rlGuideFirstPage: RelativeLayout
+
     private lateinit var rlGuideSecondPage: RelativeLayout
     private lateinit var bottomNavigation: BottomNavigationView
+
+    private var defaultCurrencyInd = 0
+
+    // Variable storing currently selected fragment for displaying
+    private lateinit var selectedFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        defaultCurrencyInd = intent.getIntExtra("defaultCurrencyInd", 0)
+        selectedFragment = CurrencyFragment(bottomNavigationHeight, defaultCurrencyInd)
 
-        val defaultCurrencyInd = intent.getIntExtra("defaultCurrencyInd", 0)
         val firstLaunch = intent.getBooleanExtra("firstLaunch", true)
 
         rlGuideSecondPage = findViewById(R.id.guide_overlay_second_layout)
@@ -78,9 +82,9 @@ class MainActivity : AppCompatActivity() {
     private val navListener: BottomNavigationView.OnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             selectedFragment = when (item.itemId) {
-                R.id.cryptocurrency_tab -> CryptoFragment()
-                R.id.currency_tab -> CurrencyFragment(bottom_navigation.height)
-                R.id.stocks_tab -> StocksFragment()
+                R.id.cryptocurrency_tab -> CryptoFragment(defaultCurrencyInd)
+                R.id.currency_tab -> CurrencyFragment(bottom_navigation.height, defaultCurrencyInd)
+                R.id.stocks_tab -> StocksFragment(defaultCurrencyInd)
                 else -> TODO("Rewrite it without else statement")
             }
 

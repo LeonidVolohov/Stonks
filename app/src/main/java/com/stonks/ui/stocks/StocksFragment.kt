@@ -26,7 +26,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class StocksFragment : Fragment() {
+class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
     private var disposables = CompositeDisposable()
     private lateinit var apiUtils: StocksApiDataUtils
 
@@ -62,6 +62,7 @@ class StocksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initFields(view)
+        spinnerCurrency.setSelection(defaultCurrencyInd)
         spinnerStocks.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,

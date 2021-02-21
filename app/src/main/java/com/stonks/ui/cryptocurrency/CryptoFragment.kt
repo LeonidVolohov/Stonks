@@ -21,6 +21,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_crypto.*
+import kotlinx.android.synthetic.main.fragment_currency.*
 import java.math.BigDecimal
 import java.math.BigDecimal.ROUND_HALF_EVEN
 import java.time.Instant
@@ -30,7 +31,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class CryptoFragment : Fragment() {
+class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
 
     private lateinit var apiUtils: CryptoCurrencyApiUtils
     private val disposables = CompositeDisposable()
@@ -55,9 +56,9 @@ class CryptoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         cryptoChart = StockLineChart(crypto_currency_chart)
+        to_currency_name_spinner.setSelection(defaultCurrencyInd)
 
         val apiKey = "W0W3UA4EHIXTZD3F"
-        val defaultCurrencyIndex = 17
         val decimalPointPrecision = 5
 
         val cryptoCurrenciesArray = resources.getStringArray(R.array.crypto_currencies)
@@ -81,7 +82,6 @@ class CryptoFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
 
-        to_currency_name_spinner.setSelection(defaultCurrencyIndex)
         to_currency_name_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                     parent: AdapterView<*>?,

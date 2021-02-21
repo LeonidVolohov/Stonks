@@ -36,6 +36,7 @@ class OnboardingActivity : AppCompatActivity() {
             spinnerDefaultCurrency = findViewById(R.id.default_currency_selector_spinner)
             groupLanguageSelection = findViewById(R.id.language_selection_group)
 
+            spinnerDefaultCurrency.setSelection(17)
             spinnerDefaultCurrency.onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(
