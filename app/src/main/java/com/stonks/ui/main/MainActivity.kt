@@ -1,6 +1,7 @@
 package com.stonks.ui.main
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,6 +15,7 @@ import com.stonks.ui.cryptocurrency.CryptoFragment
 import com.stonks.ui.currency.CurrencyFragment
 import com.stonks.ui.stocks.StocksFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private val bottomNavigationHeight: Int = 0
@@ -38,6 +40,8 @@ class MainActivity : AppCompatActivity() {
         val sharedPrefs = getPreferences(Context.MODE_PRIVATE)
         val firstLaunch = sharedPrefs.getBoolean("first_launch", true)
         Log.i("MAIN", "SharedPrefsValue: $firstLaunch")
+        var currencyID = 0
+        var language = ""
 
         rlGuideFirstPage = findViewById(R.id.guide_overlay_first_layout)
         rlGuideSecondPage = findViewById(R.id.guide_overlay_second_layout)
@@ -49,8 +53,6 @@ class MainActivity : AppCompatActivity() {
         groupLanguageSelection = findViewById(R.id.language_selection_group)
 
         if (firstLaunch) {
-            var currency = ""
-            var language = ""
             Log.i("MAIN", "Wrote false to SharedPrefs")
             Log.i(
                 "MAIN",
@@ -62,11 +64,24 @@ class MainActivity : AppCompatActivity() {
             rlGuideFirstPage.visibility = View.GONE
             rlGuideSecondPage.visibility = View.GONE
 
+            spinnerDefaultCurrency.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        currencyID = position
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
+                }
+
             btnSavePrefs.setOnClickListener {
-                currency = spinnerDefaultCurrency.selectedItem.toString()
                 when (groupLanguageSelection.checkedRadioButtonId) {
                     R.id.english_language -> {
-                        language = "eng"
+                        language = "en"
                     }
                     R.id.russian_language -> {
                         language = "ru"
@@ -74,17 +89,18 @@ class MainActivity : AppCompatActivity() {
                 }
                 with(sharedPrefs.edit()) {
                     putBoolean("first_launch", false)
-                    putString("currency", currency)
+                    putInt("currency", currencyID)
                     putString("language", language)
                     commit()
                 }
+                updateLocale(language)
                 clSetupPrefs.visibility = View.GONE
                 bottomNavigation.visibility = View.VISIBLE
                 rlGuideFirstPage.visibility = View.VISIBLE
+                bottomNavigation.selectedItemId = R.id.currency_tab
             }
 
             rlGuideFirstPage.setOnClickListener {
-                bottomNavigation.selectedItemId = R.id.currency_tab
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, selectedFragment)
                     .commitNow()
@@ -100,6 +116,8 @@ class MainActivity : AppCompatActivity() {
             rlGuideFirstPage.visibility = View.GONE
             rlGuideSecondPage.visibility = View.GONE
             clSetupPrefs.visibility = View.GONE
+            language = sharedPrefs.getString("language", "en") ?: "en"
+            updateLocale(language)
             bottomNavigation.selectedItemId = R.id.currency_tab
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, selectedFragment)
@@ -123,9 +141,17 @@ class MainActivity : AppCompatActivity() {
             }
 
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, selectedFragment)
-                    .commit()
+                .replace(R.id.fragment_container, selectedFragment)
+                .commit()
 
             true
         }
+
+    private fun updateLocale(languageCode: String) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val config: Configuration = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
+    }
 }
