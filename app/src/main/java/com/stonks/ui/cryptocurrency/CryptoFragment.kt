@@ -41,12 +41,14 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
         get() = ZonedDateTime.now(ZoneId.systemDefault())
     private val TAG = this::class.java.name
     private lateinit var cryptoChart: StockLineChart
-    var cryptoCurrencyName = ""
-    var currencyName = ""
+    private val cryptoCurrencyName: String
+        get() = crypto_currency_name_spinner.selectedItem.toString().split(",")[0]
+    private val currencyName: String
+        get() = to_currency_name_spinner.selectedItem.toString().split(",")[0]
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_crypto, container, false)
     }
@@ -89,6 +91,7 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
             ) {
                 toCurrencySpinnerString = currencyNameArray[position]
                 crypto_rate_number.setText("1.0")
+                updateChart(false)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) { }
@@ -141,8 +144,6 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
     }
 
     private fun updateChart(changedCryptoSpinner: Boolean = true) {
-        cryptoCurrencyName = crypto_currency_name_spinner.selectedItem.toString().split(",")[0]
-        currencyName = to_currency_name_spinner.selectedItem.toString().split(",")[0]
         if (changedCryptoSpinner) {
             apiUtils = CryptoCurrencyApiUtils(cryptoCurrencyName)
             period_selection_group.check(R.id.togglebutton_one_week_selector)
@@ -207,6 +208,7 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
         val dateList = result.rates.keys.map {
             it.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         }.sorted()
+        apiUtils.convertToCurrency(currencyName, result)
         cryptoChart.setXAxis(crypto_currency_chart, dateList)
         val entries = result.rates.values.sorted()
         val data = cryptoChart.getLineData(
