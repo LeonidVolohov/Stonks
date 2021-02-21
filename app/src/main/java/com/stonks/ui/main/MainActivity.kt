@@ -50,13 +50,17 @@ class MainActivity : AppCompatActivity() {
                 rlGuideSecondPage.visibility = View.GONE
                 bottomNavigation.menu.getItem(0).isEnabled = true
                 bottomNavigation.menu.getItem(2).isEnabled = true
+
+                if (!isOnline(this)) {
+                    Toast.makeText(this, "Please, check internet connection!", Toast.LENGTH_LONG).show()
+                }
             }
         } else {
             rlGuideFirstPage.visibility = View.GONE
-        }
 
-        if (!isOnline(this)) {
-            Toast.makeText(this, "Please, check internet connection!", Toast.LENGTH_LONG).show()
+            if (!isOnline(this)) {
+                Toast.makeText(this, "Please, check internet connection!", Toast.LENGTH_LONG).show()
+            }
         }
 
         bottomNavigation.selectedItemId = R.id.currency_tab
