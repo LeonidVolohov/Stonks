@@ -2,19 +2,18 @@ package com.stonks.ui.cryptocurrency
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.stonks.R
 import com.stonks.api.cryptoCurrencyApi
 import com.stonks.api.cryptocurrency.CryptoCurrencyApiUtils
 import com.stonks.api.cryptocurrency.CryptoCurrencyDataModel
-import com.stonks.api.stocks.StocksDataModel
 import com.stonks.ui.chart.StockLineChart
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -30,7 +29,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class CryptoFragment : Fragment() {
+class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
 
     private lateinit var apiUtils: CryptoCurrencyApiUtils
     private val disposables = CompositeDisposable()
@@ -55,9 +54,9 @@ class CryptoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         cryptoChart = StockLineChart(crypto_currency_chart)
+        to_currency_name_spinner.setSelection(defaultCurrencyInd)
 
         val apiKey = "W0W3UA4EHIXTZD3F"
-        val defaultCurrencyIndex = 17
         val decimalPointPrecision = 5
 
         val cryptoCurrenciesArray = resources.getStringArray(R.array.crypto_currencies)
@@ -81,7 +80,6 @@ class CryptoFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
 
-        to_currency_name_spinner.setSelection(defaultCurrencyIndex)
         to_currency_name_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                     parent: AdapterView<*>?,

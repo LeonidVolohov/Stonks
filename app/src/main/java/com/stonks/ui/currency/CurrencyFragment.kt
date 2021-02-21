@@ -24,7 +24,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class CurrencyFragment(bottomNavigationHeight: Int) : Fragment() {
+class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyInd: Int) : Fragment() {
     private val TAG = CurrencyFragment::class.java.name
     private var disposable: Disposable? = null
     private lateinit var baseRateSpinnerString: String
@@ -54,6 +54,7 @@ class CurrencyFragment(bottomNavigationHeight: Int) : Fragment() {
         val currencyLineChart = StockLineChart(currency_chart)
 
         initPrimaryRatesName(chartPrimaryRatesArray)
+        target_rate_spinner.setSelection(defaultCurrencyInd)
 
         currencyFragmentUtils.setLastUpdatedDate(last_date_update, "Data for: ")
 

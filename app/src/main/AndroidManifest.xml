@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Stonks">
-        <activity android:name=".OnboardingActivity">
+        <activity android:name=".ui.OnboardingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
