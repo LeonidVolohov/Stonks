@@ -1,4 +1,4 @@
-package com.stonks
+package com.stonks.ui
 
 import android.content.Context
 import android.content.Intent
@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.RadioGroup
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import com.stonks.R
 import com.stonks.ui.main.MainActivity
 import java.util.*
 
@@ -36,7 +37,7 @@ class OnboardingActivity : AppCompatActivity() {
             spinnerDefaultCurrency = findViewById(R.id.default_currency_selector_spinner)
             groupLanguageSelection = findViewById(R.id.language_selection_group)
 
-            spinnerDefaultCurrency.setSelection(17)
+            spinnerDefaultCurrency.setSelection(Constants.defaultCurrencyInd)
             spinnerDefaultCurrency.onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(

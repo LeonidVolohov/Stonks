@@ -2,26 +2,24 @@ package com.stonks.ui.cryptocurrency
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.stonks.R
 import com.stonks.api.cryptoCurrencyApi
 import com.stonks.api.cryptocurrency.CryptoCurrencyApiUtils
 import com.stonks.api.cryptocurrency.CryptoCurrencyDataModel
-import com.stonks.api.stocks.StocksDataModel
 import com.stonks.ui.chart.StockLineChart
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_crypto.*
-import kotlinx.android.synthetic.main.fragment_currency.*
 import java.math.BigDecimal
 import java.math.BigDecimal.ROUND_HALF_EVEN
 import java.time.Instant

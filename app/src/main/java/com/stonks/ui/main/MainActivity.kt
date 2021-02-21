@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.stonks.R
+import com.stonks.ui.Constants
 import com.stonks.ui.cryptocurrency.CryptoFragment
 import com.stonks.ui.currency.CurrencyFragment
 import com.stonks.ui.stocks.StocksFragment
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rlGuideSecondPage: RelativeLayout
     private lateinit var bottomNavigation: BottomNavigationView
 
-    private var defaultCurrencyInd = 0
+    private var defaultCurrencyInd = Constants.defaultCurrencyInd
 
     // Variable storing currently selected fragment for displaying
     private lateinit var selectedFragment: Fragment
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        defaultCurrencyInd = intent.getIntExtra("defaultCurrencyInd", 0)
+        defaultCurrencyInd = intent.getIntExtra("defaultCurrencyInd", Constants.defaultCurrencyInd)
         selectedFragment = CurrencyFragment(bottomNavigationHeight, defaultCurrencyInd)
 
         val firstLaunch = intent.getBooleanExtra("firstLaunch", true)
