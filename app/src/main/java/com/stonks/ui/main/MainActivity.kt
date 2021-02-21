@@ -1,8 +1,12 @@
 package com.stonks.ui.main
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.View
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -46,14 +50,23 @@ class MainActivity : AppCompatActivity() {
                 rlGuideSecondPage.visibility = View.GONE
                 bottomNavigation.menu.getItem(0).isEnabled = true
                 bottomNavigation.menu.getItem(2).isEnabled = true
+
+                if (!isOnline(this)) {
+                    Toast.makeText(this, "Please, check internet connection!", Toast.LENGTH_LONG).show()
+                }
             }
         } else {
             rlGuideFirstPage.visibility = View.GONE
+
+            if (!isOnline(this)) {
+                Toast.makeText(this, "Please, check internet connection!", Toast.LENGTH_LONG).show()
+            }
         }
+
         bottomNavigation.selectedItemId = R.id.currency_tab
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, selectedFragment)
-            .commitNow()
+                .replace(R.id.fragment_container, selectedFragment)
+                .commitNow()
 
         bottomNavigation.setOnNavigationItemSelectedListener(navListener)
         if (firstLaunch) {
@@ -72,9 +85,26 @@ class MainActivity : AppCompatActivity() {
             }
 
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, selectedFragment)
-                .commit()
+                    .replace(R.id.fragment_container, selectedFragment)
+                    .commit()
 
             true
         }
+
+    private fun isOnline(context: Context): Boolean {
+        val connectivityManager =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (capabilities != null) {
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                return true
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                return true
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                return true
+            }
+        }
+        return false
+    }
 }
