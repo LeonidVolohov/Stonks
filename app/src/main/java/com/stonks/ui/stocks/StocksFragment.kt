@@ -63,6 +63,20 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initFields(view)
         spinnerCurrency.setSelection(defaultCurrencyInd)
+        spinnerCurrency.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                updateStockData(changedPeriodOnly = true)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+        }
         spinnerStocks.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -161,6 +175,7 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
         val dateList = result.rates.keys.map {
             it.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         }.sorted()
+        apiUtils.convertToCurrency(spinnerCurrencyValue, result)
         stocksChart.setXAxis(view!!.findViewById(R.id.stocks_chart), dateList)
         val entries = result.rates.values.sorted()
         val data = stocksChart.getLineData(
