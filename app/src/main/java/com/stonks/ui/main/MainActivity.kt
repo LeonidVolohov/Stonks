@@ -1,7 +1,6 @@
 package com.stonks.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +28,6 @@ class MainActivity : AppCompatActivity() {
 
         val currencyID = intent.getIntExtra("currencyID", 0)
         val firstLaunch = intent.getBooleanExtra("firstLaunch", true)
-        Log.i("INTENT_PARAMS_RECEIVED", "FIRST_LAUNCH: $firstLaunch, CURRENCY: $currencyID")
 
         rlGuideSecondPage = findViewById(R.id.guide_overlay_second_layout)
         bottomNavigation = findViewById(R.id.bottom_navigation)
