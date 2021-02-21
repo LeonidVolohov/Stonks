@@ -21,6 +21,12 @@
     <string name="market_string">Биржа:</string>
     <string name="conversion_icon_description">Иконка конверсии</string>
     <string name="latest_price_string">Последняя цена:</string>
-    <string name="price_value_placeholer">100.352</string>
+    <string name="price_value_placeholer">Неизвестна</string>
     <string name="loading_value_placeholder">Загрузка…</string>
+    <string name="default_currency_selector_text">Выберите основную валюту</string>
+    <string name="language_selection_text">И язык</string>
+    <string name="preferences_setup_button_text">ВПЕРЁД!</string>
+    <string name="first_guide_page_text">Переключайтесь между режимами</string>
+    <string name="guide_tap_to_continue">(Нажмите чтобы продолжить)</string>
+    <string name="second_guide_page_text">Выбрайте что и во что переводить</string>
 </resources>
