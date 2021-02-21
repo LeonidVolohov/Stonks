@@ -2,6 +2,7 @@ package com.stonks.api.stocks
 
 import com.stonks.api.Constants
 import com.stonks.api.stocksApi
+import com.stonks.calculations.CurrencyConverter
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -197,4 +198,9 @@ class StocksApiDataUtils(val stock: String) {
     private fun checkDailyDataValid(): Boolean = lastUpdatedDailyData
         ?.isAfter(ZonedDateTime.now(ZoneId.systemDefault()) - Period.ofDays(1))
         ?: false
+
+    fun convertToCurrency(currencyCode: String, rates: StocksDataModel.RatesProcessed) {
+        val conversionRate = CurrencyConverter.ratesToUSD[currencyCode] ?: 0.0
+        rates.rates.replaceAll { t, u -> u * conversionRate }
+    }
 }
