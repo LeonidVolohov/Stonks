@@ -96,6 +96,17 @@
             android:id="@+id/textview_price_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_padding_size_small"
+            android:text="@string/price_value_placeholer"
+            android:textSize="@dimen/text_size_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/textview_dynamics_value"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textview_dynamics_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_padding_size_xlarge"
             android:text="@string/price_value_placeholer"
             android:textSize="@dimen/text_size_small"
