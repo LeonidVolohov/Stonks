@@ -36,10 +36,36 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
         get() = ZonedDateTime.now(ZoneId.systemDefault()) - Period.of(5, 0, 0)
     private val endCustomDateLimit: ZonedDateTime
         get() = ZonedDateTime.now(ZoneId.systemDefault())
+    private val period: String
+        get() {
+            when (currency_button_group.checkedButtonId) {
+                R.id.currency_togglebutton_one_day_selector -> {
+                    return "1D"
+                }
+                R.id.currency_togglebutton_one_week_selector -> {
+                    return "1W"
+                }
+                R.id.currency_togglebutton_one_month_selector -> {
+                    return "1M"
+                }
+                R.id.currency_togglebutton_six_months_selector -> {
+                    return "6M"
+                }
+                R.id.currency_togglebutton_one_year_selector -> {
+                    return "1Y"
+                }
+                R.id.currency_togglebutton_five_years_selector -> {
+                    return "5Y"
+                }
+                else -> {
+                    return "1M"
+                }
+            }
+        }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_currency, container, false)
     }
@@ -90,21 +116,17 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
         }
 
         currency_switch.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                currencyFragmentUtils.plotRatesPerPeriod(
-                    startDate = "1M",
-                    targetRate = targetRateSpinnerString,
-                    baseRate = baseRateSpinnerString,
-                    stockLineChart = currencyLineChart,
-                    currencyChart = currency_chart,
-                    isPrediction = true,
-                    context = requireContext()
-                )
+            currencyFragmentUtils.plotRatesPerPeriod(
+                startDate = period,
+                targetRate = targetRateSpinnerString,
+                baseRate = baseRateSpinnerString,
+                stockLineChart = currencyLineChart,
+                currencyChart = currency_chart,
+                isPrediction = currency_switch.isChecked,
+                context = requireContext()
+            )
 
-                displayChart()
-            } else {
-                currencyLineChart.clearChart()
-            }
+            displayChart()
         }
 
         currency_chart.isVisible = false
@@ -125,7 +147,8 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                             baseRate = baseRateSpinnerString,
                             stockLineChart = currencyLineChart,
                             currencyChart = currency_chart,
-                            context = requireContext()
+                            context = requireContext(),
+                            isPrediction = currency_switch.isChecked
                         )
 
                         displayChart()
@@ -137,7 +160,8 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                             baseRate = baseRateSpinnerString,
                             stockLineChart = currencyLineChart,
                             currencyChart = currency_chart,
-                            context = requireContext()
+                            context = requireContext(),
+                            isPrediction = currency_switch.isChecked
                         )
 
                         displayChart()
@@ -149,7 +173,8 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                             baseRate = baseRateSpinnerString,
                             stockLineChart = currencyLineChart,
                             currencyChart = currency_chart,
-                            context = requireContext()
+                            context = requireContext(),
+                            isPrediction = currency_switch.isChecked
                         )
 
                         displayChart()
@@ -161,7 +186,8 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                             baseRate = baseRateSpinnerString,
                             stockLineChart = currencyLineChart,
                             currencyChart = currency_chart,
-                            context = requireContext()
+                            context = requireContext(),
+                            isPrediction = currency_switch.isChecked
                         )
 
                         displayChart()
@@ -173,7 +199,8 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                             baseRate = baseRateSpinnerString,
                             stockLineChart = currencyLineChart,
                             currencyChart = currency_chart,
-                            context = requireContext()
+                            context = requireContext(),
+                            isPrediction = currency_switch.isChecked
                         )
 
                         displayChart()
@@ -213,7 +240,8 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                                 baseRate = baseRateSpinnerString,
                                 stockLineChart = currencyLineChart,
                                 currencyChart = currency_chart,
-                                context = requireContext()
+                                context = requireContext(),
+                                isPrediction = currency_switch.isChecked
                             )
 
                             displayChart()

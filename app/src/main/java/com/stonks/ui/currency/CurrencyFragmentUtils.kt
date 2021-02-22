@@ -17,6 +17,7 @@ import io.reactivex.disposables.Disposable
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.Period
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -288,7 +289,9 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
                                 lineChartData = lineChartData
                             )
                         } else {
-                            val predictionRateList: MutableList<Double> =
+                            val predictionRateListMax: MutableList<Double> =
+                                rateList.toMutableList()
+                            val predictionRateListMin: MutableList<Double> =
                                 rateList.toMutableList()
                             val dateListLong: ArrayList<Long> = arrayListOf()
                             if (dateList != null) {
@@ -300,8 +303,8 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
                                 }
                             }
 
-                            val predictionDate = LocalDate.now().plusMonths(1)
-                            dateList?.add(predictionDate.toString())
+//                            val predictionDate = LocalDate.now().plusMonths(1)
+//                            dateList?.add(predictionDate.toString())
 
                             val currentDaysInMonth =
                                 Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
@@ -310,17 +313,33 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
                                 entries.toTypedArray(),
                                 currentDaysInMonth
                             )
+                            val predictionRateMax = predictionRate * 1.5
+                            val predictionRateMin = predictionRate * 0.5
+                            for (i in 1..currentDaysInMonth) {
+                                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                                val predictionDate: String = (LocalDate
+                                    .parse(
+                                        dateList?.last() ?: "2020-12-20",
+                                        formatter
+                                    ) + Period.ofDays(i))
+                                    .format(formatter)
+                                dateList?.add(predictionDate.toString())
+                                predictionRateListMax.add(rateList.last() + (predictionRateMax - rateList.last()) / currentDaysInMonth * i)
+                                predictionRateListMin.add(rateList.last() + (predictionRateMin - rateList.last()) / currentDaysInMonth * i)
+                            }
 
-                            predictionRateList.add(predictionRate)
-
-                            val lineChartPredictionData = stockLineChart.getPredictionLineData(
-                                predictionEntries = predictionRateList.toList()
+                            val lineChartPredictionDataMax = stockLineChart.getPredictionLineData(
+                                predictionEntries = predictionRateListMax.toList()
+                            )
+                            val lineChartPredictionDataMin = stockLineChart.getPredictionLineData(
+                                predictionEntries = predictionRateListMin.toList()
                             )
 
-                            stockLineChart.displayPredictionChart(
+                            stockLineChart.displayPredictionChartTransparent(
                                 lineChart = currencyChart,
                                 lineChartData = lineChartData,
-                                lineChartPredictionData = lineChartPredictionData
+                                lineChartPredictionDataMax = lineChartPredictionDataMax,
+                                lineChartPredictionDataMin = lineChartPredictionDataMin
                             )
                         }
                     },
