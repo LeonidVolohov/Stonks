@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyInd: Int) : Fragment() {
+
     private var disposable: Disposable? = null
     private lateinit var baseRateSpinnerString: String
     private lateinit var targetRateSpinnerString: String

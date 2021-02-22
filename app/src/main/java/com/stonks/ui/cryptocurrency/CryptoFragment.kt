@@ -1,7 +1,6 @@
 package com.stonks.ui.cryptocurrency
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +10,13 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.stonks.R
+import com.stonks.api.Constants.Companion.CRYPTOCURRENCY_API_KEY
 import com.stonks.api.cryptoCurrencyApi
 import com.stonks.api.cryptocurrency.CryptoCurrencyApiUtils
 import com.stonks.api.cryptocurrency.CryptoCurrencyDataModel
 import com.stonks.ui.Constants
 import com.stonks.calculations.Prediction
+import com.stonks.ui.Constants.Companion.DEFAULT_DECIMAL_POINT_PRECISION
 import com.stonks.ui.chart.StockLineChart
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -43,7 +44,6 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
                 periodToFarthestReachableMomentInPast
     private val endCustomDateLimit: ZonedDateTime
         get() = ZonedDateTime.now(ZoneId.systemDefault())
-    private val TAG = this::class.java.name
     private lateinit var cryptoChart: StockLineChart
     private val cryptoCurrencyName: String
         get() = crypto_currency_name_spinner.selectedItem.toString().split(",")[0]
@@ -63,9 +63,6 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         cryptoChart = StockLineChart(crypto_currency_chart)
         to_currency_name_spinner.setSelection(defaultCurrencyInd)
-
-        val apiKey = "W0W3UA4EHIXTZD3F"
-        val decimalPointPrecision = 5
 
         val cryptoCurrenciesArray = resources.getStringArray(R.array.crypto_currencies)
         val currencyNameArray = resources.getStringArray(R.array.rates)
@@ -117,20 +114,24 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
                                 function = "CURRENCY_EXCHANGE_RATE",
                                 cryptoCurrencyName = cryptoCurrencyNameSpinnerString.split(",")[0],
                                 toCurrencyName = toCurrencySpinnerString.split(",")[0],
-                                apiKey = apiKey
+                                apiKey = CRYPTOCURRENCY_API_KEY
                         )
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribeOn(Schedulers.io())
                                 .subscribe(
                                         { response ->
                                             crypto_last_date_update.text = getString(R.string.last_updated_date, response.cryptoCurrency.lastRefreshedDate)
-                                            val exchangeRateResult = BigDecimal((crypto_rate_number.text.toString().toDouble() * response.cryptoCurrency.exchangeRate.toDouble())).setScale(decimalPointPrecision, BigDecimal.ROUND_HALF_EVEN).toString()
+                                            val exchangeRateResult =
+                                                    BigDecimal((crypto_rate_number.text.toString().toDouble() *
+                                                            response.cryptoCurrency.exchangeRate.toDouble())).setScale(DEFAULT_DECIMAL_POINT_PRECISION, BigDecimal.ROUND_HALF_EVEN).toString()
                                             first_crypto_currency_result.text = exchangeRateResult
-                                            second_crypto_currency_result.text = String.format(BigDecimal(response.cryptoCurrency.bidPrice.toDouble()).setScale(decimalPointPrecision, ROUND_HALF_EVEN).toString())
-                                            third_crypto_currency_result.text = String.format(BigDecimal(response.cryptoCurrency.askPrice.toDouble()).setScale(decimalPointPrecision, ROUND_HALF_EVEN).toString())
+                                            second_crypto_currency_result.text =
+                                                    String.format(BigDecimal(response.cryptoCurrency.bidPrice.toDouble()).setScale(DEFAULT_DECIMAL_POINT_PRECISION, ROUND_HALF_EVEN).toString())
+                                            third_crypto_currency_result.text =
+                                                    String.format(BigDecimal(response.cryptoCurrency.askPrice.toDouble()).setScale(DEFAULT_DECIMAL_POINT_PRECISION, ROUND_HALF_EVEN).toString())
                                         },
                                         { failure ->
-                                            Toast.makeText(context, "No data", Toast.LENGTH_LONG).show()
+                                            Toast.makeText(context, failure.message.toString(), Toast.LENGTH_LONG).show()
                                         }
                                 )
                 )
@@ -155,17 +156,17 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
             apiUtils = CryptoCurrencyApiUtils(cryptoCurrencyName)
             period_selection_group.check(R.id.togglebutton_one_week_selector)
             disposables.add(
-                apiUtils.getMonthDynamics().subscribe(
-                    { result ->
-                        var extraSymbol = "+"
-                        if (result < 0) {
-                            extraSymbol = "-"
-                        }
-                        val dynamic = BigDecimal(abs(result)).setScale(2, RoundingMode.HALF_EVEN)
-                        dynamics_month_value.text = "($extraSymbol${dynamic})"
-                    },
-                    ::logError
-                )
+                    apiUtils.getMonthDynamics().subscribe(
+                            { result ->
+                                var extraSymbol = "+"
+                                if (result < 0) {
+                                    extraSymbol = "-"
+                                }
+                                val dynamic = BigDecimal(abs(result)).setScale(DEFAULT_DECIMAL_POINT_PRECISION, RoundingMode.HALF_EVEN)
+                                dynamics_month_value.text = "($extraSymbol${dynamic})"
+                            },
+                            ::logError
+                    )
             )
         }
         var observable: Observable<CryptoCurrencyDataModel.RatesProcessed>? = null
@@ -203,7 +204,13 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
                                         .build()
                         )
                         .build()
-                picker.addOnNegativeButtonClickListener { Log.i(TAG, "Cancelled selection") }
+                picker.addOnNegativeButtonClickListener {
+                    Toast.makeText(
+                            requireContext(),
+                            "Cancelled selection",
+                            Toast.LENGTH_SHORT
+                    ).show()
+                }
                 picker.addOnPositiveButtonClickListener {
                     val startInstant = Instant.ofEpochMilli(it.first ?: 0)
                     val endInstant = Instant.ofEpochMilli(it.second ?: 0)
@@ -288,6 +295,10 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
     }
 
     private fun logError(error: Throwable) {
-        Log.e(TAG, error.message ?: "error occured", error)
+        Toast.makeText(
+                requireContext(),
+                error.message.toString(),
+                Toast.LENGTH_SHORT
+        ).show()
     }
 }

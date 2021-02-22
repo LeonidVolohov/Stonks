@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.github.mikephil.charting.charts.LineChart
 import com.stonks.api.currency.CurrencyApiDataUtils
+import com.stonks.ui.Constants.Companion.DEFAULT_DECIMAL_POINT_PRECISION
 import com.stonks.calculations.Prediction
 import com.stonks.ui.chart.StockLineChart
 import io.reactivex.disposables.Disposable
@@ -34,16 +35,16 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
             secondNumber: String
     ): String {
         return BigDecimal((firstNumber.toDouble() * secondNumber.toDouble())).setScale(
-                3,
+                DEFAULT_DECIMAL_POINT_PRECISION,
                 BigDecimal.ROUND_HALF_EVEN
         ).toString()
     }
 
     /**
-     * Возвращает  количество знаков после запятой равное [scale]
+     * Возвращает  количество знаков после запятой равное [DEFAULT_DECIMAL_POINT_PRECISION]
      */
-    private fun doubleScale(number: Double, scale: Int): String {
-        return BigDecimal(number).setScale(scale, BigDecimal.ROUND_HALF_EVEN).toString()
+    private fun doubleScale(number: Double): String {
+        return BigDecimal(number).setScale(DEFAULT_DECIMAL_POINT_PRECISION, BigDecimal.ROUND_HALF_EVEN).toString()
     }
 
     /**
@@ -125,21 +126,21 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
 
                                 differenceRateTextView.visibility = View.VISIBLE
 
-                                resultRateTextView.text = doubleScale(rateList[rateList.size - 1], 3)
+                                resultRateTextView.text = doubleScale(rateList[rateList.size - 1])
 
                                 val differenceAboveZero = (rateList[rateList.size - 1] - rateList[0])
                                 if (differenceAboveZero > 0) {
-                                    differenceRateTextView.text = "(" + "+" + doubleScale(differenceAboveZero, 3) + ")"
+                                    differenceRateTextView.text = "(" + "+" + doubleScale(differenceAboveZero) + ")"
                                     differenceRateTextView.setTextColor(Color.GREEN)
                                 } else {
-                                    differenceRateTextView.text = "(" + doubleScale(differenceAboveZero, 3) + ")"
+                                    differenceRateTextView.text = "(" + doubleScale(differenceAboveZero) + ")"
                                     differenceRateTextView.setTextColor(Color.RED)
                                 }
 
                             } else {
                                 resultRateTextView.text = stringMultiplication(
                                         rateNumberEditText.text.toString(),
-                                        doubleScale(rateList[rateList.size - 1], 3)
+                                        doubleScale(rateList[rateList.size - 1])
                                 )
                             }
                         },
