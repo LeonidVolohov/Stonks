@@ -22,12 +22,14 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_crypto.*
 import java.math.BigDecimal
 import java.math.BigDecimal.ROUND_HALF_EVEN
+import java.math.RoundingMode
 import java.time.Instant
 import java.time.Period
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.math.abs
 
 class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
 
@@ -147,6 +149,19 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
         if (changedCryptoSpinner) {
             apiUtils = CryptoCurrencyApiUtils(cryptoCurrencyName)
             period_selection_group.check(R.id.togglebutton_one_week_selector)
+            disposables.add(
+                apiUtils.getMonthDynamics().subscribe(
+                    { result ->
+                        var extraSymbol = "+"
+                        if (result < 0) {
+                            extraSymbol = "-"
+                        }
+                        val dynamic = BigDecimal(abs(result)).setScale(2, RoundingMode.HALF_EVEN)
+                        dynamics_month_value.text = "($extraSymbol${dynamic})"
+                    },
+                    ::logError
+                )
+            )
         }
         var observable: Observable<CryptoCurrencyDataModel.RatesProcessed>? = null
         when (period_selection_group.checkedButtonId) {
