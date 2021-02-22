@@ -164,7 +164,7 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
                         )
                 )
             } else {
-                Toast.makeText(context, "Wrong input", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, getString(R.string.toast_wrong_input), Toast.LENGTH_LONG).show()
                 first_crypto_currency_result.text = ""
                 second_crypto_currency_result.text = ""
                 third_crypto_currency_result.text = ""
@@ -200,7 +200,7 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
         var observable: Observable<CryptoCurrencyDataModel.RatesProcessed>? = null
         when (period_selection_group.checkedButtonId) {
             R.id.togglebutton_one_day_selector -> {
-                Toast.makeText(context, "API doesn't provide intraday data", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, getString(R.string.toast_api_not_provide_for_one_day), Toast.LENGTH_LONG).show()
                 period_selection_group.check(R.id.togglebutton_one_week_selector)
                 observable = apiUtils.getPricesFor1Week()
             }
@@ -235,7 +235,7 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
                 picker.addOnNegativeButtonClickListener {
                     Toast.makeText(
                             requireContext(),
-                            "Cancelled selection",
+                            getString(R.string.toast_calendar_canceled_selection),
                             Toast.LENGTH_SHORT
                     ).show()
                 }

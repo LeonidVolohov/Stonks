@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Stonks</string>
+
     <string name="edittext_constant_multiplier">1.0</string>
+    <string name="one_day_period_button_text">1Д</string>
+    <string name="one_week_period_button_text">1Н</string>
+    <string name="one_month_period_button_text">1М</string>
+    <string name="six_months_period_button_text">6М</string>
+    <string name="one_year_period_button_text">1Г</string>
+    <string name="five_years_period_button_text">5Л</string>
+
+    <string name="cryptocurrencies_tab_name">Крипта</string>
+    <string name="currencies_tab_name">Валюта</string>
+    <string name="stocks_tab_name">Акция</string>
+
     <string name="edittext_constant_hint">Количество</string>
     <string name="button_query_result">Нажми</string>
     <string name="switch_prediction">Прогноз</string>
@@ -9,24 +21,21 @@
     <string name="exchange_rate">Курс обмена</string>
     <string name="bid_price">Спрос</string>
     <string name="ask_price">Предложение</string>
-    <string name="cryptocurrencies_tab_name">Крипта</string>
-    <string name="currencies_tab_name">Валюта</string>
-    <string name="stocks_tab_name">Акция</string>
-    <string name="one_day_period_button_text">1Д</string>
-    <string name="one_week_period_button_text">1Н</string>
-    <string name="one_month_period_button_text">1М</string>
-    <string name="six_months_period_button_text">6М</string>
-    <string name="one_year_period_button_text">1Г</string>
-    <string name="five_years_period_button_text">5Л</string>
     <string name="market_string">Биржа:</string>
     <string name="conversion_icon_description">Иконка конверсии</string>
     <string name="latest_price_string">Последняя цена:</string>
     <string name="price_value_placeholer">Неизвестна</string>
     <string name="loading_value_placeholder">Загрузка…</string>
+
     <string name="default_currency_selector_text">Выберите основную валюту</string>
     <string name="language_selection_text">И язык</string>
     <string name="preferences_setup_button_text">ВПЕРЁД!</string>
     <string name="first_guide_page_text">Переключайтесь между режимами</string>
     <string name="guide_tap_to_continue">(Нажмите чтобы продолжить)</string>
     <string name="second_guide_page_text">Выбрайте что и во что переводить</string>
+
+    <string name="toast_check_internet">Пожалуйста, поверьте интернет соединение! Включите его быстро, СЕЙЧАС ЖЕ!!!</string>
+    <string name="toast_wrong_input">Неправильный ввод</string>
+    <string name="toast_api_not_provide_for_one_day">Апи не предоставляет информацию за один день</string>
+    <string name="toast_calendar_canceled_selection">Не выбрано</string>
 </resources>

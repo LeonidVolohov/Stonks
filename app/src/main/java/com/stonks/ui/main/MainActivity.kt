@@ -57,14 +57,14 @@ class MainActivity : AppCompatActivity() {
                 bottomNavigation.menu.getItem(2).isEnabled = true
 
                 if (!isOnline(this)) {
-                    Toast.makeText(this, "Please, check internet connection!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, getString(R.string.toast_check_internet), Toast.LENGTH_LONG).show()
                 }
             }
         } else {
             rlGuideFirstPage.visibility = View.GONE
 
             if (!isOnline(this)) {
-                Toast.makeText(this, "Please, check internet connection!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.toast_check_internet), Toast.LENGTH_LONG).show()
             }
         }
 

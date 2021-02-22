@@ -82,7 +82,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
         initPrimaryRatesName(chartPrimaryRatesArray)
 
         // TODO: Remove inputText, remake with getString()
-        currencyFragmentUtils.setLastUpdatedDate(last_date_update, "Data for: ", requireContext())
+        currencyFragmentUtils.setLastUpdatedDate(last_date_update, requireContext())
 
         base_rate_spinner.setSelection(defaultCurrencyInd)
         base_rate_spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -135,9 +135,9 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                 when (currency_button_group.checkedButtonId) {
                     R.id.currency_togglebutton_one_day_selector -> {
                         Toast.makeText(
-                            requireContext(),
-                            "Api does not provide information for one day",
-                            Toast.LENGTH_SHORT
+                                requireContext(),
+                                getString(R.string.toast_api_not_provide_for_one_day),
+                                Toast.LENGTH_SHORT
                         ).show()
                     }
                     R.id.currency_togglebutton_one_week_selector -> {
@@ -249,7 +249,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                         picker.addOnNegativeButtonClickListener {
                             Toast.makeText(
                                     requireContext(),
-                                    "Cancelled selection",
+                                    getString(R.string.toast_calendar_canceled_selection),
                                     Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -309,7 +309,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                         context = requireContext()
                     )
                 } else {
-                    Toast.makeText(requireContext(), "Wrong input", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), getString(R.string.toast_wrong_input), Toast.LENGTH_LONG).show()
                     changeToDefaultValue()
                 }
             }

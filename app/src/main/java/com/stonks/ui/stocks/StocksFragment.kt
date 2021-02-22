@@ -174,7 +174,7 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
                 picker.addOnNegativeButtonClickListener {
                     Toast.makeText(
                             requireContext(),
-                            "Cancelled selection",
+                            getString(R.string.toast_calendar_canceled_selection),
                             Toast.LENGTH_SHORT
                     ).show()
                 }

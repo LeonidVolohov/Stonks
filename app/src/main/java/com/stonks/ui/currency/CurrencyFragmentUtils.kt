@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.github.mikephil.charting.charts.LineChart
+import com.stonks.R
 import com.stonks.api.currency.CurrencyApiDataUtils
 import com.stonks.ui.Constants.Companion.DEFAULT_DECIMAL_POINT_PRECISION
 import com.stonks.calculations.Prediction
@@ -57,15 +58,12 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
     ) {
         localDisposable = CurrencyApiDataUtils().getLastUpdatedDate()
                 .subscribe(
-                    { response ->
-                        // TODO: Resources getString doesn`t see string from R.string
-                        // TODO: Remove inputText param if fixed
-                        //textView.text = Resources.getSystem().getString(R.string.last_updated_date, response.date.toString())
-                        textView.text = inputText + response.date.toString()
-                    },
-                    { failure ->
-                        Toast.makeText(context, failure.message, Toast.LENGTH_SHORT).show()
-                    }
+                        { response ->
+                            textView.text = context.getString(R.string.last_updated_date, response.date.toString())
+                        },
+                        { failure ->
+                            Toast.makeText(context, failure.message.toString(), Toast.LENGTH_SHORT).show()
+                        }
                 )
     }
 
@@ -82,6 +80,7 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
             differenceRateTextView: TextView,
             context: Context
     ) {
+        // TODO:  if (rateNumberEditText.text.toString() == (1.0).toString()) then second request, else first
         /*localDisposable = CurrencyApiDataUtils().getTargetRatePrice(baseRate = baseRate)
                 .subscribe(
                         { response ->
