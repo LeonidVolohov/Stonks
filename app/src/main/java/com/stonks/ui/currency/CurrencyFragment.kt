@@ -54,11 +54,10 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
         val currencyLineChart = StockLineChart(currency_chart)
 
         initPrimaryRatesName(chartPrimaryRatesArray)
-        target_rate_spinner.setSelection(defaultCurrencyInd)
 
         currencyFragmentUtils.setLastUpdatedDate(last_date_update, "Data for: ")
 
-        base_rate_spinner?.setSelection(DEFAULT_CURRENCY_INDEX)
+        base_rate_spinner.setSelection(defaultCurrencyInd)
         base_rate_spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -198,6 +197,8 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                         rate_number.text.toString(),
                         "1.0"
                 )
+
+                rate_difference.visibility = View.GONE
             } else {
                 isNumeric = try {
                     rate_number.text.toString().toDouble()
@@ -209,12 +210,14 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                 if (isNumeric) {
                     changeToDefaultValue()
                     // currency_button_group.check(R.id.currency_togglebutton_one_week_selector)
+                    rate_difference.visibility = View.GONE
 
                     currencyFragmentUtils.setTargetRatePrice(
                             baseRate = baseRateSpinnerString,
                             targetRate = targetRateSpinnerString,
-                            rateNumber = rate_number,
-                            textView = rate_result
+                            rateNumberEditText = rate_number,
+                            resultRateTextView = rate_result,
+                            differenceRateTextView = rate_difference
                     )
                     currencyFragmentUtils.plotRatesPerPeriod(
                             startDate = "1W",
