@@ -18,6 +18,7 @@ import com.stonks.api.cryptocurrency.CryptoCurrencyDataModel
 import com.stonks.ui.Constants
 import com.stonks.calculations.Prediction
 import com.stonks.ui.Constants.Companion.DEFAULT_DECIMAL_POINT_PRECISION
+import com.stonks.ui.Constants.Companion.DEFAULT_EDIT_TEXT_NUMBER
 import com.stonks.ui.chart.StockLineChart
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -110,6 +111,7 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
             }
 
             if (isNumeric) {
+                dynamics_month_value.visibility = View.GONE
                 disposables.add(
                         cryptoCurrencyApi.getCryptoCurrencyRatePerDay(
                                 function = "CURRENCY_EXCHANGE_RATE",
@@ -139,7 +141,7 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
                 disposables.add(
                         apiUtils.getMonthDynamics().subscribe(
                                 { result ->
-                                    if (crypto_rate_number.text.toString() == "1.0") {
+                                    if (crypto_rate_number.text.toString() == DEFAULT_EDIT_TEXT_NUMBER.toString()) {
                                         dynamics_month_value.visibility = View.VISIBLE
 
                                         var extraSymbol = "+"
