@@ -81,7 +81,6 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
 
         initPrimaryRatesName(chartPrimaryRatesArray)
 
-        // TODO: Change to getString() - not working
         currencyFragmentUtils.setLastUpdatedDate(last_date_update, "Data for: ", requireContext())
 
         base_rate_spinner.setSelection(defaultCurrencyInd)

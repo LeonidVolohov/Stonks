@@ -2,7 +2,6 @@ package com.stonks.ui.currency
 
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
@@ -38,7 +37,6 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
                 3,
                 BigDecimal.ROUND_HALF_EVEN
         ).toString()
-
     }
 
     /**
@@ -66,7 +64,6 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
                     },
                     { failure ->
                         Toast.makeText(context, failure.message, Toast.LENGTH_SHORT).show()
-                        Log.e(TAG, failure.message.toString())
                     }
                 )
     }
@@ -147,9 +144,8 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
                             }
                         },
                         { failure ->
-                        Toast.makeText(context, failure.message, Toast.LENGTH_SHORT).show()
-                        Log.e(TAG, failure.message.toString())
-                    }
+                            Toast.makeText(context, failure.message.toString(), Toast.LENGTH_SHORT).show()
+                        }
                 )
     }
 
@@ -199,8 +195,7 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
                         )
                     },
                     { failure ->
-                        Toast.makeText(context, failure.message, Toast.LENGTH_SHORT).show()
-                        Log.e(TAG, failure.message.toString())
+                        Toast.makeText(context, failure.message.toString(), Toast.LENGTH_SHORT).show()
                     }
                 )
     }
