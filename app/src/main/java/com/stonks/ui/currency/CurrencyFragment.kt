@@ -15,7 +15,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.stonks.R
 import com.stonks.ui.Constants
 import com.stonks.ui.chart.StockLineChart
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_currency.*
 import java.time.Instant
 import java.time.Period
@@ -26,7 +26,7 @@ import java.util.*
 
 class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyInd: Int) : Fragment() {
 
-    private var disposable: Disposable? = null
+    private var disposable = CompositeDisposable()
     private lateinit var baseRateSpinnerString: String
     private lateinit var targetRateSpinnerString: String
     private val localBottomNavigationHeight: Int = bottomNavigationHeight
@@ -346,5 +346,15 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
         params.height = Resources.getSystem().displayMetrics.heightPixels - (Resources.getSystem().displayMetrics.heightPixels - totalHeight) / 3
         currency_chart.requestLayout()
         currency_scroll_view.fullScroll(View.FOCUS_DOWN)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposable.clear()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 }

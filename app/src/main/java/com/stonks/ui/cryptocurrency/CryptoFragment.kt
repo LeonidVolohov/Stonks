@@ -36,8 +36,8 @@ import kotlin.math.abs
 
 class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
 
-    private lateinit var apiUtils: CryptoCurrencyApiUtils
     private val disposables = CompositeDisposable()
+    private lateinit var apiUtils: CryptoCurrencyApiUtils
     private val periodToFarthestReachableMomentInPast = Period.of(5, 0, 0)
     private val startCustomDateLimit: ZonedDateTime
         get() = ZonedDateTime.now(ZoneId.systemDefault()) -
@@ -223,7 +223,6 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
                 }
                 picker.show(activity?.supportFragmentManager!!, picker.toString())
             }
-            else -> TODO("Error")
         }
         disposables.add(
                 observable?.subscribe(::processResult, ::logError) ?: Observable.just(1)
@@ -300,5 +299,15 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
                 error.message.toString(),
                 Toast.LENGTH_SHORT
         ).show()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposables.clear()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.dispose()
     }
 }
