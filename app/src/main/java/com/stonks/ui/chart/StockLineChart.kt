@@ -97,9 +97,32 @@ class StockLineChart(lineChart: LineChart) {
         lineChartPredictionData: LineDataSet
     ) {
         val chartData = LineData()
+        lineChartPredictionData.setDrawFilled(true)
+        lineChartPredictionData.fillAlpha = 128
         chartData.addDataSet(lineChartData)
         chartData.addDataSet(lineChartPredictionData)
         // lineChart.marker = dateList?.let { it -> CustomMarkerView(this, R.layout.activity_textview_content, it) }
+        lineChart.onTouchListener.setLastHighlighted(null)
+        lineChart.highlightValues(null)
+        lineChart.data = chartData
+        lineChart.notifyDataSetChanged()
+        lineChart.invalidate()
+    }
+
+    fun displayPredictionChartTransparent(
+        lineChart: LineChart,
+        lineChartData: LineDataSet,
+        lineChartPredictionDataMin: LineDataSet,
+        lineChartPredictionDataMax: LineDataSet
+    ) {
+        val chartData = LineData()
+        lineChartPredictionDataMax.setDrawFilled(true)
+        lineChartPredictionDataMax.fillAlpha = 96
+        lineChartPredictionDataMin.setDrawFilled(true)
+        lineChartPredictionDataMin.fillColor = Color.TRANSPARENT
+        chartData.addDataSet(lineChartData)
+        chartData.addDataSet(lineChartPredictionDataMax)
+        chartData.addDataSet(lineChartPredictionDataMin)
         lineChart.onTouchListener.setLastHighlighted(null)
         lineChart.highlightValues(null)
         lineChart.data = chartData

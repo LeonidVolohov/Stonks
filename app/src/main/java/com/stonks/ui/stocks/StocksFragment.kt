@@ -198,7 +198,8 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
         val dateListResult = result.rates.keys.sorted().toMutableList()
         val entriesResult =
             result.rates.entries.sortedBy { it.key }.map { it.value }.toMutableList()
-        val predictedRates = entriesResult.toMutableList()
+        val predictedRatesMax = entriesResult.toMutableList()
+        val predictedRatesMin = entriesResult.toMutableList()
         val dateList = dateListResult.map {
             it.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         }
@@ -224,22 +225,29 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
                             entriesResult.toTypedArray(),
                             currentDaysInMonth
                         )
+                        val predictedRateMax = predictedRate * 1.50
+                        val predictedRateMin = predictedRate * 0.50
                         val lastExistingDate = dateListResult.last()
                         for (i in 1..currentDaysInMonth) {
                             dateListResult.add(lastExistingDate + Period.ofDays(i))
-                            predictedRates.add(entriesResult.last() + (predictedRate - entriesResult.last()) / currentDaysInMonth * i)
+                            predictedRatesMax.add(entriesResult.last() + (predictedRateMax - entriesResult.last()) / currentDaysInMonth * i)
+                            predictedRatesMin.add(entriesResult.last() + (predictedRateMin - entriesResult.last()) / currentDaysInMonth * i)
                         }
-                        val lineChartPredictionData = stocksChart.getPredictionLineData(
-                            predictionEntries = predictedRates.toList()
+                        val lineChartPredictionDataMax = stocksChart.getPredictionLineData(
+                            predictionEntries = predictedRatesMax.toList()
+                        )
+                        val lineChartPredictionDataMin = stocksChart.getPredictionLineData(
+                            predictionEntries = predictedRatesMin.toList()
                         )
                         val dateList = dateListResult.map {
                             it.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                         }
                         stocksChart.setXAxis(view!!.findViewById(R.id.stocks_chart), dateList)
-                        stocksChart.displayPredictionChart(
+                        stocksChart.displayPredictionChartTransparent(
                             lineChart = stocksChartField,
                             lineChartData = data,
-                            lineChartPredictionData = lineChartPredictionData
+                            lineChartPredictionDataMax = lineChartPredictionDataMax,
+                            lineChartPredictionDataMin = lineChartPredictionDataMin
                         )
                     },
                     ::logError
