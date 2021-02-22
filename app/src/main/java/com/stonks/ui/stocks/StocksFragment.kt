@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.github.mikephil.charting.charts.LineChart
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -16,6 +17,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.stonks.R
 import com.stonks.api.stocks.StocksApiDataUtils
 import com.stonks.api.stocks.StocksDataModel
+import com.stonks.calculations.Prediction
 import com.stonks.ui.chart.StockLineChart
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -44,7 +46,10 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
     private lateinit var textViewDynamics: TextView
     private lateinit var toggleGroupPeriod: MaterialButtonToggleGroup
     private lateinit var switchPrediction: SwitchMaterial
+    private val plotPrediction: Boolean
+        get() = switchPrediction.isChecked
     private lateinit var stocksChart: StockLineChart
+    private lateinit var stocksChartField: LineChart
 
     private val periodToFarthestReachableMomentInPast = Period.of(5, 0, 0)
     private val startCustomDateLimit: ZonedDateTime
@@ -100,6 +105,7 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
                 updateStockData(changedPeriodOnly = true)
             }
         }
+        switchPrediction.setOnCheckedChangeListener { buttonView, isChecked -> updateStockData(true) }
     }
 
     private fun updateStockData(changedPeriodOnly: Boolean = false) {
@@ -189,17 +195,59 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
     }
 
     private fun processResult(result: StocksDataModel.RatesProcessed) {
-        val dateList = result.rates.keys.map {
+        val dateListResult = result.rates.keys.sorted().toMutableList()
+        val entriesResult =
+            result.rates.entries.sortedBy { it.key }.map { it.value }.toMutableList()
+        val predictedRates = entriesResult.toMutableList()
+        val dateList = dateListResult.map {
             it.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        }.sorted()
+        }
         apiUtils.convertToCurrency(spinnerCurrencyValue, result)
         stocksChart.setXAxis(view!!.findViewById(R.id.stocks_chart), dateList)
-        val entries = result.rates.values.sorted()
         val data = stocksChart.getLineData(
-            entries = entries, baseCurrency = spinnerStocksValue,
+            entries = entriesResult, baseCurrency = spinnerStocksValue,
             targetCurrency = spinnerCurrencyValue
         )
-        stocksChart.displayChart(view!!.findViewById(R.id.stocks_chart), data)
+        if (plotPrediction) {
+            disposables.add(
+                apiUtils.getPricesFor5Years().subscribe(
+                    { result ->
+                        val currentDaysInMonth =
+                            Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
+                        val dateListLong = result.rates.keys.sorted().toMutableList()
+                            .map { it.toInstant().toEpochMilli() }
+                        val entriesResult =
+                            result.rates.entries.sortedBy { it.key }.map { it.value }
+                                .toMutableList()
+                        val predictedRate = Prediction().datePrediction(
+                            dateListLong.toTypedArray(),
+                            entriesResult.toTypedArray(),
+                            currentDaysInMonth
+                        )
+                        val lastExistingDate = dateListResult.last()
+                        for (i in 1..currentDaysInMonth) {
+                            dateListResult.add(lastExistingDate + Period.ofDays(i))
+                            predictedRates.add(entriesResult.last() + (predictedRate - entriesResult.last()) / currentDaysInMonth * i)
+                        }
+                        val lineChartPredictionData = stocksChart.getPredictionLineData(
+                            predictionEntries = predictedRates.toList()
+                        )
+                        val dateList = dateListResult.map {
+                            it.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                        }
+                        stocksChart.setXAxis(view!!.findViewById(R.id.stocks_chart), dateList)
+                        stocksChart.displayPredictionChart(
+                            lineChart = stocksChartField,
+                            lineChartData = data,
+                            lineChartPredictionData = lineChartPredictionData
+                        )
+                    },
+                    ::logError
+                )
+            )
+        } else {
+            stocksChart.displayChart(view!!.findViewById(R.id.stocks_chart), data)
+        }
     }
 
     private fun logError(error: Throwable) {
@@ -217,7 +265,8 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
         textViewMarket = view.findViewById(R.id.textview_market_name)
         textViewPrice = view.findViewById(R.id.textview_price_value)
         toggleGroupPeriod = view.findViewById(R.id.period_selection_group)
-        stocksChart = StockLineChart(view.findViewById(R.id.stocks_chart))
+        stocksChartField = view.findViewById(R.id.stocks_chart)
+        stocksChart = StockLineChart(stocksChartField)
         switchPrediction = view.findViewById(R.id.switch_prediction)
         textViewDynamics = view.findViewById(R.id.textview_dynamics_value)
     }
