@@ -1,7 +1,11 @@
 package com.stonks.ui.currency
 
+import android.graphics.Color
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.github.mikephil.charting.charts.LineChart
 import com.stonks.api.currency.CurrencyApiDataUtils
@@ -11,7 +15,6 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-const val DEFAULT_CURRENCY_INDEX = 17
 const val PRIMARY_RATES = "USD,EUR,GBP,JPY,CHF"
 
 class CurrencyFragmentUtils(disposable: Disposable?) {
@@ -30,6 +33,13 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
                 BigDecimal.ROUND_HALF_EVEN
         ).toString()
 
+    }
+
+    /**
+     * Возвращает  количество знаков после запятой равное [scale]
+     */
+    private fun doubleScale(number: Double, scale: Int): String {
+        return BigDecimal(number).setScale(scale, BigDecimal.ROUND_HALF_EVEN).toString()
     }
 
     /**
@@ -55,21 +65,78 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
     }
 
     /**
-     * Загружает в [textView] стоимость [baseRate] относительно [targetRate] со множителем [rateNumber]
+     * Загружает в [resultRateTextView] стоимость [baseRate] относительно [targetRate] со множителем [rateNumberEditText]
      */
     fun setTargetRatePrice(
             baseRate: String,
             targetRate: String,
-            rateNumber: EditText,
-            textView: TextView
+            startDate: String = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+            endDate: String = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+            rateNumberEditText: EditText,
+            resultRateTextView: TextView,
+            differenceRateTextView: TextView
     ) {
-        localDisposable = CurrencyApiDataUtils().getTargetRatePrice(baseRate = baseRate)
+        /*localDisposable = CurrencyApiDataUtils().getTargetRatePrice(baseRate = baseRate)
                 .subscribe(
                         { response ->
                             textView.text = stringMultiplication(
                                     rateNumber.text.toString(),
                                     response.rates?.get(targetRate).toString().take(7)
                             )
+                        },
+                        { failure ->
+                            Log.e(TAG, failure.message.toString())
+                        }
+                )*/
+
+        localDisposable = CurrencyApiDataUtils().getRatesPerPeriod(
+                startDate = startDate,
+                endDate = endDate,
+                baseRate = baseRate,
+                targetRate = targetRate
+        )
+                .subscribe(
+                        { response ->
+                            val rateList: MutableList<Double> = arrayListOf()
+                            val dateList: List<String>? = response.rates?.keys?.toList()
+
+                            if (dateList != null) {
+                                for (date in dateList) {
+                                    response.rates[date]?.get(
+                                            targetRate
+                                    )?.let { it ->
+                                        rateList.add(it)
+                                    }
+                                }
+                            }
+
+                            if (rateNumberEditText.text.toString() == (1.0).toString()) {
+                                val param = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 50f)
+                                rateNumberEditText.layoutParams = param
+                                differenceRateTextView.layoutParams = param
+
+                                param.marginEnd = 8
+                                resultRateTextView.layoutParams = param
+
+                                differenceRateTextView.visibility = View.VISIBLE
+
+                                resultRateTextView.text = doubleScale(rateList[rateList.size - 1], 3)
+
+                                val differenceAboveZero = (rateList[rateList.size - 1] - rateList[0])
+                                if (differenceAboveZero > 0) {
+                                    differenceRateTextView.text = "(" + "+" + doubleScale(differenceAboveZero, 3) + ")"
+                                    differenceRateTextView.setTextColor(Color.GREEN)
+                                } else {
+                                    differenceRateTextView.text = "(" + doubleScale(differenceAboveZero, 3) + ")"
+                                    differenceRateTextView.setTextColor(Color.RED)
+                                }
+
+                            } else {
+                                resultRateTextView.text = stringMultiplication(
+                                        rateNumberEditText.text.toString(),
+                                        doubleScale(rateList[rateList.size - 1], 3)
+                                )
+                            }
                         },
                         { failure ->
                             // TODO: Add toast message
