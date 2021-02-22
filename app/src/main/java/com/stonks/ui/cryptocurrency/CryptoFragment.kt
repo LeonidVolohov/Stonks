@@ -25,6 +25,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_crypto.*
+import java.io.IOException
 import java.math.BigDecimal
 import java.math.BigDecimal.ROUND_HALF_EVEN
 import java.math.RoundingMode
@@ -322,11 +323,25 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
     }
 
     private fun logError(error: Throwable) {
-        Toast.makeText(
+        if (error is NullPointerException) {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.toast_api_returned_null),
+                Toast.LENGTH_SHORT
+            ).show()
+        } else if (error is IOException) {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.toast_empty_response),
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            Toast.makeText(
                 requireContext(),
                 error.message.toString(),
                 Toast.LENGTH_SHORT
-        ).show()
+            ).show()
+        }
     }
 
     override fun onPause() {

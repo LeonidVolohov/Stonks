@@ -2,6 +2,7 @@ package com.stonks.ui.stocks
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,7 @@ import com.stonks.ui.chart.StockLineChart
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_stocks.*
+import java.io.IOException
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.Instant
@@ -116,19 +118,19 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
                 )
             )
             disposables.add(
-                    apiUtils.getMonthDynamics().subscribe(
-                            { result ->
-                                var extraSymbol = "+"
-                                textview_dynamics_value.setTextColor(Color.GREEN)
-                                if (result < 0) {
-                                    extraSymbol = "-"
-                                    textview_dynamics_value.setTextColor(Color.RED)
-                                }
-                                val dynamic = BigDecimal(abs(result)).setScale(2, RoundingMode.HALF_EVEN)
-                                textViewDynamics.text = "($extraSymbol${dynamic})"
-                            },
-                            ::logError
-                    )
+                apiUtils.getMonthDynamics().subscribe(
+                    { result ->
+                        var extraSymbol = "+"
+                        textview_dynamics_value.setTextColor(Color.GREEN)
+                        if (result < 0) {
+                            extraSymbol = "-"
+                            textview_dynamics_value.setTextColor(Color.RED)
+                        }
+                        val dynamic = BigDecimal(abs(result)).setScale(2, RoundingMode.HALF_EVEN)
+                        textViewDynamics.text = "($extraSymbol${dynamic})"
+                    },
+                    ::logError
+                )
             )
             toggleGroupPeriod.check(R.id.togglebutton_one_day_selector)
             disposables.add(
@@ -163,19 +165,19 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
                 var endDateTime: ZonedDateTime
                 val now = Calendar.getInstance()
                 val picker = MaterialDatePicker.Builder.dateRangePicker()
-                        .setSelection(androidx.core.util.Pair(now.timeInMillis, now.timeInMillis))
-                        .setCalendarConstraints(
-                                CalendarConstraints.Builder()
-                                        .setStart(startCustomDateLimit.toInstant().toEpochMilli())
-                                        .setEnd(endCustomDateLimit.toInstant().toEpochMilli())
-                                        .build()
-                        )
-                        .build()
+                    .setSelection(androidx.core.util.Pair(now.timeInMillis, now.timeInMillis))
+                    .setCalendarConstraints(
+                        CalendarConstraints.Builder()
+                            .setStart(startCustomDateLimit.toInstant().toEpochMilli())
+                            .setEnd(endCustomDateLimit.toInstant().toEpochMilli())
+                            .build()
+                    )
+                    .build()
                 picker.addOnNegativeButtonClickListener {
                     Toast.makeText(
-                            requireContext(),
-                            getString(R.string.toast_calendar_canceled_selection),
-                            Toast.LENGTH_SHORT
+                        requireContext(),
+                        getString(R.string.toast_calendar_canceled_selection),
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
                 picker.addOnPositiveButtonClickListener {
@@ -184,8 +186,8 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
                     startDateTime = ZonedDateTime.ofInstant(startInstant, ZoneId.systemDefault())
                     endDateTime = ZonedDateTime.ofInstant(endInstant, ZoneId.systemDefault())
                     disposables.add(
-                            apiUtils.getPricesForCustomPeriod(startDateTime, endDateTime)
-                                    .subscribe(::processResult, ::logError)
+                        apiUtils.getPricesForCustomPeriod(startDateTime, endDateTime)
+                            .subscribe(::processResult, ::logError)
                     )
                 }
                 picker.show(activity?.supportFragmentManager!!, picker.toString())
@@ -198,6 +200,9 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
     }
 
     private fun processResult(result: StocksDataModel.RatesProcessed) {
+        if (result.rates.isEmpty()) {
+            logError(IOException())
+        }
         val dateListResult = result.rates.keys.sorted().toMutableList()
         val entriesResult =
             result.rates.entries.sortedBy { it.key }.map { it.value }.toMutableList()
@@ -262,11 +267,26 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
     }
 
     private fun logError(error: Throwable) {
-        Toast.makeText(
+        if (error is NullPointerException) {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.toast_api_returned_null),
+                Toast.LENGTH_SHORT
+            ).show()
+        } else if (error is IOException) {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.toast_empty_response),
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            Toast.makeText(
                 requireContext(),
                 error.message.toString(),
                 Toast.LENGTH_SHORT
-        ).show()
+            ).show()
+        }
+
     }
 
     /**

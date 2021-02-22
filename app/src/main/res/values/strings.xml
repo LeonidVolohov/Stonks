@@ -39,6 +39,8 @@
     <string name="toast_wrong_input">Wrong input</string>
     <string name="toast_api_not_provide_for_one_day">Api does not provide information for one day</string>
     <string name="toast_calendar_canceled_selection">Cancelled selection</string>
+    <string name="toast_empty_response">No data for selected period</string>
+    <string name="toast_api_returned_null">Server didn\'t respond, please try again later</string>
 
 
     <string-array name="rates">

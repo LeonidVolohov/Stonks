@@ -38,4 +38,6 @@
     <string name="toast_wrong_input">Неправильный ввод</string>
     <string name="toast_api_not_provide_for_one_day">Апи не предоставляет информацию за один день</string>
     <string name="toast_calendar_canceled_selection">Не выбрано</string>
+    <string name="toast_empty_response">Нет данных за выбранный период</string>
+    <string name="toast_api_returned_null">Сервер не ответил, попробуйте снова позже</string>
 </resources>
