@@ -1,6 +1,18 @@
 <resources>
     <string name="app_name">Stonks</string>
+
     <string name="edittext_constant_multiplier">1.0</string>
+    <string name="one_day_period_button_text">1D</string>
+    <string name="one_week_period_button_text">1W</string>
+    <string name="one_month_period_button_text">1M</string>
+    <string name="six_months_period_button_text">6M</string>
+    <string name="one_year_period_button_text">1Y</string>
+    <string name="five_years_period_button_text">5Y</string>
+
+    <string name="cryptocurrencies_tab_name">Crypto</string>
+    <string name="currencies_tab_name">Currencies</string>
+    <string name="stocks_tab_name">Stocks</string>
+
     <string name="edittext_constant_hint">Amount</string>
     <string name="button_query_result">Push</string>
     <string name="switch_prediction">Prediction</string>
@@ -8,20 +20,12 @@
     <string name="exchange_rate">Rate</string>
     <string name="bid_price">Demand</string>
     <string name="ask_price">Supply</string>
-    <string name="cryptocurrencies_tab_name">Crypto</string>
-    <string name="currencies_tab_name">Currencies</string>
-    <string name="stocks_tab_name">Stocks</string>
-    <string name="one_day_period_button_text">1D</string>
-    <string name="one_week_period_button_text">1W</string>
-    <string name="one_month_period_button_text">1M</string>
-    <string name="six_months_period_button_text">6M</string>
-    <string name="one_year_period_button_text">1Y</string>
-    <string name="five_years_period_button_text">5Y</string>
     <string name="market_string">Market:</string>
     <string name="conversion_icon_description">Conversion Icon</string>
     <string name="latest_price_string">Latest Price:</string>
     <string name="price_value_placeholer">Unknown</string>
     <string name="loading_value_placeholder">Loading…</string>
+
     <string name="default_currency_selector_text">Choose your main currency</string>
     <string name="language_selection_text">And your language</string>
     <string name="english_language_label" translatable="false">ENG</string>
@@ -30,6 +34,14 @@
     <string name="first_guide_page_text">Navigate between modes</string>
     <string name="guide_tap_to_continue">(Tap to continue)</string>
     <string name="second_guide_page_text"><![CDATA[Choose base & target]]></string>
+
+    <string name="toast_check_internet">Please, check internet connection! Turn on the internet RIGHT NOW!!!</string>
+    <string name="toast_wrong_input">Wrong input</string>
+    <string name="toast_api_not_provide_for_one_day">Api does not provide information for one day</string>
+    <string name="toast_calendar_canceled_selection">Cancelled selection</string>
+    <string name="toast_empty_response">No data for selected period</string>
+    <string name="toast_api_returned_null">Server didn\'t respond, please try again later</string>
+
 
     <string-array name="rates">
         <item>AUD, Australian Dollar</item>
