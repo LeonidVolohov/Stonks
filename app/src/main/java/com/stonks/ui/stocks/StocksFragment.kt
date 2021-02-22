@@ -19,12 +19,15 @@ import com.stonks.api.stocks.StocksDataModel
 import com.stonks.ui.chart.StockLineChart
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.Instant
 import java.time.Period
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.math.abs
 
 class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
     private var disposables = CompositeDisposable()
@@ -38,6 +41,7 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
         get() = spinnerCurrency.selectedItem.toString().split(',')[0]
     private lateinit var textViewMarket: TextView
     private lateinit var textViewPrice: TextView
+    private lateinit var textViewDynamics: TextView
     private lateinit var toggleGroupPeriod: MaterialButtonToggleGroup
     private lateinit var switchPrediction: SwitchMaterial
     private lateinit var stocksChart: StockLineChart
@@ -106,6 +110,19 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
             disposables.add(
                 apiUtils.getMarket().subscribe(
                     { result -> textViewMarket.text = result.market },
+                    ::logError
+                )
+            )
+            disposables.add(
+                apiUtils.getMonthDynamics().subscribe(
+                    { result ->
+                        var extraSymbol = "+"
+                        if (result < 0) {
+                            extraSymbol = "-"
+                        }
+                        val dynamic = BigDecimal(abs(result)).setScale(2, RoundingMode.HALF_EVEN)
+                        textViewDynamics.text = "($extraSymbol${dynamic})"
+                    },
                     ::logError
                 )
             )
@@ -202,6 +219,7 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
         toggleGroupPeriod = view.findViewById(R.id.period_selection_group)
         stocksChart = StockLineChart(view.findViewById(R.id.stocks_chart))
         switchPrediction = view.findViewById(R.id.switch_prediction)
+        textViewDynamics = view.findViewById(R.id.textview_dynamics_value)
     }
 
     override fun onPause() {

@@ -52,6 +52,13 @@ class StocksApiDataUtils(val stock: String) {
         }
     }
 
+    fun getMonthDynamics(): Observable<Double> {
+        return getPricesFor1Month().map {
+            (it.rates[it.rates.lastKey()]?.let { it1 -> it.rates[it.rates.firstKey()]?.minus(it1) })
+                ?: 0.0
+        }
+    }
+
     fun getPricesFor1Day(): Observable<StocksDataModel.RatesProcessed> {
         val startDateTime: ZonedDateTime =
             endDateTimeIntraDay - Period.of(0, 0, 1)
