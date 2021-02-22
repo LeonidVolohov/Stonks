@@ -131,10 +131,23 @@
                     android:layout_marginStart="@dimen/text_size_small"
                     android:layout_marginTop="@dimen/margin_padding_size_smaller"
                     android:layout_marginBottom="@dimen/margin_padding_size_smaller"
-                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_smaller"
+                    android:layout_alignParentTop="true"
+                    android:layout_toStartOf="@id/dynamics_month_value"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="1.023040" />
+
+                <TextView
+                    android:id="@+id/dynamics_month_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:textSize="@dimen/text_size_medium"
+                    android:layout_marginStart="@dimen/text_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_smaller"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_marginBottom="@dimen/margin_padding_size_smaller"
+                    android:textSize="@dimen/text_size_smaller"
                     tools:text="1.023040" />
             </RelativeLayout>
 

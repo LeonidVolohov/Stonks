@@ -35,6 +35,13 @@ class CryptoCurrencyApiUtils(private val cryptoCurrencyName: String) {
         }
     }
 
+    fun getMonthDynamics(): Observable<Double> {
+        return getPricesFor1Month().map {
+            (it.rates[it.rates.lastKey()]?.let { it1 -> it.rates[it.rates.firstKey()]?.minus(it1) })
+                ?: 0.0
+        }
+    }
+
     fun getPricesFor1Month(): Observable<CryptoCurrencyDataModel.RatesProcessed> {
         val startDateTime: ZonedDateTime =
             endDateTimeDaily - Period.of(0, 1, 0)
