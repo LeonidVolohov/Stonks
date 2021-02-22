@@ -18,7 +18,7 @@
     <string name="button_query_result">Нажми</string>
     <string name="switch_prediction">Прогноз</string>
     <string name="last_updated_date">Данные на: %1$s</string>
-    <string name="exchange_rate">Курс обмена</string>
+    <string name="exchange_rate">Курс</string>
     <string name="bid_price">Спрос</string>
     <string name="ask_price">Предложение</string>
     <string name="market_string">Биржа:</string>
