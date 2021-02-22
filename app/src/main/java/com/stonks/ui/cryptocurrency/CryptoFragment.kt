@@ -14,6 +14,7 @@ import com.stonks.R
 import com.stonks.api.cryptoCurrencyApi
 import com.stonks.api.cryptocurrency.CryptoCurrencyApiUtils
 import com.stonks.api.cryptocurrency.CryptoCurrencyDataModel
+import com.stonks.ui.Constants
 import com.stonks.calculations.Prediction
 import com.stonks.ui.chart.StockLineChart
 import io.reactivex.Observable
@@ -80,7 +81,7 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
                     id: Long
             ) {
                 cryptoCurrencyNameSpinnerString = cryptoCurrenciesArray[position]
-                crypto_rate_number.setText("1.0")
+                crypto_rate_number.setText(Constants.DEFAULT_EDIT_TEXT_NUMBER.toString())
                 updateChart(changedCryptoSpinner = true)
             }
 
@@ -95,7 +96,7 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
                     id: Long
             ) {
                 toCurrencySpinnerString = currencyNameArray[position]
-                crypto_rate_number.setText("1.0")
+                crypto_rate_number.setText(Constants.DEFAULT_EDIT_TEXT_NUMBER.toString())
                 updateChart(false)
             }
 

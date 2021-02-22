@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rlGuideSecondPage: RelativeLayout
     private lateinit var bottomNavigation: BottomNavigationView
 
-    private var defaultCurrencyInd = Constants.defaultCurrencyInd
+    private var defaultCurrencyInd = Constants.DEFAULT_CURRENCY_ID
 
     // Variable storing currently selected fragment for displaying
     private lateinit var selectedFragment: Fragment
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        defaultCurrencyInd = intent.getIntExtra("defaultCurrencyInd", Constants.defaultCurrencyInd)
+        defaultCurrencyInd = intent.getIntExtra("defaultCurrencyInd", Constants.DEFAULT_CURRENCY_ID)
         selectedFragment = CurrencyFragment(bottomNavigationHeight, defaultCurrencyInd)
 
         val firstLaunch = intent.getBooleanExtra("firstLaunch", true)

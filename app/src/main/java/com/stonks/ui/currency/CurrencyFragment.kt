@@ -2,7 +2,6 @@ package com.stonks.ui.currency
 
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +13,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.stonks.R
+import com.stonks.ui.Constants
 import com.stonks.ui.chart.StockLineChart
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_currency.*
@@ -25,7 +25,6 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyInd: Int) : Fragment() {
-    private val TAG = CurrencyFragment::class.java.name
     private var disposable: Disposable? = null
     private lateinit var baseRateSpinnerString: String
     private lateinit var targetRateSpinnerString: String
@@ -81,6 +80,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
 
         initPrimaryRatesName(chartPrimaryRatesArray)
 
+        // TODO: Remove inputText, remake with getString()
         currencyFragmentUtils.setLastUpdatedDate(last_date_update, "Data for: ", requireContext())
 
         base_rate_spinner.setSelection(defaultCurrencyInd)
@@ -92,7 +92,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                     id: Long
             ) {
                 baseRateSpinnerString = ratesNameArray[position].split(",")[0]
-                rate_number.setText("1.0")
+                rate_number.setText(Constants.DEFAULT_EDIT_TEXT_NUMBER.toString())
                 currencyLineChart.clearChart()
             }
 
@@ -107,7 +107,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                 id: Long
             ) {
                 targetRateSpinnerString = ratesNameArray[position].split(",")[0]
-                rate_number.setText("1.0")
+                rate_number.setText(Constants.DEFAULT_EDIT_TEXT_NUMBER.toString())
                 currencyLineChart.clearChart()
             }
 
@@ -246,10 +246,11 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                             displayChart()
                         }
                         picker.addOnNegativeButtonClickListener {
-                            Log.i(
-                                TAG,
-                                "Cancelled selection"
-                            )
+                            Toast.makeText(
+                                    requireContext(),
+                                    "Cancelled selection",
+                                    Toast.LENGTH_SHORT
+                            ).show()
                         }
 
                         picker.show(activity?.supportFragmentManager!!, picker.toString())
@@ -262,7 +263,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
             if (baseRateSpinnerString == targetRateSpinnerString) {
                 rate_result.text = currencyFragmentUtils.stringMultiplication(
                         rate_number.text.toString(),
-                        "1.0"
+                        Constants.DEFAULT_EDIT_TEXT_NUMBER.toString()
                 )
 
                 rate_difference.visibility = View.GONE
@@ -276,7 +277,6 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
 
                 if (isNumeric) {
                     changeToDefaultValue()
-                    // currency_button_group.check(R.id.currency_togglebutton_one_week_selector)
                     rate_difference.visibility = View.GONE
 
                     currencyFragmentUtils.setTargetRatePrice(
