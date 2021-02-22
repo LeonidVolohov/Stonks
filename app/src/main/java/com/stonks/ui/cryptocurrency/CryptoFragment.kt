@@ -1,5 +1,6 @@
 package com.stonks.ui.cryptocurrency
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -94,7 +95,7 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
             ) {
                 toCurrencySpinnerString = currencyNameArray[position]
                 crypto_rate_number.setText(Constants.DEFAULT_EDIT_TEXT_NUMBER.toString())
-                updateChart(false)
+                updateChart(changedCryptoSpinner = false)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) { }
@@ -134,6 +135,31 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
                                             Toast.makeText(context, failure.message.toString(), Toast.LENGTH_LONG).show()
                                         }
                                 )
+                )
+                disposables.add(
+                        apiUtils.getMonthDynamics().subscribe(
+                                { result ->
+                                    if (crypto_rate_number.text.toString() == "1.0") {
+                                        dynamics_month_value.visibility = View.VISIBLE
+
+                                        var extraSymbol = "+"
+                                        dynamics_month_value.setTextColor(Color.GREEN)
+
+                                        if (result < 0) {
+                                            extraSymbol = "-"
+                                            dynamics_month_value.setTextColor(Color.RED)
+                                        }
+
+                                        val dynamic = BigDecimal(abs(result)).setScale(DEFAULT_DECIMAL_POINT_PRECISION, RoundingMode.HALF_EVEN)
+                                        dynamics_month_value.text = "($extraSymbol${dynamic})"
+                                    } else {
+                                        dynamics_month_value.visibility = View.GONE
+                                        val output = BigDecimal(abs(result)).setScale(DEFAULT_DECIMAL_POINT_PRECISION, RoundingMode.HALF_EVEN).toString()
+                                        dynamics_month_value.text = output
+                                    }
+                                },
+                                ::logError
+                        )
                 )
             } else {
                 Toast.makeText(context, "Wrong input", Toast.LENGTH_LONG).show()
