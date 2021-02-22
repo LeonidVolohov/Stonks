@@ -14,6 +14,7 @@ import com.stonks.R
 import com.stonks.api.cryptoCurrencyApi
 import com.stonks.api.cryptocurrency.CryptoCurrencyApiUtils
 import com.stonks.api.cryptocurrency.CryptoCurrencyDataModel
+import com.stonks.calculations.Prediction
 import com.stonks.ui.chart.StockLineChart
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -47,6 +48,8 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
         get() = crypto_currency_name_spinner.selectedItem.toString().split(",")[0]
     private val currencyName: String
         get() = to_currency_name_spinner.selectedItem.toString().split(",")[0]
+    private val plotPrediction: Boolean
+        get() = crypto_switch.isChecked
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -138,11 +141,12 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
             }
         }
 
-        period_selection_group.addOnButtonCheckedListener{ group, checkedId, isChecked ->
+        period_selection_group.addOnButtonCheckedListener { group, checkedId, isChecked ->
             if (isChecked) {
                 updateChart(changedCryptoSpinner = false)
             }
         }
+        crypto_switch.setOnCheckedChangeListener { buttonView, isChecked -> updateChart(false) }
     }
 
     private fun updateChart(changedCryptoSpinner: Boolean = true) {
@@ -220,17 +224,66 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
     }
 
     private fun processResult(result: CryptoCurrencyDataModel.RatesProcessed) {
-        val dateList = result.rates.keys.map {
+        val dateListResult = result.rates.keys.sorted().toMutableList()
+        val entriesResult =
+            result.rates.entries.sortedBy { it.key }.map { it.value }.toMutableList()
+        val predictedRatesMax = entriesResult.toMutableList()
+        val predictedRatesMin = entriesResult.toMutableList()
+        val dateList = dateListResult.map {
             it.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        }.sorted()
-        apiUtils.convertToCurrency(currencyName, result)
+        }
         cryptoChart.setXAxis(crypto_currency_chart, dateList)
-        val entries = result.rates.values.sorted()
         val data = cryptoChart.getLineData(
-                entries = entries, baseCurrency = cryptoCurrencyName,
-                targetCurrency = currencyName
+            entries = entriesResult, baseCurrency = cryptoCurrencyName,
+            targetCurrency = currencyName
         )
-        cryptoChart.displayChart(crypto_currency_chart, data)
+        if (plotPrediction) {
+            disposables.add(
+                apiUtils.getPricesFor1Year().subscribe(
+                    { result ->
+                        val currentDaysInMonth =
+                            Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
+                        val dateListLong = result.rates.keys.sorted().toMutableList()
+                            .map { it.toInstant().toEpochMilli() }
+                        val entriesResult =
+                            result.rates.entries.sortedBy { it.key }.map { it.value }
+                                .toMutableList()
+                        val predictedRate = Prediction().datePrediction(
+                            dateListLong.toTypedArray(),
+                            entriesResult.toTypedArray(),
+                            currentDaysInMonth
+                        )
+                        val predictedRateMax = predictedRate * 1.50
+                        val predictedRateMin = predictedRate * 0.50
+                        val lastExistingDate = dateListResult.last()
+                        for (i in 1..currentDaysInMonth) {
+                            dateListResult.add(lastExistingDate + Period.ofDays(i))
+                            predictedRatesMax.add(entriesResult.last() + (predictedRateMax - entriesResult.last()) / currentDaysInMonth * i)
+                            predictedRatesMin.add(entriesResult.last() + (predictedRateMin - entriesResult.last()) / currentDaysInMonth * i)
+                        }
+                        val lineChartPredictionDataMax = cryptoChart.getPredictionLineData(
+                            predictionEntries = predictedRatesMax.toList()
+                        )
+                        val lineChartPredictionDataMin = cryptoChart.getPredictionLineData(
+                            predictionEntries = predictedRatesMin.toList()
+                        )
+                        val dateList = dateListResult.map {
+                            it.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                        }
+                        cryptoChart.setXAxis(crypto_currency_chart, dateList)
+                        cryptoChart.displayPredictionChartTransparent(
+                            lineChart = crypto_currency_chart,
+                            lineChartData = data,
+                            lineChartPredictionDataMax = lineChartPredictionDataMax,
+                            lineChartPredictionDataMin = lineChartPredictionDataMin
+                        )
+                    },
+                    ::logError
+                )
+            )
+        } else {
+            cryptoChart.displayChart(crypto_currency_chart, data)
+        }
     }
 
     private fun logError(error: Throwable) {

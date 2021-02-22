@@ -58,6 +58,30 @@ class StockLineChart(lineChart: LineChart) {
         return lineChartData
     }
 
+    fun getPredictionLineData(predictionEntries: List<Double>): LineDataSet {
+        val localPredictionEntry = ArrayList<Entry>()
+        var iter = -1.0f
+        for (item in predictionEntries) {
+            iter += 1.0f
+            localPredictionEntry.add(
+                Entry(
+                    iter,
+                    BigDecimal(item).setScale(5, BigDecimal.ROUND_HALF_EVEN).toFloat()
+                )
+            )
+        }
+
+        val lineChartPredictionData = LineDataSet(localPredictionEntry, "")
+        lineChartPredictionData.lineWidth = 2f
+        lineChartPredictionData.setDrawCircles(false)
+        lineChartPredictionData.setDrawCircleHole(false)
+        lineChartPredictionData.valueTextSize = 0f
+        lineChartPredictionData.color = R.color.purple_500
+        lineChartPredictionData.enableDashedLine(10f, 10f, 0f)
+
+        return lineChartPredictionData
+    }
+
     fun displayChart(lineChart: LineChart, lineChartData: LineDataSet) {
         // lineChart.marker = dateList?.let { it -> CustomMarkerView(this, R.layout.activity_textview_content, it) }
         lineChart.onTouchListener.setLastHighlighted(null)
@@ -65,5 +89,49 @@ class StockLineChart(lineChart: LineChart) {
         lineChart.data = LineData(lineChartData)
         lineChart.notifyDataSetChanged()
         lineChart.invalidate()
+    }
+
+    fun displayPredictionChart(
+        lineChart: LineChart,
+        lineChartData: LineDataSet,
+        lineChartPredictionData: LineDataSet
+    ) {
+        val chartData = LineData()
+        lineChartPredictionData.setDrawFilled(true)
+        lineChartPredictionData.fillAlpha = 128
+        chartData.addDataSet(lineChartData)
+        chartData.addDataSet(lineChartPredictionData)
+        // lineChart.marker = dateList?.let { it -> CustomMarkerView(this, R.layout.activity_textview_content, it) }
+        lineChart.onTouchListener.setLastHighlighted(null)
+        lineChart.highlightValues(null)
+        lineChart.data = chartData
+        lineChart.notifyDataSetChanged()
+        lineChart.invalidate()
+    }
+
+    fun displayPredictionChartTransparent(
+        lineChart: LineChart,
+        lineChartData: LineDataSet,
+        lineChartPredictionDataMin: LineDataSet,
+        lineChartPredictionDataMax: LineDataSet
+    ) {
+        val chartData = LineData()
+        lineChartPredictionDataMax.setDrawFilled(true)
+        lineChartPredictionDataMax.fillAlpha = 96
+        lineChartPredictionDataMin.setDrawFilled(true)
+        lineChartPredictionDataMin.fillColor = Color.TRANSPARENT
+        chartData.addDataSet(lineChartData)
+        chartData.addDataSet(lineChartPredictionDataMax)
+        chartData.addDataSet(lineChartPredictionDataMin)
+        lineChart.onTouchListener.setLastHighlighted(null)
+        lineChart.highlightValues(null)
+        lineChart.data = chartData
+        lineChart.notifyDataSetChanged()
+        lineChart.invalidate()
+    }
+
+    fun clearChart() {
+        this.localLineChart.invalidate()
+        this.localLineChart.clear()
     }
 }

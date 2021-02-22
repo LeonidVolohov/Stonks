@@ -72,7 +72,7 @@ class StocksApiDataUtils(val stock: String) {
     fun getPricesFor1Week(): Observable<StocksDataModel.RatesProcessed> {
         val startDateTime: ZonedDateTime =
             endDateTimeIntraDay - Period.of(0, 0, 7)
-        return getIntradayPrices().map {
+        return getDailyPrices().map {
             StocksDataModel.RatesProcessed(
                 filterPeriod(it, startDateTime, endDateTimeIntraDay).toMap().toSortedMap()
             )
@@ -82,7 +82,7 @@ class StocksApiDataUtils(val stock: String) {
     fun getPricesFor1Month(): Observable<StocksDataModel.RatesProcessed> {
         val startDateTime: ZonedDateTime =
             endDateTimeIntraDay - Period.of(0, 1, 0)
-        return getIntradayPrices().map {
+        return getDailyPrices().map {
             StocksDataModel.RatesProcessed(
                 filterPeriod(it, startDateTime, endDateTimeIntraDay).toMap().toSortedMap()
             )

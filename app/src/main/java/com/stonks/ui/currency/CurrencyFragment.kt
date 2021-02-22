@@ -36,10 +36,36 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
         get() = ZonedDateTime.now(ZoneId.systemDefault()) - Period.of(5, 0, 0)
     private val endCustomDateLimit: ZonedDateTime
         get() = ZonedDateTime.now(ZoneId.systemDefault())
+    private val period: String
+        get() {
+            when (currency_button_group.checkedButtonId) {
+                R.id.currency_togglebutton_one_day_selector -> {
+                    return "1D"
+                }
+                R.id.currency_togglebutton_one_week_selector -> {
+                    return "1W"
+                }
+                R.id.currency_togglebutton_one_month_selector -> {
+                    return "1M"
+                }
+                R.id.currency_togglebutton_six_months_selector -> {
+                    return "6M"
+                }
+                R.id.currency_togglebutton_one_year_selector -> {
+                    return "1Y"
+                }
+                R.id.currency_togglebutton_five_years_selector -> {
+                    return "5Y"
+                }
+                else -> {
+                    return "1M"
+                }
+            }
+        }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_currency, container, false)
     }
@@ -55,7 +81,8 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
 
         initPrimaryRatesName(chartPrimaryRatesArray)
 
-        currencyFragmentUtils.setLastUpdatedDate(last_date_update, "Data for: ")
+        // TODO: Change to getString() - not working
+        currencyFragmentUtils.setLastUpdatedDate(last_date_update, "Data for: ", requireContext())
 
         base_rate_spinner.setSelection(defaultCurrencyInd)
         base_rate_spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -67,6 +94,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
             ) {
                 baseRateSpinnerString = ratesNameArray[position].split(",")[0]
                 rate_number.setText("1.0")
+                currencyLineChart.clearChart()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -74,16 +102,31 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
 
         target_rate_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
             ) {
                 targetRateSpinnerString = ratesNameArray[position].split(",")[0]
                 rate_number.setText("1.0")
+                currencyLineChart.clearChart()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        currency_switch.setOnCheckedChangeListener { buttonView, isChecked ->
+            currencyFragmentUtils.plotRatesPerPeriod(
+                startDate = period,
+                targetRate = targetRateSpinnerString,
+                baseRate = baseRateSpinnerString,
+                stockLineChart = currencyLineChart,
+                currencyChart = currency_chart,
+                isPrediction = currency_switch.isChecked,
+                context = requireContext()
+            )
+
+            displayChart()
         }
 
         currency_chart.isVisible = false
@@ -92,62 +135,72 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                 when (currency_button_group.checkedButtonId) {
                     R.id.currency_togglebutton_one_day_selector -> {
                         Toast.makeText(
-                                requireContext(),
-                                "Api does not provide information for one day",
-                                Toast.LENGTH_SHORT
+                            requireContext(),
+                            "Api does not provide information for one day",
+                            Toast.LENGTH_SHORT
                         ).show()
                     }
                     R.id.currency_togglebutton_one_week_selector -> {
                         currencyFragmentUtils.plotRatesPerPeriod(
-                                startDate = "1W",
-                                targetRate = targetRateSpinnerString,
-                                baseRate = baseRateSpinnerString,
-                                stockLineChart = currencyLineChart,
-                                currencyChart = currency_chart
+                            startDate = "1W",
+                            targetRate = targetRateSpinnerString,
+                            baseRate = baseRateSpinnerString,
+                            stockLineChart = currencyLineChart,
+                            currencyChart = currency_chart,
+                            context = requireContext(),
+                            isPrediction = currency_switch.isChecked
                         )
 
                         displayChart()
                     }
                     R.id.currency_togglebutton_one_month_selector -> {
                         currencyFragmentUtils.plotRatesPerPeriod(
-                                startDate = "1M",
-                                targetRate = targetRateSpinnerString,
-                                baseRate = baseRateSpinnerString,
-                                stockLineChart = currencyLineChart,
-                                currencyChart = currency_chart
+                            startDate = "1M",
+                            targetRate = targetRateSpinnerString,
+                            baseRate = baseRateSpinnerString,
+                            stockLineChart = currencyLineChart,
+                            currencyChart = currency_chart,
+                            context = requireContext(),
+                            isPrediction = currency_switch.isChecked
                         )
 
                         displayChart()
                     }
                     R.id.currency_togglebutton_six_months_selector -> {
                         currencyFragmentUtils.plotRatesPerPeriod(
-                                startDate = "6M",
-                                targetRate = targetRateSpinnerString,
-                                baseRate = baseRateSpinnerString,
-                                stockLineChart = currencyLineChart,
-                                currencyChart = currency_chart
+                            startDate = "6M",
+                            targetRate = targetRateSpinnerString,
+                            baseRate = baseRateSpinnerString,
+                            stockLineChart = currencyLineChart,
+                            currencyChart = currency_chart,
+                            context = requireContext(),
+                            isPrediction = currency_switch.isChecked
                         )
 
                         displayChart()
                     }
                     R.id.currency_togglebutton_one_year_selector -> {
                         currencyFragmentUtils.plotRatesPerPeriod(
-                                startDate = "1Y",
-                                targetRate = targetRateSpinnerString,
-                                baseRate = baseRateSpinnerString,
-                                stockLineChart = currencyLineChart,
-                                currencyChart = currency_chart
+                            startDate = "1Y",
+                            targetRate = targetRateSpinnerString,
+                            baseRate = baseRateSpinnerString,
+                            stockLineChart = currencyLineChart,
+                            currencyChart = currency_chart,
+                            context = requireContext(),
+                            isPrediction = currency_switch.isChecked
                         )
 
                         displayChart()
                     }
                     R.id.currency_togglebutton_five_years_selector -> {
                         currencyFragmentUtils.plotRatesPerPeriod(
-                                startDate = "5Y",
-                                targetRate = targetRateSpinnerString,
-                                baseRate = baseRateSpinnerString,
-                                stockLineChart = currencyLineChart,
-                                currencyChart = currency_chart
+                            startDate = "5Y",
+                            targetRate = targetRateSpinnerString,
+                            baseRate = baseRateSpinnerString,
+                            stockLineChart = currencyLineChart,
+                            currencyChart = currency_chart,
+                            context = requireContext(),
+                            isPrediction = currency_switch.isChecked
                         )
 
                         displayChart()
@@ -157,35 +210,50 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                         var endDateTime: String
                         val now = Calendar.getInstance()
                         val picker = MaterialDatePicker.Builder.dateRangePicker()
-                                .setSelection(androidx.core.util.Pair(now.timeInMillis, now.timeInMillis))
-                                .setCalendarConstraints(
-                                        CalendarConstraints.Builder()
-                                                .setStart(startCustomDateLimit.toInstant().toEpochMilli())
-                                                .setEnd(endCustomDateLimit.toInstant().toEpochMilli())
-                                                .build()
+                            .setSelection(
+                                androidx.core.util.Pair(
+                                    now.timeInMillis,
+                                    now.timeInMillis
                                 )
-                                .build()
+                            )
+                            .setCalendarConstraints(
+                                CalendarConstraints.Builder()
+                                    .setStart(startCustomDateLimit.toInstant().toEpochMilli())
+                                    .setEnd(endCustomDateLimit.toInstant().toEpochMilli())
+                                    .build()
+                            )
+                            .build()
                         picker.addOnPositiveButtonClickListener {
                             val startInstant = Instant.ofEpochMilli(it.first ?: 0)
                             val endInstant = Instant.ofEpochMilli(it.second ?: 0)
-                            startDateTime = ZonedDateTime.ofInstant(startInstant, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                            endDateTime = ZonedDateTime.ofInstant(endInstant, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                            startDateTime =
+                                ZonedDateTime.ofInstant(startInstant, ZoneId.systemDefault())
+                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                            endDateTime =
+                                ZonedDateTime.ofInstant(endInstant, ZoneId.systemDefault())
+                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
                             currencyFragmentUtils.plotRatesPerPeriod(
-                                    startDate = startDateTime,
-                                    endDate = endDateTime,
-                                    targetRate = targetRateSpinnerString,
-                                    baseRate = baseRateSpinnerString,
-                                    stockLineChart = currencyLineChart,
-                                    currencyChart = currency_chart
+                                startDate = startDateTime,
+                                endDate = endDateTime,
+                                targetRate = targetRateSpinnerString,
+                                baseRate = baseRateSpinnerString,
+                                stockLineChart = currencyLineChart,
+                                currencyChart = currency_chart,
+                                context = requireContext(),
+                                isPrediction = currency_switch.isChecked
                             )
 
                             displayChart()
                         }
-                        picker.addOnNegativeButtonClickListener { Log.i(TAG, "Cancelled selection") }
+                        picker.addOnNegativeButtonClickListener {
+                            Log.i(
+                                TAG,
+                                "Cancelled selection"
+                            )
+                        }
 
                         picker.show(activity?.supportFragmentManager!!, picker.toString())
-
                     }
                 }
             }
@@ -220,22 +288,24 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                             differenceRateTextView = rate_difference
                     )
                     currencyFragmentUtils.plotRatesPerPeriod(
-                            startDate = "1W",
-                            targetRate = targetRateSpinnerString,
-                            baseRate = baseRateSpinnerString,
-                            stockLineChart = currencyLineChart,
-                            currencyChart = currency_chart
+                        startDate = "1W",
+                        targetRate = targetRateSpinnerString,
+                        baseRate = baseRateSpinnerString,
+                        stockLineChart = currencyLineChart,
+                        currencyChart = currency_chart,
+                        context = requireContext()
                     )
 
                     currencyFragmentUtils.setPrimaryRatesPerDay(
-                            baseRate = baseRateSpinnerString,
-                            symbols = PRIMARY_RATES,
-                            firstTextView = first_primary_currency_result,
-                            secondTextView = second_primary_currency_result,
-                            thirdTextView = third_primary_currency_result,
-                            fourthTextView = fourth_primary_currency_result,
-                            fifthTextView = fifth_primary_currency_result,
-                            rateNumber = rate_number
+                        baseRate = baseRateSpinnerString,
+                        symbols = PRIMARY_RATES,
+                        firstTextView = first_primary_currency_result,
+                        secondTextView = second_primary_currency_result,
+                        thirdTextView = third_primary_currency_result,
+                        fourthTextView = fourth_primary_currency_result,
+                        fifthTextView = fifth_primary_currency_result,
+                        rateNumber = rate_number,
+                        context = requireContext()
                     )
                 } else {
                     Toast.makeText(requireContext(), "Wrong input", Toast.LENGTH_LONG).show()
