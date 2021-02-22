@@ -281,11 +281,12 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                     rate_difference.visibility = View.GONE
 
                     currencyFragmentUtils.setTargetRatePrice(
-                            baseRate = baseRateSpinnerString,
-                            targetRate = targetRateSpinnerString,
-                            rateNumberEditText = rate_number,
-                            resultRateTextView = rate_result,
-                            differenceRateTextView = rate_difference
+                        baseRate = baseRateSpinnerString,
+                        targetRate = targetRateSpinnerString,
+                        rateNumberEditText = rate_number,
+                        resultRateTextView = rate_result,
+                        differenceRateTextView = rate_difference,
+                        context = requireContext()
                     )
                     currencyFragmentUtils.plotRatesPerPeriod(
                         startDate = "1W",
