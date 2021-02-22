@@ -1,5 +1,6 @@
 package com.stonks.ui.stocks
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ import com.stonks.calculations.Prediction
 import com.stonks.ui.chart.StockLineChart
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.fragment_stocks.*
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.Instant
@@ -114,17 +116,19 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
                 )
             )
             disposables.add(
-                apiUtils.getMonthDynamics().subscribe(
-                    { result ->
-                        var extraSymbol = "+"
-                        if (result < 0) {
-                            extraSymbol = "-"
-                        }
-                        val dynamic = BigDecimal(abs(result)).setScale(2, RoundingMode.HALF_EVEN)
-                        textViewDynamics.text = "($extraSymbol${dynamic})"
-                    },
-                    ::logError
-                )
+                    apiUtils.getMonthDynamics().subscribe(
+                            { result ->
+                                var extraSymbol = "+"
+                                textview_dynamics_value.setTextColor(Color.GREEN)
+                                if (result < 0) {
+                                    extraSymbol = "-"
+                                    textview_dynamics_value.setTextColor(Color.RED)
+                                }
+                                val dynamic = BigDecimal(abs(result)).setScale(2, RoundingMode.HALF_EVEN)
+                                textViewDynamics.text = "($extraSymbol${dynamic})"
+                            },
+                            ::logError
+                    )
             )
             toggleGroupPeriod.check(R.id.togglebutton_one_day_selector)
             disposables.add(
