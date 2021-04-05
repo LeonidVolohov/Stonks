@@ -75,8 +75,10 @@ dependencies {
     apply plugin: 'kotlin-android-extensions'
     
     // Logging HTTP requests for debugging purposes
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
 
     // Prediction
     implementation 'org.nield:kotlin-statistics:1.2.1'
+
+    implementation 'com.google.code.gson:gson:2.8.6'
 }

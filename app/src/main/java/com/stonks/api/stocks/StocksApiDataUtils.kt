@@ -1,7 +1,10 @@
 package com.stonks.api.stocks
 
+import com.google.gson.Gson
+import com.stonks.api.AsyncGetter
 import com.stonks.api.Constants
 import com.stonks.api.stocksApi
+import com.stonks.api.utils.UrlBuilder
 import com.stonks.calculations.CurrencyConverter
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -44,6 +47,19 @@ class StocksApiDataUtils(val stock: String) {
         return stocksApi.getCompanyMarket(symbol = stock, apikey = Constants.STOCK_API_KEY)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getMarketOkHttp(): StocksDataModel.ResultCompanyInfo {
+        val endpoint = "query"
+        val params = mapOf(
+            "apikey" to Constants.STOCK_API_KEY,
+            "symbol" to stock,
+            "function" to "OVERVIEW"
+        )
+        val url = UrlBuilder.build(Constants.STOCK_API_BASE_URL, endpoint, params)
+        val JSONString = AsyncGetter.execute(url).get()
+        val result = Gson().fromJson(JSONString, StocksDataModel.ResultCompanyInfo::class.java)
+        return result
     }
 
     fun getLatestRate(): Observable<Double> {

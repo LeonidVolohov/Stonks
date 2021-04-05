@@ -2,7 +2,6 @@ package com.stonks.ui.stocks
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -111,12 +110,7 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
         if (!changedPeriodOnly) {
             apiUtils = StocksApiDataUtils(stock)
             textViewMarket.text = getString(R.string.loading_value_placeholder)
-            disposables.add(
-                apiUtils.getMarket().subscribe(
-                    { result -> textViewMarket.text = result.market },
-                    ::logError
-                )
-            )
+            textViewMarket.text = apiUtils.getMarketOkHttp().market
             disposables.add(
                 apiUtils.getMonthDynamics().subscribe(
                     { result ->
