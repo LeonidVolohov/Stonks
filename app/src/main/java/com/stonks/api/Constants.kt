@@ -5,6 +5,9 @@ class Constants {
         const val CURRENCY_API_BASE_URL = "http://api.exchangeratesapi.io/"
         const val CURRENCY_API_KEY = "336e3bb00b12688a8830aa4bfb766086"
 
+        const val CURRENCY_API_ALPHAVANTAGE_BASE_URL = "https://www.alphavantage.co/"
+        const val CURRENCY_ALPHAVANTAGE_API_KEY = "LBWSCWL8M5V6V9T0"
+
         const val STOCK_API_BASE_URL = "https://www.alphavantage.co/"
         const val STOCK_API_KEY = "LBWSCWL8M5V6V9T0"
 
