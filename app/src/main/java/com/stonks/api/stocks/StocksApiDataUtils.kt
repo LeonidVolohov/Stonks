@@ -12,7 +12,7 @@ import io.reactivex.schedulers.Schedulers
 import java.time.*
 import java.time.format.DateTimeFormatter
 
-class StocksApiDataUtils(val stock: String) {
+class StocksApiDataUtils(val stock: String, val apiUrl: String = Constants.STOCK_API_BASE_URL) {
 
     private companion object {
         const val dateFormatDaily = "yyyy-MM-dd"
@@ -56,7 +56,7 @@ class StocksApiDataUtils(val stock: String) {
             "symbol" to stock,
             "function" to "OVERVIEW"
         )
-        val url = UrlBuilder.build(Constants.STOCK_API_BASE_URL, endpoint, params)
+        val url = UrlBuilder.build(apiUrl, endpoint, params)
         val jsonResponse = AsyncGetter().execute(url).get()
         return Gson().fromJson(jsonResponse, StocksDataModel.ResultCompanyInfo::class.java)
     }
@@ -263,7 +263,7 @@ class StocksApiDataUtils(val stock: String) {
                 "function" to "TIME_SERIES_DAILY",
                 "outputsize" to "full"
             )
-            val url = UrlBuilder.build(Constants.STOCK_API_BASE_URL, endpoint, params)
+            val url = UrlBuilder.build(apiUrl, endpoint, params)
             val jsonResponse = AsyncGetter().execute(url).get()
             val result = Gson().fromJson(jsonResponse, StocksDataModel.ResultDaily::class.java)
             dailyData = result.data.map {
@@ -319,7 +319,7 @@ class StocksApiDataUtils(val stock: String) {
                 "outputsize" to "full",
                 "interval" to "15min"
             )
-            val url = UrlBuilder.build(Constants.STOCK_API_BASE_URL, endpoint, params)
+            val url = UrlBuilder.build(apiUrl, endpoint, params)
             val jsonResponse = AsyncGetter().execute(url).get()
             val result = Gson().fromJson(jsonResponse, StocksDataModel.ResultIntraday::class.java)
             intradayData = result.data.map {
