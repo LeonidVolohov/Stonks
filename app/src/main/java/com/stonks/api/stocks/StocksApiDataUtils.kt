@@ -57,9 +57,8 @@ class StocksApiDataUtils(val stock: String) {
             "function" to "OVERVIEW"
         )
         val url = UrlBuilder.build(Constants.STOCK_API_BASE_URL, endpoint, params)
-        val JSONString = AsyncGetter.execute(url).get()
-        val result = Gson().fromJson(JSONString, StocksDataModel.ResultCompanyInfo::class.java)
-        return result
+        val jsonResponse = AsyncGetter.execute(url).get()
+        return Gson().fromJson(jsonResponse, StocksDataModel.ResultCompanyInfo::class.java)
     }
 
     fun getLatestRate(): Observable<Double> {
@@ -95,6 +94,15 @@ class StocksApiDataUtils(val stock: String) {
         }
     }
 
+    fun getPricesFor1WeekOkHttp(): StocksDataModel.RatesProcessed {
+        val startDateTime: ZonedDateTime =
+            endDateTimeIntraDay - Period.of(0, 0, 7)
+        val result = getDailyPricesOkHttp()
+        return StocksDataModel.RatesProcessed(
+            filterPeriod(result, startDateTime, endDateTimeIntraDay).toMap().toSortedMap()
+        )
+    }
+
     fun getPricesFor1Month(): Observable<StocksDataModel.RatesProcessed> {
         val startDateTime: ZonedDateTime =
             endDateTimeIntraDay - Period.of(0, 1, 0)
@@ -103,6 +111,15 @@ class StocksApiDataUtils(val stock: String) {
                 filterPeriod(it, startDateTime, endDateTimeIntraDay).toMap().toSortedMap()
             )
         }
+    }
+
+    fun getPricesFor1MonthOkHttp(): StocksDataModel.RatesProcessed {
+        val startDateTime: ZonedDateTime =
+            endDateTimeIntraDay - Period.of(0, 1, 0)
+        val result = getDailyPricesOkHttp()
+        return StocksDataModel.RatesProcessed(
+            filterPeriod(result, startDateTime, endDateTimeIntraDay).toMap().toSortedMap()
+        )
     }
 
     fun getPricesFor6Months(): Observable<StocksDataModel.RatesProcessed> {
@@ -115,6 +132,15 @@ class StocksApiDataUtils(val stock: String) {
         }
     }
 
+    fun getPricesFor6MonthsOkHttp(): StocksDataModel.RatesProcessed {
+        val startDateTime: ZonedDateTime =
+            endDateTimeDaily - Period.of(0, 6, 0)
+        val result = getDailyPricesOkHttp()
+        return StocksDataModel.RatesProcessed(
+            filterPeriod(result, startDateTime, endDateTimeDaily).toMap().toSortedMap()
+        )
+    }
+
     fun getPricesFor1Year(): Observable<StocksDataModel.RatesProcessed> {
         val startDateTime: ZonedDateTime =
             endDateTimeDaily - Period.of(1, 0, 0)
@@ -123,6 +149,15 @@ class StocksApiDataUtils(val stock: String) {
                 filterPeriod(it, startDateTime, endDateTimeDaily).toMap().toSortedMap()
             )
         }
+    }
+
+    fun getPricesFor1YearOkHttp(): StocksDataModel.RatesProcessed {
+        val startDateTime: ZonedDateTime =
+            endDateTimeDaily - Period.of(1, 0, 0)
+        val result = getDailyPricesOkHttp()
+        return StocksDataModel.RatesProcessed(
+            filterPeriod(result, startDateTime, endDateTimeDaily).toMap().toSortedMap()
+        )
     }
 
     fun getPricesFor5Years(): Observable<StocksDataModel.RatesProcessed> {
@@ -135,6 +170,15 @@ class StocksApiDataUtils(val stock: String) {
         }
     }
 
+    fun getPricesFor5YearsOkHttp(): StocksDataModel.RatesProcessed {
+        val startDateTime: ZonedDateTime =
+            endDateTimeDaily - Period.of(5, 0, 0)
+        val result = getDailyPricesOkHttp()
+        return StocksDataModel.RatesProcessed(
+            filterPeriod(result, startDateTime, endDateTimeDaily).toMap().toSortedMap()
+        )
+    }
+
     fun getPricesForCustomPeriod(
         startDateTime: ZonedDateTime,
         endDateTime: ZonedDateTime
@@ -144,6 +188,16 @@ class StocksApiDataUtils(val stock: String) {
                 filterPeriod(it, startDateTime, endDateTime).toMap().toSortedMap()
             )
         }
+    }
+
+    fun getPricesForCustomPeriodOkHttp(
+        startDateTime: ZonedDateTime,
+        endDateTime: ZonedDateTime
+    ): StocksDataModel.RatesProcessed {
+        val result = getDailyPricesOkHttp()
+        return StocksDataModel.RatesProcessed(
+            filterPeriod(result, startDateTime, endDateTime).toMap().toSortedMap()
+        )
     }
 
     private fun filterPeriod(
@@ -175,6 +229,32 @@ class StocksApiDataUtils(val stock: String) {
                     lastUpdatedDailyData = ZonedDateTime.now(ZoneId.systemDefault())
                     dailyData
                 }
+        }
+    }
+
+    fun getDailyPricesOkHttp(): List<Pair<ZonedDateTime, Double>> {
+        if (checkDailyDataValid()) {
+            return dailyData!!
+        } else {
+            val endpoint = "query"
+            val params = mapOf(
+                "apikey" to Constants.STOCK_API_KEY,
+                "symbol" to stock,
+                "function" to "TIME_SERIES_DAILY",
+                "outputsize" to "full"
+            )
+            val url = UrlBuilder.build(Constants.STOCK_API_BASE_URL, endpoint, params)
+            val jsonResponse = AsyncGetter.execute(url).get()
+            val result = Gson().fromJson(jsonResponse, StocksDataModel.ResultDaily::class.java)
+            dailyData = result.data.map {
+                ZonedDateTime.of(
+                    LocalDate.parse(it.key, DateTimeFormatter.ofPattern(dateFormatDaily)),
+                    LocalTime.MIDNIGHT,
+                    ZoneId.of(result.metaData.timeZone)
+                ).withZoneSameInstant(ZoneId.systemDefault()) to it.value.price.toDouble()
+            }
+            lastUpdatedDailyData = ZonedDateTime.now(ZoneId.systemDefault())
+            return dailyData!!
         }
     }
 
