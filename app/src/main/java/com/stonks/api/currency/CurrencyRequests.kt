@@ -7,18 +7,27 @@ import retrofit2.http.Query
 interface CurrencyRequests {
 
     @GET("latest")
-    fun getLastUpdatedDate(): Observable<CurrencyDataModel.LastUpdatedDate>
+    fun getLastUpdatedDate(@Query("access_key") apiKey: String): Observable<CurrencyDataModel.LastUpdatedDate>
 
     @GET("latest")
-    fun getRatesPerDay(@Query("base") rate: String): Observable<CurrencyDataModel.CurrencyPerDay>
+    fun getRatesPerDay(
+        @Query("access_key") apiKey: String,
+        @Query("base") rate: String
+    ): Observable<CurrencyDataModel.CurrencyPerDay>
 
     @GET("history")
-    fun getRatesPerPeriod(@Query("start_at") startDate: String,
-                          @Query("end_at") endDate: String,
-                          @Query("base") baseRate: String,
-                          @Query("symbols") targetRate: String): Observable<CurrencyDataModel.CurrencyPerPeriod>
+    fun getRatesPerPeriod(
+        @Query("access_key") apiKey: String,
+        @Query("start_at") startDate: String,
+        @Query("end_at") endDate: String,
+        @Query("base") baseRate: String,
+        @Query("symbols") targetRate: String
+    ): Observable<CurrencyDataModel.CurrencyPerPeriod>
 
     @GET("latest")
-    fun getPrimaryRatesPerDay(@Query("base") baseRate: String,
-                              @Query("symbols") primaryCurrencies: String): Observable<CurrencyDataModel.CurrencyPrimaryPerDay>
+    fun getPrimaryRatesPerDay(
+        @Query("access_key") apiKey: String,
+        @Query("base") baseRate: String,
+        @Query("symbols") primaryCurrencies: String
+    ): Observable<CurrencyDataModel.CurrencyPrimaryPerDay>
 }
