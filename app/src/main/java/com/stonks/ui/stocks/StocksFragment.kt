@@ -79,7 +79,11 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                updateStockData(changedPeriodOnly = true)
+                try {
+                    updateStockData(changedPeriodOnly = true)
+                } catch (e: NullPointerException) {
+                    logError(e)
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -91,7 +95,11 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                updateStockData()
+                try {
+                    updateStockData()
+                } catch (e: NullPointerException) {
+                    logError(e)
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -101,7 +109,13 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
                 updateStockData(changedPeriodOnly = true)
             }
         }
-        switchPrediction.setOnCheckedChangeListener { buttonView, isChecked -> updateStockData(true) }
+        switchPrediction.setOnCheckedChangeListener { buttonView, isChecked ->
+            try {
+                updateStockData(true)
+            } catch (e: NullPointerException) {
+                logError(e)
+            }
+        }
     }
 
     private fun updateStockData(changedPeriodOnly: Boolean = false) {
