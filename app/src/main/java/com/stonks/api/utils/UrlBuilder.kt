@@ -17,7 +17,7 @@ object UrlBuilder {
      *
      * @return Resulting constructed URL as a String
      */
-    fun build(baseUrl: String, endpoint: String? = null, params: HashMap<String, Any>? = null): String {
+    fun build(baseUrl: String, endpoint: String? = null, params: Map<String, Any>? = null): String {
         val builder = Uri.parse(baseUrl)
             .buildUpon()
         if (endpoint != null) {
