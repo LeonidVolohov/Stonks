@@ -20,7 +20,6 @@ import com.stonks.api.stocks.StocksApiDataUtils
 import com.stonks.api.stocks.StocksDataModel
 import com.stonks.calculations.Prediction
 import com.stonks.ui.chart.StockLineChart
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_stocks.*
 import java.io.IOException
@@ -111,48 +110,37 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
             apiUtils = StocksApiDataUtils(stock)
             textViewMarket.text = getString(R.string.loading_value_placeholder)
             textViewMarket.text = apiUtils.getMarketOkHttp().market
-            disposables.add(
-                apiUtils.getMonthDynamics().subscribe(
-                    { result ->
-                        var extraSymbol = "+"
-                        textview_dynamics_value.setTextColor(Color.GREEN)
-                        if (result < 0) {
-                            extraSymbol = "-"
-                            textview_dynamics_value.setTextColor(Color.RED)
-                        }
-                        val dynamic = BigDecimal(abs(result)).setScale(2, RoundingMode.HALF_EVEN)
-                        textViewDynamics.text = "($extraSymbol${dynamic})"
-                    },
-                    ::logError
-                )
-            )
+            val monthDynamics = apiUtils.getMonthDynamicsOkHttp()
+            var extraSymbol = "+"
+            textview_dynamics_value.setTextColor(Color.GREEN)
+            if (monthDynamics < 0) {
+                extraSymbol = "-"
+                textview_dynamics_value.setTextColor(Color.RED)
+            }
+            val dynamic = BigDecimal(abs(monthDynamics)).setScale(2, RoundingMode.HALF_EVEN)
+            textViewDynamics.text = "($extraSymbol${dynamic})"
             toggleGroupPeriod.check(R.id.togglebutton_one_day_selector)
-            disposables.add(
-                apiUtils.getLatestRate().subscribe(
-                    { result -> textViewPrice.text = result.toString() },
-                    ::logError
-                )
-            )
+            textViewPrice.text = apiUtils.getLatestRateOkHttp().toString()
         }
-        var observable: Observable<StocksDataModel.RatesProcessed>? = null
+        var observable: StocksDataModel.RatesProcessed? = null
         when (toggleGroupPeriod.checkedButtonId) {
             R.id.togglebutton_one_day_selector -> {
-                observable = apiUtils.getPricesFor1Day()
+                observable = apiUtils.getPricesFor1DayOkHttp()
             }
             R.id.togglebutton_one_week_selector -> {
-                observable = apiUtils.getPricesFor1Week()
+                observable = apiUtils.getPricesFor1WeekOkHttp()
             }
             R.id.togglebutton_one_month_selector -> {
-                observable = apiUtils.getPricesFor1Month()
+                observable = apiUtils.getPricesFor1MonthOkHttp()
             }
             R.id.togglebutton_six_months_selector -> {
-                observable = apiUtils.getPricesFor6Months()
+                observable = apiUtils.getPricesFor6MonthsOkHttp()
             }
             R.id.togglebutton_one_year_selector -> {
-                observable = apiUtils.getPricesFor1Year()
+                observable = apiUtils.getPricesFor1YearOkHttp()
             }
             R.id.togglebutton_five_years_selector -> {
-                observable = apiUtils.getPricesFor5Years()
+                observable = apiUtils.getPricesFor5YearsOkHttp()
             }
             R.id.togglebutton_custom_period_selector -> {
                 var startDateTime: ZonedDateTime
@@ -179,17 +167,19 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
                     val endInstant = Instant.ofEpochMilli(it.second ?: 0)
                     startDateTime = ZonedDateTime.ofInstant(startInstant, ZoneId.systemDefault())
                     endDateTime = ZonedDateTime.ofInstant(endInstant, ZoneId.systemDefault())
-                    disposables.add(
-                        apiUtils.getPricesForCustomPeriod(startDateTime, endDateTime)
-                            .subscribe(::processResult, ::logError)
+                    processResult(
+                        apiUtils.getPricesForCustomPeriodOkHttp(
+                            startDateTime,
+                            endDateTime
+                        )
                     )
                 }
                 picker.show(activity?.supportFragmentManager!!, picker.toString())
             }
         }
-        disposables.add(
-            observable?.subscribe(::processResult, ::logError) ?: Observable.just(1)
-                .subscribe({}, {})
+        processResult(
+            observable
+                ?: StocksDataModel.RatesProcessed(mapOf<ZonedDateTime, Double>().toSortedMap())
         )
     }
 
@@ -212,48 +202,42 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
             targetCurrency = spinnerCurrencyValue
         )
         if (plotPrediction) {
-            disposables.add(
-                apiUtils.getPricesFor5Years().subscribe(
-                    { result ->
-                        val currentDaysInMonth =
-                            Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
-                        val dateListLong = result.rates.keys.sorted().toMutableList()
-                            .map { it.toInstant().toEpochMilli() }
-                        val entriesResult =
-                            result.rates.entries.sortedBy { it.key }.map { it.value }
-                                .toMutableList()
-                        val predictedRate = Prediction().datePrediction(
-                            dateListLong.toTypedArray(),
-                            entriesResult.toTypedArray(),
-                            currentDaysInMonth
-                        )
-                        val predictedRateMax = predictedRate * 1.50
-                        val predictedRateMin = predictedRate * 0.50
-                        val lastExistingDate = dateListResult.last()
-                        for (i in 1..currentDaysInMonth) {
-                            dateListResult.add(lastExistingDate + Period.ofDays(i))
-                            predictedRatesMax.add(entriesResult.last() + (predictedRateMax - entriesResult.last()) / currentDaysInMonth * i)
-                            predictedRatesMin.add(entriesResult.last() + (predictedRateMin - entriesResult.last()) / currentDaysInMonth * i)
-                        }
-                        val lineChartPredictionDataMax = stocksChart.getPredictionLineData(
-                            predictionEntries = predictedRatesMax.toList()
-                        )
-                        val lineChartPredictionDataMin = stocksChart.getPredictionLineData(
-                            predictionEntries = predictedRatesMin.toList()
-                        )
-                        val dateList = dateListResult.map {
-                            it.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                        }
-                        stocksChart.setXAxis(view!!.findViewById(R.id.stocks_chart), dateList)
-                        stocksChart.displayPredictionChartTransparent(
-                            lineChart = stocksChartField,
-                            lineChartData = data,
-                            lineChartPredictionDataMax = lineChartPredictionDataMax,
-                            lineChartPredictionDataMin = lineChartPredictionDataMin
-                        )
-                    },
-                    ::logError
-                )
+            val result = apiUtils.getPricesFor5YearsOkHttp()
+            val currentDaysInMonth =
+                Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
+            val dateListLong = result.rates.keys.sorted().toMutableList()
+                .map { it.toInstant().toEpochMilli() }
+            val entriesResult =
+                result.rates.entries.sortedBy { it.key }.map { it.value }
+                    .toMutableList()
+            val predictedRate = Prediction().datePrediction(
+                dateListLong.toTypedArray(),
+                entriesResult.toTypedArray(),
+                currentDaysInMonth
+            )
+            val predictedRateMax = predictedRate * 1.50
+            val predictedRateMin = predictedRate * 0.50
+            val lastExistingDate = dateListResult.last()
+            for (i in 1..currentDaysInMonth) {
+                dateListResult.add(lastExistingDate + Period.ofDays(i))
+                predictedRatesMax.add(entriesResult.last() + (predictedRateMax - entriesResult.last()) / currentDaysInMonth * i)
+                predictedRatesMin.add(entriesResult.last() + (predictedRateMin - entriesResult.last()) / currentDaysInMonth * i)
+            }
+            val lineChartPredictionDataMax = stocksChart.getPredictionLineData(
+                predictionEntries = predictedRatesMax.toList()
+            )
+            val lineChartPredictionDataMin = stocksChart.getPredictionLineData(
+                predictionEntries = predictedRatesMin.toList()
+            )
+            val dateList = dateListResult.map {
+                it.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            }
+            stocksChart.setXAxis(view!!.findViewById(R.id.stocks_chart), dateList)
+            stocksChart.displayPredictionChartTransparent(
+                lineChart = stocksChartField,
+                lineChartData = data,
+                lineChartPredictionDataMax = lineChartPredictionDataMax,
+                lineChartPredictionDataMin = lineChartPredictionDataMin
             )
         } else {
             stocksChart.displayChart(view!!.findViewById(R.id.stocks_chart), data)

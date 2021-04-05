@@ -5,7 +5,7 @@ import android.util.Log
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-object AsyncGetter : AsyncTask<String, Void, String>() {
+class AsyncGetter : AsyncTask<String, Void, String>() {
     override fun doInBackground(vararg params: String?): String {
         val okHttpClient = OkHttpClient()
         if (params.isNotEmpty()) {
@@ -15,6 +15,7 @@ object AsyncGetter : AsyncTask<String, Void, String>() {
                 )
                 .build()
             val response = okHttpClient.newCall(request).execute()
+            Log.d(TAG, response.toString())
             return response.body?.string() ?: ""
         } else {
             Log.e(TAG, "No server URL passed. Nothing to fetch")

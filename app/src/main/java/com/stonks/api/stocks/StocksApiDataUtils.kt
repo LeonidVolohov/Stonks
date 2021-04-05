@@ -57,7 +57,7 @@ class StocksApiDataUtils(val stock: String) {
             "function" to "OVERVIEW"
         )
         val url = UrlBuilder.build(Constants.STOCK_API_BASE_URL, endpoint, params)
-        val jsonResponse = AsyncGetter.execute(url).get()
+        val jsonResponse = AsyncGetter().execute(url).get()
         return Gson().fromJson(jsonResponse, StocksDataModel.ResultCompanyInfo::class.java)
     }
 
@@ -67,11 +67,22 @@ class StocksApiDataUtils(val stock: String) {
         }
     }
 
+    fun getLatestRateOkHttp(): Double {
+        val result = getIntradayPricesOkHttp()
+        return result[result.size - 1].second
+    }
+
     fun getMonthDynamics(): Observable<Double> {
         return getPricesFor1Month().map {
             (it.rates[it.rates.lastKey()]?.let { it1 -> it.rates[it.rates.firstKey()]?.minus(it1) })
                 ?: 0.0
         }
+    }
+
+    fun getMonthDynamicsOkHttp(): Double {
+        val result = getPricesFor1MonthOkHttp()
+        return (result.rates[result.rates.lastKey()]
+            ?.let { result.rates[result.rates.firstKey()]?.minus(it) }) ?: 0.0
     }
 
     fun getPricesFor1Day(): Observable<StocksDataModel.RatesProcessed> {
@@ -82,6 +93,15 @@ class StocksApiDataUtils(val stock: String) {
                 filterPeriod(it, startDateTime, endDateTimeIntraDay).toMap().toSortedMap()
             )
         }
+    }
+
+    fun getPricesFor1DayOkHttp(): StocksDataModel.RatesProcessed {
+        val startDateTime: ZonedDateTime =
+            endDateTimeIntraDay - Period.of(0, 0, 1)
+        val result = getIntradayPricesOkHttp()
+        return StocksDataModel.RatesProcessed(
+            filterPeriod(result, startDateTime, endDateTimeIntraDay).toMap().toSortedMap()
+        )
     }
 
     fun getPricesFor1Week(): Observable<StocksDataModel.RatesProcessed> {
@@ -244,7 +264,7 @@ class StocksApiDataUtils(val stock: String) {
                 "outputsize" to "full"
             )
             val url = UrlBuilder.build(Constants.STOCK_API_BASE_URL, endpoint, params)
-            val jsonResponse = AsyncGetter.execute(url).get()
+            val jsonResponse = AsyncGetter().execute(url).get()
             val result = Gson().fromJson(jsonResponse, StocksDataModel.ResultDaily::class.java)
             dailyData = result.data.map {
                 ZonedDateTime.of(
@@ -281,6 +301,38 @@ class StocksApiDataUtils(val stock: String) {
                     lastUpdatedIntradayData = ZonedDateTime.now(ZoneId.systemDefault())
                     intradayData
                 }
+        }
+    }
+
+    /**
+     * Returns data about intraday prices as an Observable
+     */
+    private fun getIntradayPricesOkHttp(): List<Pair<ZonedDateTime, Double>> {
+        if (checkIntradayDataValid()) {
+            return intradayData!!
+        } else {
+            val endpoint = "query"
+            val params = mapOf(
+                "apikey" to Constants.STOCK_API_KEY,
+                "symbol" to stock,
+                "function" to "TIME_SERIES_INTRADAY",
+                "outputsize" to "full",
+                "interval" to "15min"
+            )
+            val url = UrlBuilder.build(Constants.STOCK_API_BASE_URL, endpoint, params)
+            val jsonResponse = AsyncGetter().execute(url).get()
+            val result = Gson().fromJson(jsonResponse, StocksDataModel.ResultIntraday::class.java)
+            intradayData = result.data.map {
+                ZonedDateTime.of(
+                    LocalDateTime.parse(
+                        it.key,
+                        DateTimeFormatter.ofPattern(dateFormatIntraday)
+                    ),
+                    ZoneId.of(result.metaData.timeZone)
+                ).withZoneSameInstant(ZoneId.systemDefault()) to it.value.price.toDouble()
+            }
+            lastUpdatedIntradayData = ZonedDateTime.now(ZoneId.systemDefault())
+            return intradayData!!
         }
     }
 
