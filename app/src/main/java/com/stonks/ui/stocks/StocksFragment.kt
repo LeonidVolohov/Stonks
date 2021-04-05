@@ -123,8 +123,8 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
         if (!changedPeriodOnly) {
             apiUtils = StocksApiDataUtils(stock)
             textViewMarket.text = getString(R.string.loading_value_placeholder)
-            textViewMarket.text = apiUtils.getMarketOkHttp().market
-            val monthDynamics = apiUtils.getMonthDynamicsOkHttp()
+            textViewMarket.text = apiUtils.getMarket().market
+            val monthDynamics = apiUtils.getMonthDynamics()
             var extraSymbol = "+"
             textview_dynamics_value.setTextColor(Color.GREEN)
             if (monthDynamics < 0) {
@@ -134,27 +134,27 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
             val dynamic = BigDecimal(abs(monthDynamics)).setScale(2, RoundingMode.HALF_EVEN)
             textViewDynamics.text = "($extraSymbol${dynamic})"
             toggleGroupPeriod.check(R.id.togglebutton_one_day_selector)
-            textViewPrice.text = apiUtils.getLatestRateOkHttp().toString()
+            textViewPrice.text = apiUtils.getLatestRate().toString()
         }
         var observable: StocksDataModel.RatesProcessed? = null
         when (toggleGroupPeriod.checkedButtonId) {
             R.id.togglebutton_one_day_selector -> {
-                observable = apiUtils.getPricesFor1DayOkHttp()
+                observable = apiUtils.getPricesFor1Day()
             }
             R.id.togglebutton_one_week_selector -> {
-                observable = apiUtils.getPricesFor1WeekOkHttp()
+                observable = apiUtils.getPricesFor1Week()
             }
             R.id.togglebutton_one_month_selector -> {
-                observable = apiUtils.getPricesFor1MonthOkHttp()
+                observable = apiUtils.getPricesFor1Month()
             }
             R.id.togglebutton_six_months_selector -> {
-                observable = apiUtils.getPricesFor6MonthsOkHttp()
+                observable = apiUtils.getPricesFor6Months()
             }
             R.id.togglebutton_one_year_selector -> {
-                observable = apiUtils.getPricesFor1YearOkHttp()
+                observable = apiUtils.getPricesFor1Year()
             }
             R.id.togglebutton_five_years_selector -> {
-                observable = apiUtils.getPricesFor5YearsOkHttp()
+                observable = apiUtils.getPricesFor5Years()
             }
             R.id.togglebutton_custom_period_selector -> {
                 var startDateTime: ZonedDateTime
@@ -182,7 +182,7 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
                     startDateTime = ZonedDateTime.ofInstant(startInstant, ZoneId.systemDefault())
                     endDateTime = ZonedDateTime.ofInstant(endInstant, ZoneId.systemDefault())
                     processResult(
-                        apiUtils.getPricesForCustomPeriodOkHttp(
+                        apiUtils.getPricesForCustomPeriod(
                             startDateTime,
                             endDateTime
                         )
@@ -216,7 +216,7 @@ class StocksFragment(private val defaultCurrencyInd: Int) : Fragment() {
             targetCurrency = spinnerCurrencyValue
         )
         if (plotPrediction) {
-            val result = apiUtils.getPricesFor5YearsOkHttp()
+            val result = apiUtils.getPricesFor5Years()
             val currentDaysInMonth =
                 Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
             val dateListLong = result.rates.keys.sorted().toMutableList()
