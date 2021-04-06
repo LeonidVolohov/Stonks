@@ -162,7 +162,7 @@ class StocksApiDataUtils(val stock: String, val apiUrl: String = Constants.STOCK
     /**
      * Returns data about intraday prices as an Observable
      */
-    private fun getIntradayPrices(): List<Pair<ZonedDateTime, Double>> {
+    fun getIntradayPrices(): List<Pair<ZonedDateTime, Double>> {
         if (checkIntradayDataValid()) {
             return intradayData!!
         } else {

@@ -9,6 +9,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 @RunWith(AndroidJUnit4::class)
 @Config(manifest = Config.NONE)
@@ -108,7 +110,7 @@ class StocksApiDataUtilsTest {
     }
 
     @Test
-    fun getPricesFor1Day() {
+    fun getPricesFor1Day_test() {
         val testResponse = "{\n" +
                 "  \"Meta Data\": {\n" +
                 "    \"1. Information\": \"Intraday (5min) open, high, low, close prices and volume\",\n" +
@@ -136,7 +138,7 @@ class StocksApiDataUtilsTest {
     }
 
     @Test
-    fun getPricesFor1Week() {
+    fun getPricesFor1Week_test() {
         val testResponse = "{\n" +
                 "    \"Meta Data\": {\n" +
                 "        \"1. Information\": \"Daily Prices (open, high, low, close) and Volumes\",\n" +
@@ -163,7 +165,7 @@ class StocksApiDataUtilsTest {
     }
 
     @Test
-    fun getPricesFor1Month() {
+    fun getPricesFor1Month_test() {
         val testResponse = "{\n" +
                 "    \"Meta Data\": {\n" +
                 "        \"1. Information\": \"Daily Prices (open, high, low, close) and Volumes\",\n" +
@@ -190,7 +192,7 @@ class StocksApiDataUtilsTest {
     }
 
     @Test
-    fun getPricesFor6Months() {
+    fun getPricesFor6Months_test() {
         val testResponse = "{\n" +
                 "    \"Meta Data\": {\n" +
                 "        \"1. Information\": \"Daily Prices (open, high, low, close) and Volumes\",\n" +
@@ -217,7 +219,7 @@ class StocksApiDataUtilsTest {
     }
 
     @Test
-    fun getPricesFor1Year() {
+    fun getPricesFor1Year_test() {
         val testResponse = "{\n" +
                 "    \"Meta Data\": {\n" +
                 "        \"1. Information\": \"Daily Prices (open, high, low, close) and Volumes\",\n" +
@@ -244,7 +246,7 @@ class StocksApiDataUtilsTest {
     }
 
     @Test
-    fun getPricesFor5Years() {
+    fun getPricesFor5Years_test() {
         val testResponse = "{\n" +
                 "    \"Meta Data\": {\n" +
                 "        \"1. Information\": \"Daily Prices (open, high, low, close) and Volumes\",\n" +
@@ -271,27 +273,120 @@ class StocksApiDataUtilsTest {
     }
 
     @Test
-    fun getPricesForCustomPeriod() {
+    fun getPricesForCustomPeriod_test() {
+        val testResponse = "{\n" +
+                "    \"Meta Data\": {\n" +
+                "        \"1. Information\": \"Daily Prices (open, high, low, close) and Volumes\",\n" +
+                "        \"2. Symbol\": \"IBM\",\n" +
+                "        \"3. Last Refreshed\": \"2021-04-01\",\n" +
+                "        \"4. Output Size\": \"Full size\",\n" +
+                "        \"5. Time Zone\": \"US/Eastern\"\n" +
+                "    },\n" +
+                "    \"Time Series (Daily)\": {\n" +
+                "        \"2021-04-01\": {\n" +
+                "            \"1. open\": \"133.7600\",\n" +
+                "            \"2. high\": \"133.9300\",\n" +
+                "            \"3. low\": \"132.2700\",\n" +
+                "            \"4. close\": \"133.2300\",\n" +
+                "            \"5. volume\": \"4074161\"\n" +
+                "        }\n" +
+                "  }\n" +
+                "}"
+        println(testResponse)
+        server.enqueue(MockResponse().setBody(testResponse))
+        val testPeriodStart = ZonedDateTime.of(
+            2021, 3, 1, 0, 0, 0, 0, ZoneId.systemDefault()
+        )
+        val testPeriodEnd = ZonedDateTime.of(
+            2021, 5, 1, 0, 0, 0, 0, ZoneId.systemDefault()
+        )
+        val result = api.getPricesForCustomPeriod(testPeriodStart, testPeriodEnd)
+        println(result)
+        Assert.assertEquals(result.rates.size, 1)
     }
 
     @Test
-    fun getDailyPrices() {
+    fun getDailyPrices_test() {
+        val testResponse = "{\n" +
+                "    \"Meta Data\": {\n" +
+                "        \"1. Information\": \"Daily Prices (open, high, low, close) and Volumes\",\n" +
+                "        \"2. Symbol\": \"IBM\",\n" +
+                "        \"3. Last Refreshed\": \"2021-04-01\",\n" +
+                "        \"4. Output Size\": \"Full size\",\n" +
+                "        \"5. Time Zone\": \"US/Eastern\"\n" +
+                "    },\n" +
+                "    \"Time Series (Daily)\": {\n" +
+                "        \"2021-04-01\": {\n" +
+                "            \"1. open\": \"133.7600\",\n" +
+                "            \"2. high\": \"133.9300\",\n" +
+                "            \"3. low\": \"132.2700\",\n" +
+                "            \"4. close\": \"133.2300\",\n" +
+                "            \"5. volume\": \"4074161\"\n" +
+                "        }\n" +
+                "  }\n" +
+                "}"
+        println(testResponse)
+        server.enqueue(MockResponse().setBody(testResponse))
+        var dummy = api.getDailyPrices()
+        dummy = api.getDailyPrices()
     }
 
     @Test
-    fun convertToCurrency() {
+    fun getIntradayPrices_test() {
+        val testResponse = "{\n" +
+                "  \"Meta Data\": {\n" +
+                "    \"1. Information\": \"Intraday (5min) open, high, low, close prices and volume\",\n" +
+                "    \"2. Symbol\": \"IBM\",\n" +
+                "    \"3. Last Refreshed\": \"2021-04-01 18:05:00\",\n" +
+                "    \"4. Interval\": \"5min\",\n" +
+                "    \"5. Output Size\": \"Full size\",\n" +
+                "    \"6. Time Zone\": \"US/Eastern\"\n" +
+                "  },\n" +
+                "  \"Time Series (15min)\": {\n" +
+                "    \"2021-04-01 18:05:00\": {\n" +
+                "      \"1. open\": \"133.2800\",\n" +
+                "      \"2. high\": \"133.2800\",\n" +
+                "      \"3. low\": \"133.2300\",\n" +
+                "      \"4. close\": \"133.2300\",\n" +
+                "      \"5. volume\": \"905\"\n" +
+                "    }\n" +
+                "  }\n" +
+                "}"
+        println(testResponse)
+        server.enqueue(MockResponse().setBody(testResponse))
+        var dummy = api.getIntradayPrices()
+        dummy = api.getIntradayPrices()
     }
 
     @Test
-    fun getStock() {
+    fun convertToCurrency_test() {
+        val testDT = ZonedDateTime.of(
+            2021, 3, 1, 0, 0, 0, 0, ZoneId.systemDefault()
+        )
+        val testRates = StocksDataModel.RatesProcessed(mapOf(testDT to 500.0).toSortedMap())
+        api.convertToCurrency("EUR", testRates)
+        Assert.assertEquals(testRates.rates[testRates.rates.firstKey()] ?: 0.0, 415.0, 0.0001)
     }
 
     @Test
-    fun getApiUrl() {
+    fun getStock_test() {
+        Assert.assertEquals(api.stock, "noStock")
     }
 
-    private fun openFile(filename: String): String {
-        val fileInputStream = javaClass.classLoader!!.getResourceAsStream(filename)
-        return fileInputStream?.bufferedReader()?.readText() ?: ""
+    @Test
+    fun getApiUrl_test() {
+        Assert.assertEquals(api.apiUrl, "http://localhost:8080/")
+    }
+
+    @Test
+    fun constructDataModels_test() {
+        val dummy1 = StocksDataModel.MetaDataIntraday("UTC")
+        val dummy2 = StocksDataModel.MetaDataDaily("UTC")
+        val dummy3 = StocksDataModel.ResultCompanyInfo("NASDAQ", "USD")
+        val dummy4 = StocksDataModel.RateData("500.0")
+        val dummy5 =
+            StocksDataModel.ResultIntraday(dummy1, mapOf("2021-01-01" to dummy4).toSortedMap())
+        val dummy6 =
+            StocksDataModel.ResultDaily(dummy2, mapOf("2021-01-01" to dummy4).toSortedMap())
     }
 }
