@@ -84,7 +84,12 @@ class MainActivity : AppCompatActivity() {
     private val navListener: BottomNavigationView.OnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             selectedFragment = when (item.itemId) {
-                R.id.cryptocurrency_tab -> CryptoFragment(defaultCurrencyInd)
+                R.id.cryptocurrency_tab -> {
+                    val fragment = CryptoFragment()
+                    val args = Bundle()
+                    args.putInt("defaultCurrencyInd", defaultCurrencyInd)
+                    fragment
+                }
                 R.id.currency_tab -> CurrencyFragment(bottom_navigation.height, defaultCurrencyInd)
                 R.id.stocks_tab -> {
                     val fragment = StocksFragment()

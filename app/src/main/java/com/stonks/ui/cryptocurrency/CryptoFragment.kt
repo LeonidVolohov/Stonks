@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.stonks.R
+import com.stonks.api.ApiConstants
 import com.stonks.api.ApiConstants.Companion.CRYPTOCURRENCY_API_KEY
 import com.stonks.api.cryptoCurrencyApi
 import com.stonks.api.cryptocurrency.CryptoCurrencyApiUtils
@@ -37,10 +38,12 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.math.abs
 
-class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
+class CryptoFragment : Fragment() {
+    var defaultCurrencyInd = UiConstants.DEFAULT_CURRENCY_ID
 
     private val disposables = CompositeDisposable()
     private lateinit var apiUtils: CryptoCurrencyApiUtils
+    lateinit var url: String
     private val periodToFarthestReachableMomentInPast = Period.of(5, 0, 0)
     private val startCustomDateLimit: ZonedDateTime
         get() = ZonedDateTime.now(ZoneId.systemDefault()) -
@@ -59,6 +62,9 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        url = arguments?.getString("url") ?: ApiConstants.STOCK_API_BASE_URL
+        defaultCurrencyInd =
+            arguments?.getInt("defaultCurrencyInd") ?: UiConstants.DEFAULT_CURRENCY_ID
         return inflater.inflate(R.layout.fragment_crypto, container, false)
     }
 
@@ -182,7 +188,7 @@ class CryptoFragment(private val defaultCurrencyInd: Int) : Fragment() {
 
     private fun updateChart(changedCryptoSpinner: Boolean = true) {
         if (changedCryptoSpinner) {
-            apiUtils = CryptoCurrencyApiUtils(cryptoCurrencyName)
+            apiUtils = CryptoCurrencyApiUtils(cryptoCurrencyName, url)
             period_selection_group.check(R.id.togglebutton_one_week_selector)
             disposables.add(
                     apiUtils.getMonthDynamics().subscribe(
