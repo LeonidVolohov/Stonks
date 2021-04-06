@@ -1,7 +1,7 @@
 package com.stonks.api
 
-import com.stonks.api.Constants.Companion.CRYPTOCURRENCY_API_BASE_URL
-import com.stonks.api.Constants.Companion.CURRENCY_API_BASE_URL
+import com.stonks.api.ApiConstants.Companion.CRYPTOCURRENCY_API_BASE_URL
+import com.stonks.api.ApiConstants.Companion.CURRENCY_API_BASE_URL
 import com.stonks.api.cryptocurrency.CryptoCurrencyRequests
 import com.stonks.api.currency.CurrencyRequests
 import okhttp3.OkHttpClient

@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.stonks.R
-import com.stonks.ui.Constants
+import com.stonks.ui.UiConstants
 import com.stonks.ui.cryptocurrency.CryptoFragment
 import com.stonks.ui.currency.CurrencyFragment
 import com.stonks.ui.stocks.StocksFragment
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rlGuideSecondPage: RelativeLayout
     private lateinit var bottomNavigation: BottomNavigationView
 
-    private var defaultCurrencyInd = Constants.DEFAULT_CURRENCY_ID
+    private var defaultCurrencyInd = UiConstants.DEFAULT_CURRENCY_ID
 
     // Variable storing currently selected fragment for displaying
     private lateinit var selectedFragment: Fragment
@@ -33,7 +33,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        defaultCurrencyInd = intent.getIntExtra("defaultCurrencyInd", Constants.DEFAULT_CURRENCY_ID)
+        defaultCurrencyInd =
+            intent.getIntExtra("defaultCurrencyInd", UiConstants.DEFAULT_CURRENCY_ID)
         selectedFragment = CurrencyFragment(bottomNavigationHeight, defaultCurrencyInd)
 
         val firstLaunch = intent.getBooleanExtra("firstLaunch", true)
@@ -85,7 +86,12 @@ class MainActivity : AppCompatActivity() {
             selectedFragment = when (item.itemId) {
                 R.id.cryptocurrency_tab -> CryptoFragment(defaultCurrencyInd)
                 R.id.currency_tab -> CurrencyFragment(bottom_navigation.height, defaultCurrencyInd)
-                R.id.stocks_tab -> StocksFragment(defaultCurrencyInd)
+                R.id.stocks_tab -> {
+                    val fragment = StocksFragment()
+                    val args = Bundle()
+                    args.putInt("defaultCurrencyInd", defaultCurrencyInd)
+                    fragment
+                }
                 else -> TODO("Rewrite it without else statement")
             }
 

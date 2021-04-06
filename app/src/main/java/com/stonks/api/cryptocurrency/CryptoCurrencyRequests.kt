@@ -1,6 +1,6 @@
 package com.stonks.api.cryptocurrency
 
-import com.stonks.api.Constants
+import com.stonks.api.ApiConstants
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -16,10 +16,10 @@ interface CryptoCurrencyRequests {
     ): Observable<CryptoCurrencyDataModel.CryptoCurrencyPerDay>
 
     @GET("query")
-    fun getDailyStats (
-            @Query("symbol") cryptoCurrencyName: String,
-            @Query("market") market: String = "USD",
-            @Query("function") function: String = "DIGITAL_CURRENCY_DAILY",
-            @Query("apikey") apikey: String = Constants.CRYPTOCURRENCY_API_KEY
+    fun getDailyStats(
+        @Query("symbol") cryptoCurrencyName: String,
+        @Query("market") market: String = "USD",
+        @Query("function") function: String = "DIGITAL_CURRENCY_DAILY",
+        @Query("apikey") apikey: String = ApiConstants.CRYPTOCURRENCY_API_KEY
     ): Observable<CryptoCurrencyDataModel.ResultDaily>
 }

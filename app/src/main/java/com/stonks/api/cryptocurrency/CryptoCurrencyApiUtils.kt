@@ -1,6 +1,6 @@
 package com.stonks.api.cryptocurrency
 
-import com.stonks.api.Constants
+import com.stonks.api.ApiConstants
 import com.stonks.api.cryptoCurrencyApi
 import com.stonks.calculations.CurrencyConverter
 import io.reactivex.Observable
@@ -111,7 +111,7 @@ class CryptoCurrencyApiUtils(private val cryptoCurrencyName: String) {
             return cryptoCurrencyApi
                 .getDailyStats(
                     cryptoCurrencyName = cryptoCurrencyName,
-                    apikey = Constants.CRYPTOCURRENCY_API_KEY
+                    apikey = ApiConstants.CRYPTOCURRENCY_API_KEY
                 )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

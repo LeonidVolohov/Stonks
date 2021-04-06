@@ -1,6 +1,6 @@
 package com.stonks.api.currency
 
-import com.stonks.api.Constants.Companion.CURRENCY_API_KEY
+import com.stonks.api.ApiConstants.Companion.CURRENCY_API_KEY
 import com.stonks.api.currencyApi
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers

@@ -13,9 +13,9 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.stonks.R
-import com.stonks.api.Constants.Companion.CURRENCY_ALPHAVANTAGE_API_KEY
+import com.stonks.api.ApiConstants.Companion.CURRENCY_ALPHAVANTAGE_API_KEY
 import com.stonks.api.currency.CurrencyApiAlphavantageDataUtils
-import com.stonks.ui.Constants
+import com.stonks.ui.UiConstants
 import com.stonks.ui.chart.StockLineChart
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_currency.*
@@ -104,7 +104,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                 id: Long
             ) {
                 baseRateSpinnerString = ratesNameArray[position].split(",")[0]
-                rate_number.setText(Constants.DEFAULT_EDIT_TEXT_NUMBER.toString())
+                rate_number.setText(UiConstants.DEFAULT_EDIT_TEXT_NUMBER.toString())
                 currencyLineChart.clearChart()
             }
 
@@ -119,7 +119,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                 id: Long
             ) {
                 targetRateSpinnerString = ratesNameArray[position].split(",")[0]
-                rate_number.setText(Constants.DEFAULT_EDIT_TEXT_NUMBER.toString())
+                rate_number.setText(UiConstants.DEFAULT_EDIT_TEXT_NUMBER.toString())
                 currencyLineChart.clearChart()
             }
 
@@ -274,8 +274,8 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
         calculate_button.setOnClickListener {
             if (baseRateSpinnerString == targetRateSpinnerString) {
                 rate_result.text = currencyFragmentUtils.stringMultiplication(
-                        rate_number.text.toString(),
-                        Constants.DEFAULT_EDIT_TEXT_NUMBER.toString()
+                    rate_number.text.toString(),
+                    UiConstants.DEFAULT_EDIT_TEXT_NUMBER.toString()
                 )
 
                 rate_difference.visibility = View.GONE

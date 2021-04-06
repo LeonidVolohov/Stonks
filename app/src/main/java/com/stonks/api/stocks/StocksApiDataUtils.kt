@@ -1,14 +1,14 @@
 package com.stonks.api.stocks
 
 import com.google.gson.Gson
+import com.stonks.api.ApiConstants
 import com.stonks.api.AsyncGetter
-import com.stonks.api.Constants
 import com.stonks.api.utils.UrlBuilder
 import com.stonks.calculations.CurrencyConverter
 import java.time.*
 import java.time.format.DateTimeFormatter
 
-class StocksApiDataUtils(val stock: String, val apiUrl: String = Constants.STOCK_API_BASE_URL) {
+class StocksApiDataUtils(val stock: String, val apiUrl: String = ApiConstants.STOCK_API_BASE_URL) {
 
     private companion object {
         const val dateFormatDaily = "yyyy-MM-dd"
@@ -38,7 +38,7 @@ class StocksApiDataUtils(val stock: String, val apiUrl: String = Constants.STOCK
     fun getMarket(): StocksDataModel.ResultCompanyInfo {
         val endpoint = "query"
         val params = mapOf(
-            "apikey" to Constants.STOCK_API_KEY,
+            "apikey" to ApiConstants.STOCK_API_KEY,
             "symbol" to stock,
             "function" to "OVERVIEW"
         )
@@ -139,7 +139,7 @@ class StocksApiDataUtils(val stock: String, val apiUrl: String = Constants.STOCK
         } else {
             val endpoint = "query"
             val params = mapOf(
-                "apikey" to Constants.STOCK_API_KEY,
+                "apikey" to ApiConstants.STOCK_API_KEY,
                 "symbol" to stock,
                 "function" to "TIME_SERIES_DAILY",
                 "outputsize" to "full"
@@ -168,7 +168,7 @@ class StocksApiDataUtils(val stock: String, val apiUrl: String = Constants.STOCK
         } else {
             val endpoint = "query"
             val params = mapOf(
-                "apikey" to Constants.STOCK_API_KEY,
+                "apikey" to ApiConstants.STOCK_API_KEY,
                 "symbol" to stock,
                 "function" to "TIME_SERIES_INTRADAY",
                 "outputsize" to "full",

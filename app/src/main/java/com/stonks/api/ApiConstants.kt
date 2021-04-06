@@ -1,6 +1,6 @@
 package com.stonks.api
 
-class Constants {
+class ApiConstants {
     companion object {
         const val CURRENCY_API_BASE_URL = "http://api.exchangeratesapi.io/"
         const val CURRENCY_API_KEY = "336e3bb00b12688a8830aa4bfb766086"

@@ -12,7 +12,7 @@ import com.github.mikephil.charting.charts.LineChart
 import com.stonks.R
 import com.stonks.api.currency.CurrencyApiDataUtils
 import com.stonks.calculations.Prediction
-import com.stonks.ui.Constants.Companion.DEFAULT_DECIMAL_POINT_PRECISION
+import com.stonks.ui.UiConstants.Companion.DEFAULT_DECIMAL_POINT_PRECISION
 import com.stonks.ui.chart.StockLineChart
 import io.reactivex.disposables.Disposable
 import java.math.BigDecimal
