@@ -12,8 +12,6 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.stonks.R
 import com.stonks.api.ApiConstants
-import com.stonks.api.ApiConstants.Companion.CRYPTOCURRENCY_API_KEY
-import com.stonks.api.cryptoCurrencyApi
 import com.stonks.api.cryptocurrency.CryptoCurrencyApiUtils
 import com.stonks.api.cryptocurrency.CryptoCurrencyDataModel
 import com.stonks.calculations.Prediction
@@ -21,9 +19,7 @@ import com.stonks.ui.UiConstants
 import com.stonks.ui.UiConstants.Companion.DEFAULT_DECIMAL_POINT_PRECISION
 import com.stonks.ui.UiConstants.Companion.DEFAULT_EDIT_TEXT_NUMBER
 import com.stonks.ui.chart.StockLineChart
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_crypto.*
 import java.io.IOException
 import java.math.BigDecimal
@@ -118,55 +114,46 @@ class CryptoFragment : Fragment() {
 
             if (isNumeric) {
                 dynamics_month_value.visibility = View.GONE
-                TODO("Fix migrating to OkHttp")
-                disposables.add(
-                    cryptoCurrencyApi.getCryptoCurrencyRatePerDay(
-                        function = "CURRENCY_EXCHANGE_RATE",
-                        cryptoCurrencyName = cryptoCurrencyNameSpinnerString.split(",")[0],
-                        toCurrencyName = toCurrencySpinnerString.split(",")[0],
-                        apiKey = CRYPTOCURRENCY_API_KEY
+                try {
+                    val response = apiUtils.getCryptoCurrencyRatePerDay(
+                        cryptoCurrencyNameSpinnerString.split(",")[0],
+                        toCurrencySpinnerString.split(",")[0]
                     )
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(
-                            { response ->
-                                crypto_last_date_update.text = getString(
-                                    R.string.last_updated_date,
-                                    response.cryptoCurrency.lastRefreshedDate
-                                )
-                                val exchangeRateResult =
-                                    BigDecimal(
-                                        (crypto_rate_number.text.toString().toDouble() *
-                                                response.cryptoCurrency.exchangeRate.toDouble())
-                                    ).setScale(
-                                        DEFAULT_DECIMAL_POINT_PRECISION,
-                                        BigDecimal.ROUND_HALF_EVEN
-                                    ).toString()
-                                first_crypto_currency_result.text = exchangeRateResult
-                                second_crypto_currency_result.text =
-                                    String.format(
-                                        BigDecimal(response.cryptoCurrency.bidPrice.toDouble()).setScale(
-                                            DEFAULT_DECIMAL_POINT_PRECISION,
-                                            ROUND_HALF_EVEN
-                                        ).toString()
-                                    )
-                                third_crypto_currency_result.text =
-                                    String.format(
-                                        BigDecimal(response.cryptoCurrency.askPrice.toDouble()).setScale(
-                                            DEFAULT_DECIMAL_POINT_PRECISION,
-                                            ROUND_HALF_EVEN
-                                        ).toString()
-                                    )
-                            },
-                            { failure ->
-                                Toast.makeText(
-                                    context,
-                                    failure.message.toString(),
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
+
+                    crypto_last_date_update.text = getString(
+                        R.string.last_updated_date,
+                        response.cryptoCurrency.lastRefreshedDate
+                    )
+                    val exchangeRateResult =
+                        BigDecimal(
+                            (crypto_rate_number.text.toString().toDouble() *
+                                    response.cryptoCurrency.exchangeRate.toDouble())
+                        ).setScale(
+                            DEFAULT_DECIMAL_POINT_PRECISION,
+                            BigDecimal.ROUND_HALF_EVEN
+                        ).toString()
+                    first_crypto_currency_result.text = exchangeRateResult
+                    second_crypto_currency_result.text =
+                        String.format(
+                            BigDecimal(response.cryptoCurrency.bidPrice.toDouble()).setScale(
+                                DEFAULT_DECIMAL_POINT_PRECISION,
+                                ROUND_HALF_EVEN
+                            ).toString()
                         )
-                )
+                    third_crypto_currency_result.text =
+                        String.format(
+                            BigDecimal(response.cryptoCurrency.askPrice.toDouble()).setScale(
+                                DEFAULT_DECIMAL_POINT_PRECISION,
+                                ROUND_HALF_EVEN
+                            ).toString()
+                        )
+                } catch (e: Error) {
+                    Toast.makeText(
+                        context,
+                        e.message.toString(),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
                 var monthDynamics = 0.0
                 try {
                     monthDynamics = apiUtils.getMonthDynamics()

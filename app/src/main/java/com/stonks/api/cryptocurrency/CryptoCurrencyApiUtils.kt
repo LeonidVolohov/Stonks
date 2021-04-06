@@ -27,6 +27,24 @@ class CryptoCurrencyApiUtils(
     private var lastUpdatedDailyData: ZonedDateTime? = null
     private var dailyData: List<Pair<ZonedDateTime, Double>>? = null
 
+    fun getCryptoCurrencyRatePerDay(
+        sourceCrypto: String = cryptoCurrencyName,
+        targetCurrency: String
+    ): CryptoCurrencyDataModel.CryptoCurrencyPerDay {
+        val endpoint = "query"
+        val params = mapOf(
+            "apikey" to ApiConstants.CRYPTOCURRENCY_API_KEY,
+            "from_currency" to sourceCrypto,
+            "function" to "CURRENCY_EXCHANGE_RATE",
+            "to_currency" to targetCurrency
+        )
+        val url = UrlBuilder.build(apiUrl, endpoint, params)
+        val jsonResponse = AsyncGetter().execute(url).get()
+        val result =
+            Gson().fromJson(jsonResponse, CryptoCurrencyDataModel.CryptoCurrencyPerDay::class.java)
+        return result
+    }
+
     fun getPricesFor1Week(): CryptoCurrencyDataModel.RatesProcessed {
         val startDateTime: ZonedDateTime =
             endDateTimeDaily - Period.of(0, 0, 7)
