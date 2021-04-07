@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.Spinner
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.charts.LineChart
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -86,11 +83,7 @@ class StocksFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                try {
-                    updateStockData(changedPeriodOnly = true)
-                } catch (e: NullPointerException) {
-                    logError(e)
-                }
+                safeUpdateCallTrue()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -102,11 +95,7 @@ class StocksFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                try {
-                    updateStockData()
-                } catch (e: NullPointerException) {
-                    logError(e)
-                }
+                safeUpdateCallFalse()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -116,12 +105,22 @@ class StocksFragment : Fragment() {
                 updateStockData(changedPeriodOnly = true)
             }
         }
-        switchPrediction.setOnCheckedChangeListener { buttonView, isChecked ->
-            try {
-                updateStockData(true)
-            } catch (e: NullPointerException) {
-                logError(e)
-            }
+        switchPrediction.setOnCheckedChangeListener(::safeUpdateCallTrue)
+    }
+
+    fun safeUpdateCallTrue(buttonView: CompoundButton? = null, isChecked: Boolean? = null) {
+        try {
+            updateStockData(true)
+        } catch (e: NullPointerException) {
+            logError(e)
+        }
+    }
+
+    fun safeUpdateCallFalse(buttonView: CompoundButton? = null, isChecked: Boolean? = null) {
+        try {
+            updateStockData(false)
+        } catch (e: NullPointerException) {
+            logError(e)
         }
     }
 

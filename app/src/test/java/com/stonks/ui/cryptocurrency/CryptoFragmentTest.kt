@@ -37,7 +37,7 @@ class CryptoFragmentTest {
                 val response = MockResponse()
                 when (request.requestUrl?.queryParameter("function")) {
                     "CURRENCY_EXCHANGE_RATE" -> response.setBody(currencyExchangeRateResponse)
-                    "TIME_SERIES_DAILY" -> response.setBody(dailyResponse)
+                    "DIGITAL_CURRENCY_DAILY" -> response.setBody(dailyResponse)
                     else -> TODO("Incorrect request URL")
                 }
                 return response
