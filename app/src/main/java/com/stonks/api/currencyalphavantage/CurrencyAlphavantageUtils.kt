@@ -1,5 +1,6 @@
 package com.stonks.api.currencyalphavantage
 
+import com.stonks.api.ApiConstants.Companion.CURRENCY_ALPHAVANTAGE_ANOTHER_ANOTHER_API_KEY
 import com.stonks.api.ApiConstants.Companion.CURRENCY_ALPHAVANTAGE_ANOTHER_ANOTHER_PRIMARY_API_KEY
 import com.stonks.api.ApiConstants.Companion.CURRENCY_ALPHAVANTAGE_ANOTHER_PRIMARY_API_KEY
 import com.stonks.api.currencyAlphavantageApi
@@ -17,7 +18,7 @@ class CurrencyAlphavantageUtils {
             function = "FX_MONTHLY",
             fromCurrencyName = fromCurrencyName,
             toCurrencyName = toCurrencyName,
-            apiKey = CURRENCY_ALPHAVANTAGE_ANOTHER_ANOTHER_PRIMARY_API_KEY
+            apiKey = CURRENCY_ALPHAVANTAGE_ANOTHER_ANOTHER_API_KEY
         )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
