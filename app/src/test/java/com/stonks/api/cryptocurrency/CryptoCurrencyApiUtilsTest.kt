@@ -46,6 +46,12 @@ class CryptoCurrencyApiUtilsTest {
     }
 
     @Test
+    fun getCryptoCurrencyRatePerDay_test() {
+        val result = api.getCryptoCurrencyRatePerDay(targetCurrency = "USD")
+        Assert.assertEquals(result.cryptoCurrency.askPrice, "380018.82024000")
+    }
+
+    @Test
     fun getPricesFor1Week_test() {
         val result = api.getPricesFor1Week()
         Assert.assertEquals(result.rates.size, 1)
@@ -94,6 +100,13 @@ class CryptoCurrencyApiUtilsTest {
     }
 
     @Test
+    fun getDailyPrices_testCached() {
+        var result = api.getPricesFor1Month()
+        result = api.getPricesFor1Month()
+        Assert.assertEquals(result.rates.size, 1)
+    }
+
+    @Test
     fun convertToCurrency_test() {
         val testDT = ZonedDateTime.of(
             2021, 3, 1, 0, 0, 0, 0, ZoneId.systemDefault()
@@ -105,6 +118,31 @@ class CryptoCurrencyApiUtilsTest {
 
     @Test
     fun getApiUrl_test() {
+        Assert.assertEquals(api.apiUrl, "http://localhost:8080/")
+    }
+
+    @Test
+    fun constructDataModels_test() {
+        val dummy1 = CryptoCurrencyDataModel.MetaDataDaily("UTC")
+        Assert.assertEquals(dummy1.timeZone, "UTC")
+        val dummy2 = CryptoCurrencyDataModel.RateData("500.0")
+        Assert.assertEquals(dummy2.price, "500.0")
+        val dummy3 = CryptoCurrencyDataModel.CryptoCurrencyInfo(
+            "55656.0",
+            "2021-01-04",
+            "55656.0",
+            "55656.0"
+        )
+        Assert.assertEquals(dummy3.exchangeRate, "55656.0")
+        Assert.assertEquals(dummy3.lastRefreshedDate, "2021-01-04")
+        Assert.assertEquals(dummy3.bidPrice, "55656.0")
+        Assert.assertEquals(dummy3.askPrice, "55656.0")
+        val dummy4 = CryptoCurrencyDataModel.CryptoCurrencyPerDay(dummy3)
+        Assert.assertEquals(dummy4.cryptoCurrency, dummy3)
+        val dummy6 =
+            CryptoCurrencyDataModel.ResultDaily(dummy1, mapOf("2021-01-01" to dummy2).toSortedMap())
+        Assert.assertEquals(dummy6.metaData, dummy1)
+        Assert.assertEquals(dummy6.data, mapOf("2021-01-01" to dummy2).toSortedMap())
     }
 
     private val currencyExchangeRateResponse = "{\n" +
