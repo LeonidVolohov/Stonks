@@ -36,22 +36,28 @@ import kotlin.math.abs
 class CryptoFragment : Fragment() {
     var defaultCurrencyInd = UiConstants.DEFAULT_CURRENCY_ID
 
-    private val disposables = CompositeDisposable()
-    private lateinit var apiUtils: CryptoCurrencyApiUtils
+    val disposables = CompositeDisposable()
+    lateinit var apiUtils: CryptoCurrencyApiUtils
     lateinit var url: String
-    private val periodToFarthestReachableMomentInPast = Period.of(5, 0, 0)
-    private val startCustomDateLimit: ZonedDateTime
+    val periodToFarthestReachableMomentInPast = Period.of(5, 0, 0)
+    val startCustomDateLimit: ZonedDateTime
         get() = ZonedDateTime.now(ZoneId.systemDefault()) -
                 periodToFarthestReachableMomentInPast
-    private val endCustomDateLimit: ZonedDateTime
+    val endCustomDateLimit: ZonedDateTime
         get() = ZonedDateTime.now(ZoneId.systemDefault())
-    private lateinit var cryptoChart: StockLineChart
-    private val cryptoCurrencyName: String
+    lateinit var cryptoChart: StockLineChart
+    val cryptoCurrencyName: String
         get() = crypto_currency_name_spinner.selectedItem.toString().split(",")[0]
-    private val currencyName: String
+    val currencyName: String
         get() = to_currency_name_spinner.selectedItem.toString().split(",")[0]
-    private val plotPrediction: Boolean
+    val plotPrediction: Boolean
         get() = crypto_switch.isChecked
+
+
+    var cryptoCurrencyNameSpinnerString = ""
+    var toCurrencySpinnerString = ""
+//    var isNumeric: Boolean = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,10 +76,6 @@ class CryptoFragment : Fragment() {
 
         val cryptoCurrenciesArray = resources.getStringArray(R.array.crypto_currencies)
         val currencyNameArray = resources.getStringArray(R.array.rates)
-        var cryptoCurrencyNameSpinnerString = ""
-        var toCurrencySpinnerString = ""
-        var isNumeric: Boolean
-
         crypto_currency_name_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -83,7 +85,11 @@ class CryptoFragment : Fragment() {
             ) {
                 cryptoCurrencyNameSpinnerString = cryptoCurrenciesArray[position]
                 crypto_rate_number.setText(UiConstants.DEFAULT_EDIT_TEXT_NUMBER.toString())
-                updateChart(changedCryptoSpinner = true)
+                try {
+                    updateChart(changedCryptoSpinner = true)
+                } catch (e: Throwable) {
+                    logError(e)
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) { }
@@ -98,109 +104,119 @@ class CryptoFragment : Fragment() {
             ) {
                 toCurrencySpinnerString = currencyNameArray[position]
                 crypto_rate_number.setText(UiConstants.DEFAULT_EDIT_TEXT_NUMBER.toString())
-                updateChart(changedCryptoSpinner = false)
+                try {
+                    updateChart(changedCryptoSpinner = false)
+                } catch (e: Throwable) {
+                    logError(e)
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
 
-        crypto_calculate_button.setOnClickListener {
-            isNumeric = try {
-                crypto_rate_number.text.toString().toDouble()
-                true
-            } catch (exception: NumberFormatException) {
-                false
-            }
-
-            if (isNumeric) {
-                dynamics_month_value.visibility = View.GONE
-                try {
-                    val response = apiUtils.getCryptoCurrencyRatePerDay(
-                        cryptoCurrencyNameSpinnerString.split(",")[0],
-                        toCurrencySpinnerString.split(",")[0]
-                    )
-
-                    crypto_last_date_update.text = getString(
-                        R.string.last_updated_date,
-                        response.cryptoCurrency.lastRefreshedDate
-                    )
-                    val exchangeRateResult =
-                        BigDecimal(
-                            (crypto_rate_number.text.toString().toDouble() *
-                                    response.cryptoCurrency.exchangeRate.toDouble())
-                        ).setScale(
-                            DEFAULT_DECIMAL_POINT_PRECISION,
-                            BigDecimal.ROUND_HALF_EVEN
-                        ).toString()
-                    first_crypto_currency_result.text = exchangeRateResult
-                    second_crypto_currency_result.text =
-                        String.format(
-                            BigDecimal(response.cryptoCurrency.bidPrice.toDouble()).setScale(
-                                DEFAULT_DECIMAL_POINT_PRECISION,
-                                ROUND_HALF_EVEN
-                            ).toString()
-                        )
-                    third_crypto_currency_result.text =
-                        String.format(
-                            BigDecimal(response.cryptoCurrency.askPrice.toDouble()).setScale(
-                                DEFAULT_DECIMAL_POINT_PRECISION,
-                                ROUND_HALF_EVEN
-                            ).toString()
-                        )
-                } catch (e: Error) {
-                    Toast.makeText(
-                        context,
-                        e.message.toString(),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                var monthDynamics = 0.0
-                try {
-                    monthDynamics = apiUtils.getMonthDynamics()
-                } catch (e: NullPointerException) {
-                    logError(e)
-                }
-                if (crypto_rate_number.text.toString() == DEFAULT_EDIT_TEXT_NUMBER.toString()) {
-                    dynamics_month_value.visibility = View.VISIBLE
-
-                    var extraSymbol = "+"
-                    dynamics_month_value.setTextColor(Color.GREEN)
-
-                    if (monthDynamics < 0) {
-                        extraSymbol = "-"
-                        dynamics_month_value.setTextColor(Color.RED)
-                    }
-
-                    val dynamic = BigDecimal(abs(monthDynamics)).setScale(
-                        DEFAULT_DECIMAL_POINT_PRECISION,
-                        RoundingMode.HALF_EVEN
-                    )
-                    dynamics_month_value.text = "($extraSymbol${dynamic})"
-                } else {
-                    dynamics_month_value.visibility = View.GONE
-                    val output = BigDecimal(abs(monthDynamics)).setScale(
-                        DEFAULT_DECIMAL_POINT_PRECISION,
-                        RoundingMode.HALF_EVEN
-                    ).toString()
-                    dynamics_month_value.text = output
-                }
-            } else {
-                Toast.makeText(context, getString(R.string.toast_wrong_input), Toast.LENGTH_LONG).show()
-                first_crypto_currency_result.text = ""
-                second_crypto_currency_result.text = ""
-                third_crypto_currency_result.text = ""
-            }
-        }
+        crypto_calculate_button.setOnClickListener(::clickEventHandler)
 
         period_selection_group.addOnButtonCheckedListener { group, checkedId, isChecked ->
             if (isChecked) {
-                updateChart(changedCryptoSpinner = false)
+                try {
+                    updateChart(changedCryptoSpinner = false)
+                } catch (e: Throwable) {
+                    logError(e)
+                }
             }
         }
         crypto_switch.setOnCheckedChangeListener { buttonView, isChecked -> updateChart(false) }
     }
 
-    private fun updateChart(changedCryptoSpinner: Boolean = true) {
+    fun clickEventHandler(view: View) {
+        val isNumeric = try {
+            crypto_rate_number.text.toString().toDouble()
+            true
+        } catch (exception: NumberFormatException) {
+            false
+        }
+
+        if (isNumeric) {
+            dynamics_month_value.visibility = View.GONE
+            try {
+                val response = apiUtils.getCryptoCurrencyRatePerDay(
+                    cryptoCurrencyNameSpinnerString.split(",")[0],
+                    toCurrencySpinnerString.split(",")[0]
+                )
+
+                crypto_last_date_update.text = getString(
+                    R.string.last_updated_date,
+                    response.cryptoCurrency.lastRefreshedDate
+                )
+                val exchangeRateResult =
+                    BigDecimal(
+                        (crypto_rate_number.text.toString().toDouble() *
+                                response.cryptoCurrency.exchangeRate.toDouble())
+                    ).setScale(
+                        DEFAULT_DECIMAL_POINT_PRECISION,
+                        BigDecimal.ROUND_HALF_EVEN
+                    ).toString()
+                first_crypto_currency_result.text = exchangeRateResult
+                second_crypto_currency_result.text =
+                    String.format(
+                        BigDecimal(response.cryptoCurrency.bidPrice.toDouble()).setScale(
+                            DEFAULT_DECIMAL_POINT_PRECISION,
+                            ROUND_HALF_EVEN
+                        ).toString()
+                    )
+                third_crypto_currency_result.text =
+                    String.format(
+                        BigDecimal(response.cryptoCurrency.askPrice.toDouble()).setScale(
+                            DEFAULT_DECIMAL_POINT_PRECISION,
+                            ROUND_HALF_EVEN
+                        ).toString()
+                    )
+            } catch (e: Error) {
+                Toast.makeText(
+                    context,
+                    e.message.toString(),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            var monthDynamics = 0.0
+            try {
+                monthDynamics = apiUtils.getMonthDynamics()
+            } catch (e: NullPointerException) {
+                logError(e)
+            }
+            if (crypto_rate_number.text.toString() == DEFAULT_EDIT_TEXT_NUMBER.toString()) {
+                dynamics_month_value.visibility = View.VISIBLE
+
+                var extraSymbol = "+"
+                dynamics_month_value.setTextColor(Color.GREEN)
+
+                if (monthDynamics < 0) {
+                    extraSymbol = "-"
+                    dynamics_month_value.setTextColor(Color.RED)
+                }
+
+                val dynamic = BigDecimal(abs(monthDynamics)).setScale(
+                    DEFAULT_DECIMAL_POINT_PRECISION,
+                    RoundingMode.HALF_EVEN
+                )
+                dynamics_month_value.text = "($extraSymbol${dynamic})"
+            } else {
+                dynamics_month_value.visibility = View.GONE
+                val output = BigDecimal(abs(monthDynamics)).setScale(
+                    DEFAULT_DECIMAL_POINT_PRECISION,
+                    RoundingMode.HALF_EVEN
+                ).toString()
+                dynamics_month_value.text = output
+            }
+        } else {
+            Toast.makeText(context, getString(R.string.toast_wrong_input), Toast.LENGTH_LONG).show()
+            first_crypto_currency_result.text = ""
+            second_crypto_currency_result.text = ""
+            third_crypto_currency_result.text = ""
+        }
+    }
+
+    fun updateChart(changedCryptoSpinner: Boolean = true) {
         if (changedCryptoSpinner) {
             apiUtils = CryptoCurrencyApiUtils(cryptoCurrencyName, url)
             period_selection_group.check(R.id.togglebutton_one_week_selector)
@@ -282,7 +298,7 @@ class CryptoFragment : Fragment() {
         processResult(result)
     }
 
-    private fun processResult(result: CryptoCurrencyDataModel.RatesProcessed) {
+    fun processResult(result: CryptoCurrencyDataModel.RatesProcessed) {
         val dateListResult = result.rates.keys.sorted().toMutableList()
         val entriesResult =
             result.rates.entries.sortedBy { it.key }.map { it.value }.toMutableList()
@@ -339,7 +355,7 @@ class CryptoFragment : Fragment() {
         }
     }
 
-    private fun logError(error: Throwable) {
+    fun logError(error: Throwable) {
         if (error is NullPointerException) {
             Toast.makeText(
                 requireContext(),
