@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter
 
 class CryptoCurrencyApiUtils(
     private val cryptoCurrencyName: String,
-    val apiUrl: String = ApiConstants.STOCK_API_BASE_URL
+    val apiUrl: String = ApiConstants.CRYPTOCURRENCY_API_BASE_URL
 ) {
 
     private companion object {
@@ -125,7 +125,7 @@ class CryptoCurrencyApiUtils(
             val params = mapOf(
                 "apikey" to ApiConstants.CRYPTOCURRENCY_API_KEY,
                 "symbol" to cryptoCurrencyName,
-                "function" to "TIME_SERIES_DAILY",
+                "function" to "DIGITAL_CURRENCY_DAILY",
                 "outputsize" to "full"
             )
             val url = UrlBuilder.build(apiUrl, endpoint, params)
