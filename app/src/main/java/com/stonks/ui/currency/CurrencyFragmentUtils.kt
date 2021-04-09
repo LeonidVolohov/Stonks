@@ -2,7 +2,6 @@ package com.stonks.ui.currency
 
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
@@ -257,6 +256,7 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
                     val rateList: MutableList<Double> = arrayListOf()
                     val dateList: MutableList<String>? =
                         response.data.keys.toMutableList()
+                    val processedDateList: MutableList<String>? = mutableListOf()
 
                     if (dateList != null) {
                         for (date in dateList) {
@@ -270,21 +270,16 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
                             ) {
                                 response.data[date]?.get("4. close")?.toDouble()
                                     ?.let { rateList.add(it) }
-                            } else {
-                                dateList.remove(date)
+                                processedDateList?.add(date)
                             }
                         }
                     }
-
-                    Log.i(TAG, response.data.toString())
-                    Log.i(TAG, dateList.toString())
-                    Log.i(TAG, rateList.toString())
 
                     val entries = rateList.toList()
 
                     stockLineChart.setXAxis(
                         lineChart = currencyChart,
-                        dateList = dateList?.toList(),
+                        dateList = processedDateList?.toList(),
                     )
 
                     val lineChartData = stockLineChart.getLineData(
@@ -304,8 +299,8 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
                         val predictionRateListMin: MutableList<Double> =
                             rateList.toMutableList()
                         val dateListLong: ArrayList<Long> = arrayListOf()
-                        if (dateList != null) {
-                            for (item in dateList) {
+                        if (processedDateList != null) {
+                            for (item in processedDateList) {
                                 dateListLong.add(
                                     (SimpleDateFormat("yyyy-MM-dd").parse(item).toInstant()
                                         .toEpochMilli())
@@ -326,11 +321,11 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
                             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                             val predictionDate: String = (LocalDate
                                 .parse(
-                                    dateList?.last() ?: "2020-12-20",
+                                    processedDateList?.last() ?: "2020-12-20",
                                     formatter
                                 ) + Period.ofDays(i))
                                 .format(formatter)
-                            dateList?.add(predictionDate.toString())
+                            processedDateList?.add(predictionDate.toString())
                             predictionRateListMax.add(rateList.last() + (predictionRateMax - rateList.last()) / currentDaysInMonth * i)
                             predictionRateListMin.add(rateList.last() + (predictionRateMin - rateList.last()) / currentDaysInMonth * i)
                         }

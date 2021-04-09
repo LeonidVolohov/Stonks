@@ -308,6 +308,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                                     val rateList: MutableList<Double> = arrayListOf()
                                     val dateList: MutableList<String>? =
                                         response.data.keys.toMutableList()
+                                    val processedDateList: MutableList<String>? = mutableListOf()
 
                                     val startDate = LocalDate.now().minusMonths(1)
                                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
@@ -326,8 +327,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                                             ) {
                                                 response.data[date]?.get("4. close")?.toDouble()
                                                     ?.let { rateList.add(it) }
-                                            } else {
-                                                dateList.remove(date)
+                                                processedDateList?.add(date)
                                             }
                                         }
                                     }
@@ -415,6 +415,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                     )*/
 
                     try {
+                        // TODO: Add check if baseTargetString = primaryCurrency
                         queryString =
                             "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=$baseRateSpinnerString&to_currency=USD&apikey=$CURRENCY_ALPHAVANTAGE_PRIMARY_API_KEY"
                         first_primary_currency_result.text =
