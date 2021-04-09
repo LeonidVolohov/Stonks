@@ -1,10 +1,7 @@
 package com.stonks.api
 
-import com.stonks.api.ApiConstants.Companion.CRYPTOCURRENCY_API_BASE_URL
-import com.stonks.api.ApiConstants.Companion.CURRENCY_ALPHAVANTAGE_ANOTHER_PRIMARY_API_KEY
 import com.stonks.api.ApiConstants.Companion.CURRENCY_API_ALPHAVANTAGE_BASE_URL
 import com.stonks.api.ApiConstants.Companion.CURRENCY_API_BASE_URL
-import com.stonks.api.cryptocurrency.CryptoCurrencyRequests
 import com.stonks.api.currency.CurrencyRequests
 import com.stonks.api.currencyalphavantage.CurrencyALphavantageRequests
 import okhttp3.OkHttpClient
@@ -35,11 +32,3 @@ val currencyAlphavantageApi: CurrencyALphavantageRequests = Retrofit.Builder()
     .client(client)
     .build()
     .create(CurrencyALphavantageRequests::class.java)
-
-val cryptoCurrencyApi: CryptoCurrencyRequests = Retrofit.Builder()
-    .baseUrl(CRYPTOCURRENCY_API_BASE_URL)
-    .addConverterFactory(GsonConverterFactory.create())
-    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-    .client(client)
-    .build()
-    .create(CryptoCurrencyRequests::class.java)
