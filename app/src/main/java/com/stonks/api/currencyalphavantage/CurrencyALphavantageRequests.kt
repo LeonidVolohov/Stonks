@@ -11,6 +11,7 @@ interface CurrencyALphavantageRequests {
         @Query("function") function: String,
         @Query("from_symbol") fromCurrencyName: String,
         @Query("to_symbol") toCurrencyName: String,
+        @Query("outputsize") outputSize: String,
         @Query("apikey") apiKey: String
     ): Observable<CurrencyAplhavantageDataModel.CurrencyData>
 }

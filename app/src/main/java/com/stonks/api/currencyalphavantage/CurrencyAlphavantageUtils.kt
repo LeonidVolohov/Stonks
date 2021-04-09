@@ -13,13 +13,13 @@ class CurrencyAlphavantageUtils {
         toCurrencyName: String
     ): Observable<CurrencyAplhavantageDataModel.CurrencyData> {
         return currencyAlphavantageApi.getDataForPeriod(
-            function = "FX_MONTHLY",
+            function = "FX_DAILY",
             fromCurrencyName = fromCurrencyName,
             toCurrencyName = toCurrencyName,
+            outputSize = "full",
             apiKey = CURRENCY_ALPHAVANTAGE_ANOTHER_ANOTHER_API_KEY
         )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-
     }
 }

@@ -111,7 +111,7 @@
 
             <TextView
                 android:id="@+id/rate_difference"
-                android:layout_width="0dp"
+                android:layout_width="1dp"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 android:layout_marginStart="@dimen/margin_padding_size_small"

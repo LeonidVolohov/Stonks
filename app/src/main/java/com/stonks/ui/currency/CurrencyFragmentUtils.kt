@@ -46,8 +46,11 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
     /**
      * Возвращает  количество знаков после запятой равное [DEFAULT_DECIMAL_POINT_PRECISION]
      */
-    private fun doubleScale(number: Double): String {
-        return BigDecimal(number).setScale(DEFAULT_DECIMAL_POINT_PRECISION, BigDecimal.ROUND_HALF_EVEN).toString()
+    fun doubleScale(number: Double): String {
+        return BigDecimal(number).setScale(
+            DEFAULT_DECIMAL_POINT_PRECISION,
+            BigDecimal.ROUND_HALF_EVEN
+        ).toString()
     }
 
     /**
@@ -267,6 +270,8 @@ class CurrencyFragmentUtils(disposable: Disposable?) {
                             ) {
                                 response.data[date]?.get("4. close")?.toDouble()
                                     ?.let { rateList.add(it) }
+                            } else {
+                                dateList.remove(date)
                             }
                         }
                     }
