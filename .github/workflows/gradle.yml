@@ -1,0 +1,51 @@
+# This workflow will build a Java project with Gradle
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: App CI with Gradle
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+  workflow_dispatch
+
+jobs:
+  unit_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run unit tests
+        run: ./gradlew testDebug --tests "com.stonks.unit.*"
+
+      - name: Archive test report
+        uses: actions/upload-artifact@v2
+        if: ${{ always() }}
+        with:
+          name: unit_test_report
+          path: app/build/reports/tests/testDebugUnitTest
+
+  integration_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run integration tests
+        run: ./gradlew testDebug --tests "com.stonks.integration.*"
+
+      - name: Archive test report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: integration_test_report
+          path: app/build/reports/tests/testDebugUnitTest
+
+      - name: Stop containers
+        run: docker stack rm app
