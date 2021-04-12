@@ -13,7 +13,9 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.stonks.R
-import com.stonks.ui.Constants
+import com.stonks.api.ApiConstants.Companion.CURRENCY_ALPHAVANTAGE_API_KEY
+import com.stonks.api.currency.CurrencyApiAlphavantageDataUtils
+import com.stonks.ui.UiConstants
 import com.stonks.ui.chart.StockLineChart
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_currency.*
@@ -81,19 +83,28 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
 
         initPrimaryRatesName(chartPrimaryRatesArray)
 
-        // TODO: Remove inputText, remake with getString()
-        currencyFragmentUtils.setLastUpdatedDate(last_date_update, requireContext())
+        // Old type using retrofit library
+        // currencyFragmentUtils.setLastUpdatedDate(last_date_update, requireContext())
+        // New using OkHttp
+        var queryString =
+            "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=JPY&apikey=$CURRENCY_ALPHAVANTAGE_API_KEY"
+        last_date_update.text = context?.getString(
+            R.string.last_updated_date,
+            CurrencyApiAlphavantageDataUtils().getLastUpdatedDate(queryString)
+        )
+
+
 
         base_rate_spinner.setSelection(defaultCurrencyInd)
         base_rate_spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
             ) {
                 baseRateSpinnerString = ratesNameArray[position].split(",")[0]
-                rate_number.setText(Constants.DEFAULT_EDIT_TEXT_NUMBER.toString())
+                rate_number.setText(UiConstants.DEFAULT_EDIT_TEXT_NUMBER.toString())
                 currencyLineChart.clearChart()
             }
 
@@ -108,7 +119,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                 id: Long
             ) {
                 targetRateSpinnerString = ratesNameArray[position].split(",")[0]
-                rate_number.setText(Constants.DEFAULT_EDIT_TEXT_NUMBER.toString())
+                rate_number.setText(UiConstants.DEFAULT_EDIT_TEXT_NUMBER.toString())
                 currencyLineChart.clearChart()
             }
 
@@ -116,7 +127,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
         }
 
         currency_switch.setOnCheckedChangeListener { buttonView, isChecked ->
-            currencyFragmentUtils.plotRatesPerPeriod(
+            /*currencyFragmentUtils.plotRatesPerPeriod(
                 startDate = period,
                 targetRate = targetRateSpinnerString,
                 baseRate = baseRateSpinnerString,
@@ -126,7 +137,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                 context = requireContext()
             )
 
-            displayChart()
+            displayChart()*/
         }
 
         currency_chart.isVisible = false
@@ -141,7 +152,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                         ).show()
                     }
                     R.id.currency_togglebutton_one_week_selector -> {
-                        currencyFragmentUtils.plotRatesPerPeriod(
+                        /*currencyFragmentUtils.plotRatesPerPeriod(
                             startDate = "1W",
                             targetRate = targetRateSpinnerString,
                             baseRate = baseRateSpinnerString,
@@ -151,10 +162,10 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                             isPrediction = currency_switch.isChecked
                         )
 
-                        displayChart()
+                        displayChart()*/
                     }
                     R.id.currency_togglebutton_one_month_selector -> {
-                        currencyFragmentUtils.plotRatesPerPeriod(
+                        /*currencyFragmentUtils.plotRatesPerPeriod(
                             startDate = "1M",
                             targetRate = targetRateSpinnerString,
                             baseRate = baseRateSpinnerString,
@@ -164,10 +175,10 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                             isPrediction = currency_switch.isChecked
                         )
 
-                        displayChart()
+                        displayChart()*/
                     }
                     R.id.currency_togglebutton_six_months_selector -> {
-                        currencyFragmentUtils.plotRatesPerPeriod(
+                        /*currencyFragmentUtils.plotRatesPerPeriod(
                             startDate = "6M",
                             targetRate = targetRateSpinnerString,
                             baseRate = baseRateSpinnerString,
@@ -177,10 +188,10 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                             isPrediction = currency_switch.isChecked
                         )
 
-                        displayChart()
+                        displayChart()*/
                     }
                     R.id.currency_togglebutton_one_year_selector -> {
-                        currencyFragmentUtils.plotRatesPerPeriod(
+                        /*currencyFragmentUtils.plotRatesPerPeriod(
                             startDate = "1Y",
                             targetRate = targetRateSpinnerString,
                             baseRate = baseRateSpinnerString,
@@ -190,10 +201,10 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                             isPrediction = currency_switch.isChecked
                         )
 
-                        displayChart()
+                        displayChart()*/
                     }
                     R.id.currency_togglebutton_five_years_selector -> {
-                        currencyFragmentUtils.plotRatesPerPeriod(
+                        /*currencyFragmentUtils.plotRatesPerPeriod(
                             startDate = "5Y",
                             targetRate = targetRateSpinnerString,
                             baseRate = baseRateSpinnerString,
@@ -203,7 +214,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                             isPrediction = currency_switch.isChecked
                         )
 
-                        displayChart()
+                        displayChart()*/
                     }
                     R.id.currency_togglebutton_custom_period_selector -> {
                         var startDateTime: String
@@ -233,7 +244,7 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                                 ZonedDateTime.ofInstant(endInstant, ZoneId.systemDefault())
                                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-                            currencyFragmentUtils.plotRatesPerPeriod(
+                            /*currencyFragmentUtils.plotRatesPerPeriod(
                                 startDate = startDateTime,
                                 endDate = endDateTime,
                                 targetRate = targetRateSpinnerString,
@@ -244,13 +255,13 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                                 isPrediction = currency_switch.isChecked
                             )
 
-                            displayChart()
+                            displayChart()*/
                         }
                         picker.addOnNegativeButtonClickListener {
                             Toast.makeText(
-                                    requireContext(),
-                                    getString(R.string.toast_calendar_canceled_selection),
-                                    Toast.LENGTH_SHORT
+                                requireContext(),
+                                getString(R.string.toast_calendar_canceled_selection),
+                                Toast.LENGTH_SHORT
                             ).show()
                         }
 
@@ -263,8 +274,8 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
         calculate_button.setOnClickListener {
             if (baseRateSpinnerString == targetRateSpinnerString) {
                 rate_result.text = currencyFragmentUtils.stringMultiplication(
-                        rate_number.text.toString(),
-                        Constants.DEFAULT_EDIT_TEXT_NUMBER.toString()
+                    rate_number.text.toString(),
+                    UiConstants.DEFAULT_EDIT_TEXT_NUMBER.toString()
                 )
 
                 rate_difference.visibility = View.GONE
@@ -280,15 +291,22 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                     changeToDefaultValue()
                     rate_difference.visibility = View.GONE
 
-                    currencyFragmentUtils.setTargetRatePrice(
+                    /*currencyFragmentUtils.setTargetRatePrice(
                         baseRate = baseRateSpinnerString,
                         targetRate = targetRateSpinnerString,
                         rateNumberEditText = rate_number,
                         resultRateTextView = rate_result,
                         differenceRateTextView = rate_difference,
                         context = requireContext()
+                    )*/
+                    queryString =
+                        "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=$baseRateSpinnerString&to_currency=$targetRateSpinnerString&apikey=$CURRENCY_ALPHAVANTAGE_API_KEY"
+                    rate_result.text = CurrencyFragmentUtils(null).stringMultiplication(
+                        rate_number.text.toString(),
+                        CurrencyApiAlphavantageDataUtils().getTargetRatePrice(queryString)
                     )
-                    currencyFragmentUtils.plotRatesPerPeriod(
+
+                    /*currencyFragmentUtils.plotRatesPerPeriod(
                         startDate = "1W",
                         targetRate = targetRateSpinnerString,
                         baseRate = baseRateSpinnerString,
@@ -307,7 +325,48 @@ class CurrencyFragment(bottomNavigationHeight: Int, private val defaultCurrencyI
                         fifthTextView = fifth_primary_currency_result,
                         rateNumber = rate_number,
                         context = requireContext()
-                    )
+                    )*/
+
+                    // TODO: Some unknown bug in on of these requests (usually last). Message: "No value for Realtime Currency Exchange Rate". Even thought there it such key.
+                    queryString =
+                        "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=$baseRateSpinnerString&to_currency=USD&apikey=$CURRENCY_ALPHAVANTAGE_API_KEY"
+                    first_primary_currency_result.text =
+                        CurrencyFragmentUtils(null).stringMultiplication(
+                            rate_number.text.toString(),
+                            CurrencyApiAlphavantageDataUtils().getTargetRatePrice(queryString)
+                        )
+
+                    queryString =
+                        "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=$baseRateSpinnerString&to_currency=EUR&apikey=$CURRENCY_ALPHAVANTAGE_API_KEY"
+                    second_primary_currency_result.text =
+                        CurrencyFragmentUtils(null).stringMultiplication(
+                            rate_number.text.toString(),
+                            CurrencyApiAlphavantageDataUtils().getTargetRatePrice(queryString)
+                        )
+
+                    queryString =
+                        "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=$baseRateSpinnerString&to_currency=GBP&apikey=$CURRENCY_ALPHAVANTAGE_API_KEY"
+                    third_primary_currency_result.text =
+                        CurrencyFragmentUtils(null).stringMultiplication(
+                            rate_number.text.toString(),
+                            CurrencyApiAlphavantageDataUtils().getTargetRatePrice(queryString)
+                        )
+
+                    queryString =
+                        "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=$baseRateSpinnerString&to_currency=JPY&apikey=$CURRENCY_ALPHAVANTAGE_API_KEY"
+                    fourth_primary_currency_result.text =
+                        CurrencyFragmentUtils(null).stringMultiplication(
+                            rate_number.text.toString(),
+                            CurrencyApiAlphavantageDataUtils().getTargetRatePrice(queryString)
+                        )
+
+                    queryString =
+                        "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=$baseRateSpinnerString&to_currency=CHF&apikey=$CURRENCY_ALPHAVANTAGE_API_KEY"
+                    fifth_primary_currency_result.text =
+                        CurrencyFragmentUtils(null).stringMultiplication(
+                            rate_number.text.toString(),
+                            CurrencyApiAlphavantageDataUtils().getTargetRatePrice(queryString)
+                        )
                 } else {
                     Toast.makeText(requireContext(), getString(R.string.toast_wrong_input), Toast.LENGTH_LONG).show()
                     changeToDefaultValue()
