@@ -68,6 +68,42 @@ class CurrencyScenarios {
     }
 
     @Test
+    fun userCanGetCurrencyHistoricalDaily() {
+        val args = Bundle()
+        args.putString("url", requestBaseUrl)
+
+        val scenario = FragmentScenario.launchInContainer(
+            StocksFragment::class.java,
+            args,
+            R.style.Theme_Stonks
+        )
+        scenario.onFragment { fragment ->
+            fragment.updateStockData(false)
+            fragment.toggleGroupPeriod.check(R.id.togglebutton_one_day_selector)
+        }
+        Assert.assertEquals("USD", testCurrencyName)
+        Assert.assertEquals("59234.53000000", testCurrencyPrice)
+    }
+
+    @Test
+    fun userCanGetCurrencyHistoricalMonthly() {
+        val args = Bundle()
+        args.putString("url", requestBaseUrl)
+
+        val scenario = FragmentScenario.launchInContainer(
+            StocksFragment::class.java,
+            args,
+            R.style.Theme_Stonks
+        )
+        scenario.onFragment { fragment ->
+            fragment.updateStockData(false)
+            fragment.toggleGroupPeriod.check(R.id.togglebutton_one_day_selector)
+        }
+        Assert.assertEquals("USD", testCurrencyName)
+        Assert.assertEquals("59234.53000000", testCurrencyPrice)
+    }
+
+    @Test
     fun userCanConvertCurrencies() {
         val args = Bundle()
         args.putString("url", requestBaseUrl)
