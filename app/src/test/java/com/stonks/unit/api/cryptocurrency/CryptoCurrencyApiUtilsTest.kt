@@ -1,6 +1,8 @@
-package com.stonks.api.cryptocurrency
+package com.stonks.unit.api.cryptocurrency
 
 import androidx.test.runner.AndroidJUnit4
+import com.stonks.api.cryptocurrency.CryptoCurrencyApiUtils
+import com.stonks.api.cryptocurrency.CryptoCurrencyDataModel
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer

@@ -1,5 +1,6 @@
-package com.stonks.calculations
+package com.stonks.unit.calculations
 
+import com.stonks.calculations.Prediction
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

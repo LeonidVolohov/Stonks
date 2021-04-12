@@ -1,10 +1,11 @@
-package com.stonks.ui.stocks
+package com.stonks.unit.ui.stocks
 
 import android.os.Bundle
 import androidx.fragment.app.testing.FragmentScenario.Companion.launchInContainer
 import androidx.test.runner.AndroidJUnit4
 import com.stonks.R
 import com.stonks.api.stocks.StocksApiDataUtils
+import com.stonks.ui.stocks.StocksFragment
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer

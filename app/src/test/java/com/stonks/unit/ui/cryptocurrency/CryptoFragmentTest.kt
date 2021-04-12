@@ -1,4 +1,4 @@
-package com.stonks.ui.cryptocurrency
+package com.stonks.unit.ui.cryptocurrency
 
 import android.os.Bundle
 import androidx.fragment.app.testing.FragmentScenario
@@ -6,6 +6,7 @@ import androidx.test.runner.AndroidJUnit4
 import com.stonks.R
 import com.stonks.api.cryptocurrency.CryptoCurrencyApiUtils
 import com.stonks.api.cryptocurrency.CryptoCurrencyDataModel
+import com.stonks.ui.cryptocurrency.CryptoFragment
 import kotlinx.android.synthetic.main.fragment_currency.*
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse

@@ -1,4 +1,4 @@
-package com.stonks.utils
+package com.stonks.unit.utils
 
 object Fileutils {
     fun readTestResourceFile(fileName: String): String {
