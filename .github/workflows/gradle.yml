@@ -3,11 +3,7 @@
 
 name: App CI with Gradle
 
-on:
-  push:
-    branches: [ develop ]
-  pull_request:
-    branches: [ develop ]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   unit_test:
